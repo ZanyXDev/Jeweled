@@ -1,36 +1,46 @@
-import Qt 4.7
-import com.mycompany.gemcell 1.0
-import "qml"
+import QtQuick 2.15
+import QtQuick.Controls 2.15 as QQC2
+import QtQuick.Controls.Material 2.15
+import QtQuick.Layouts 1.15
 
+//import com.mycompany.gemcell 1.0
 Rectangle {
     id: screen
 
-    width: 8*gameBoard.cellSize
-    height: 12*gameBoard.cellSize
-    property double g_scaleFactor: gameBoard.cellSize/40
+    width: 8 * gameBoard.cellSize
+    height: 12 * gameBoard.cellSize
+    property double g_scaleFactor: gameBoard.cellSize / 40
     state: "stateMainMenu"
     z: -10
 
     function setBackgroundSource() {
-        var source = generateBackgroundFileName();
-        while (source == background.source) {
-            source = generateBackgroundFileName();
+        var source = generateBackgroundFileName()
+        while (source === background.source) {
+            source = generateBackgroundFileName()
         }
-        background.source = source;
+        background.source = source
     }
 
     function generateBackgroundFileName() {
-        var bgrStr = Math.floor(Math.random()*20 + 1).toString();
-        if (bgrStr.length == 1) {
-            bgrStr = "0" + bgrStr;
+        var bgrStr = Math.floor(Math.random() * 20 + 1).toString()
+        if (bgrStr.length === 1) {
+            bgrStr = "0" + bgrStr
         }
-        return ":/pics/backgrounds/bgr" + bgrStr + ".jpg";
+        return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
     }
 
-    SystemPalette { id: activePalette }
+    SystemPalette {
+        id: activePalette
+    }
 
-    FontLoader { id: gameFont; source: ":/fonts/mailrays.ttf" }
-    FontLoader { id: buttonFont; source: ":/fonts/pirulen.ttf" }
+    FontLoader {
+        id: gameFont
+        source: "qrc:/res/fonts/mailrays.ttf"
+    }
+    FontLoader {
+        id: buttonFont
+        source: "qrc:/res/fonts/pirulen.ttf"
+    }
 
     Image {
         id: background
@@ -41,7 +51,7 @@ Rectangle {
     Image {
         id: bgrMainMenu
         anchors.fill: parent
-        source: ":/pics/backgrounds/bgr00.jpg"
+        source: "qrc:/res/images/backgrounds/bgr00.jpg"
     }
 
     AboutDialog {
@@ -53,7 +63,9 @@ Rectangle {
             onClicked: screen.state = "stateSettings"
         }
         Behavior on opacity {
-            NumberAnimation { duration: 500 }
+            NumberAnimation {
+                duration: 500
+            }
         }
     }
 
@@ -64,10 +76,12 @@ Rectangle {
         canIncreaseSize: gameBoard.cellSize < 80
         canDecreaseSize: gameBoard.cellSize > 40
         Behavior on opacity {
-            NumberAnimation { duration: 500 }
+            NumberAnimation {
+                duration: 500
+            }
         }
-        onSizeDecrease: gameBoard.cellSize -= 10;
-        onSizeIncrease: gameBoard.cellSize += 10;
+        onSizeDecrease: gameBoard.cellSize -= 10
+        onSizeIncrease: gameBoard.cellSize += 10
         onBackPressed: screen.state = "stateMainMenu"
         onAboutPressed: screen.state = "stateAbout"
     }
@@ -78,7 +92,7 @@ Rectangle {
         color: "white"
         opacity: 0.5
         anchors.top: scoreBox.bottom
-        height: 5*g_scaleFactor
+        height: 5 * g_scaleFactor
         width: parent.width
     }
 
@@ -88,14 +102,14 @@ Rectangle {
         color: "white"
         opacity: 0.5
         anchors.top: gameBoard.bottom
-        height: 5*g_scaleFactor
+        height: 5 * g_scaleFactor
         width: parent.width
     }
 
     GameBoard {
         id: gameBoard
-        width: 8*gameBoard.cellSize
-        height: 8*gameBoard.cellSize
+        width: 8 * gameBoard.cellSize
+        height: 8 * gameBoard.cellSize
         anchors.top: topGameBoardBorder.bottom
         visible: opacity > 0
         opacity: 0
@@ -121,8 +135,8 @@ Rectangle {
             width: gameBoard.cellSize
             height: gameBoard.cellSize
             visible: gameBoard.gemSelected
-            x: gameBoard.selGemColumn*width
-            y: gameBoard.selGemRow*width
+            x: gameBoard.selGemColumn * width
+            y: gameBoard.selGemRow * width
 
             Image {
                 anchors.fill: parent
@@ -136,12 +150,11 @@ Rectangle {
             id: hintImage
             source: ":/pics/hintArrow.svg"
             x: gameBoard.hintX
-            y: gameBoard.hintY - height/4
+            y: gameBoard.hintY - height / 4
             width: gameBoard.cellSize
-            height: gameBoard.cellSize/2
+            height: gameBoard.cellSize / 2
             sourceSize.width: width
             sourceSize.height: height
-
 
             visible: gameBoard.hintVisible
             z: 5
@@ -150,23 +163,27 @@ Rectangle {
                 SequentialAnimation {
                     loops: Animation.Infinite
                     PropertyAnimation {
-                        target: hintImage;
-                        property: "y";
-                        to: gameBoard.hintY - 3*hintImage.height/4;
-                        duration: 300;
+                        target: hintImage
+                        property: "y"
+                        to: gameBoard.hintY - 3 * hintImage.height / 4
+                        duration: 300
                         easing.type: Easing.InOutQuad
                     }
                     PropertyAnimation {
-                        target: hintImage;
-                        property: "y";
-                        to: gameBoard.hintY - hintImage.height/4;
-                        duration: 300;
+                        target: hintImage
+                        property: "y"
+                        to: gameBoard.hintY - hintImage.height / 4
+                        duration: 300
                         easing.type: Easing.InOutQuad
                     }
                 }
                 SequentialAnimation {
-                    PauseAnimation { duration: 3000 }
-                    ScriptAction { script: gameBoard.hintVisible = false }
+                    PauseAnimation {
+                        duration: 3000
+                    }
+                    ScriptAction {
+                        script: gameBoard.hintVisible = false
+                    }
                 }
             }
         }
@@ -174,10 +191,10 @@ Rectangle {
         onLevelUp: levelUpAnimation.start()
 
         onNoMoreMoves: {
-            msgText.text = "NO MORE MOVES";
-            msgText.font.pointSize = 30*g_scaleFactor;
-            msgText.show();
-            dlgEndGame.show();
+            msgText.text = "NO MORE MOVES"
+            msgText.font.pointSize = 30 * g_scaleFactor
+            msgText.show()
+            dlgEndGame.show()
         }
     }
 
@@ -185,22 +202,25 @@ Rectangle {
         id: levelUpAnimation
         ScriptAction {
             script: {
-                msgText.text = "LEVEL UP!";
-                msgText.font.pointSize = 38*g_scaleFactor;
-                msgText.show();
-                gameBoard.dropGemsDown();
+                msgText.text = "LEVEL UP!"
+                msgText.font.pointSize = 38 * g_scaleFactor
+                msgText.show()
+                gameBoard.dropGemsDown()
             }
         }
-        PauseAnimation { duration: 3000 }
+        PauseAnimation {
+            duration: 3000
+        }
         ScriptAction {
             script: {
-                msgText.text = "LEVEL " + gameBoard.level;
-                msgText.font.pointSize = 38*g_scaleFactor;
-                msgText.show();
-                pbLevelProgress.minimum = gameBoard.levelCap(gameBoard.level - 1);
-                pbLevelProgress.maximum = gameBoard.levelCap(gameBoard.level);
-                setBackgroundSource();
-                gameBoard.resetBoard();
+                msgText.text = "LEVEL " + gameBoard.level
+                msgText.font.pointSize = 38 * g_scaleFactor
+                msgText.show()
+                pbLevelProgress.minimum = gameBoard.levelCap(
+                            gameBoard.level - 1)
+                pbLevelProgress.maximum = gameBoard.levelCap(gameBoard.level)
+                setBackgroundSource()
+                gameBoard.resetBoard()
             }
         }
     }
@@ -218,11 +238,11 @@ Rectangle {
         z: 10
         onCancel: screen.state = "stateMainMenu"
         onLoadSaved: {
-            gameBoard.loadBoardStateFromFile();
-            pbLevelProgress.minimum = gameBoard.levelCap(gameBoard.level - 1);
-            pbLevelProgress.maximum = gameBoard.levelCap(gameBoard.level);
+            gameBoard.loadBoardStateFromFile()
+            pbLevelProgress.minimum = gameBoard.levelCap(gameBoard.level - 1)
+            pbLevelProgress.maximum = gameBoard.levelCap(gameBoard.level)
         }
-        onNewGame: gameBoard.newGame();
+        onNewGame: gameBoard.newGame()
     }
 
     ProgressBar {
@@ -232,7 +252,7 @@ Rectangle {
         anchors.top: bottomGameBoardBorder.bottom
         color: "white"
         secondColor: "green"
-        height: 20*g_scaleFactor
+        height: 20 * g_scaleFactor
         maximum: gameBoard.levelCap(gameBoard.level)
         value: gameBoard.score
     }
@@ -241,7 +261,7 @@ Rectangle {
         id: scoreBox
 
         width: parent.width
-        height: 60*g_scaleFactor /* cellSize*1.5, actually */
+        height: 60 * g_scaleFactor /* cellSize*1.5, actually */
         state: "stateHidden"
 
         anchors.top: parent.top
@@ -250,36 +270,48 @@ Rectangle {
             id: txtScore
             color: "white"
             font.family: gameFont.name
-            font.pointSize: 16*g_scaleFactor
+            font.pointSize: 16 * g_scaleFactor
             font.bold: true
             text: gameBoard.score
             anchors.bottom: parent.bottom
-            anchors.leftMargin: 10*g_scaleFactor
-            anchors.bottomMargin: 5*g_scaleFactor
+            anchors.leftMargin: 10 * g_scaleFactor
+            anchors.bottomMargin: 5 * g_scaleFactor
         }
 
         Text {
             id: txtLevel
             color: "white"
             font.family: gameFont.name
-            font.pointSize: 16*g_scaleFactor
+            font.pointSize: 16 * g_scaleFactor
             font.bold: true
             text: "Level " + gameBoard.level + " "
             anchors.bottom: parent.bottom
-            anchors.rightMargin: 10*g_scaleFactor
-            anchors.bottomMargin: 5*g_scaleFactor
+            anchors.rightMargin: 10 * g_scaleFactor
+            anchors.bottomMargin: 5 * g_scaleFactor
         }
 
         states: [
             State {
                 name: "stateNormal"
-                AnchorChanges { target: txtScore; anchors.left: scoreBox.left }
-                AnchorChanges { target: txtLevel; anchors.right: scoreBox.right }
+                AnchorChanges {
+                    target: txtScore
+                    anchors.left: scoreBox.left
+                }
+                AnchorChanges {
+                    target: txtLevel
+                    anchors.right: scoreBox.right
+                }
             },
             State {
                 name: "stateHidden"
-                AnchorChanges { target: txtScore; anchors.right: scoreBox.left }
-                AnchorChanges { target: txtLevel; anchors.left: scoreBox.right }
+                AnchorChanges {
+                    target: txtScore
+                    anchors.right: scoreBox.left
+                }
+                AnchorChanges {
+                    target: txtLevel
+                    anchors.left: scoreBox.right
+                }
             }
         ]
 
@@ -287,15 +319,20 @@ Rectangle {
             Transition {
                 from: "stateHidden"
                 to: "stateNormal"
-                AnchorAnimation { duration: 200; easing.type: Easing.Linear }
+                AnchorAnimation {
+                    duration: 200
+                    easing.type: Easing.Linear
+                }
             },
             Transition {
                 from: "stateNormal"
                 to: "stateHidden"
-                AnchorAnimation { duration: 200; easing.type: Easing.Linear }
+                AnchorAnimation {
+                    duration: 200
+                    easing.type: Easing.Linear
+                }
             }
         ]
-
     }
 
     MsgText {
@@ -305,8 +342,8 @@ Rectangle {
     Item {
         id: toolBar
         width: parent.width
-        height: parent.height - scoreBox.height - topGameBoardBorder.height - gameBoard.height
-            - bottomGameBoardBorder.height - pbLevelProgress.height
+        height: parent.height - scoreBox.height - topGameBoardBorder.height
+                - gameBoard.height - bottomGameBoardBorder.height - pbLevelProgress.height
         anchors.top: pbLevelProgress.bottom
         visible: opacity > 0
 
@@ -338,8 +375,8 @@ Rectangle {
             color: "blue"
 
             onClicked: {
-                gameBoard.score = gameBoard.levelCap(gameBoard.level);
-                gameBoard.removeAll();
+                gameBoard.score = gameBoard.levelCap(gameBoard.level)
+                gameBoard.removeAll()
             }
         }
 
@@ -378,34 +415,48 @@ Rectangle {
     Text {
         id: txtAppVersion
         text: g_appVersion
-        font.pointSize: 14*g_scaleFactor
+        font.pointSize: 14 * g_scaleFactor
         font.family: buttonFont.name
         color: "lightgray"
         visible: opacity > 0
-        anchors { bottom: screen.bottom; right: screen.right; margins: 3*g_scaleFactor }
+        anchors {
+            bottom: screen.bottom
+            right: screen.right
+            margins: 3 * g_scaleFactor
+        }
         Behavior on opacity {
-            NumberAnimation { duration: 500 }
+            NumberAnimation {
+                duration: 500
+            }
         }
     }
 
     Image {
         id: gameTitle
-        anchors.topMargin: 30*g_scaleFactor
+        anchors.topMargin: 30 * g_scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
-        width: parent.width*0.9
-        height: 126./346.*width
+        width: parent.width * 0.9
+        height: 126. / 346. * width
         source: ":/pics/titleText.svg"
-        sourceSize { width: gameTitle.width; height: gameTitle.height }
+        sourceSize {
+            width: gameTitle.width
+            height: gameTitle.height
+        }
 
         Image {
             anchors.centerIn: parent
-            width: 50*g_scaleFactor
-            height: 50*g_scaleFactor
+            width: 50 * g_scaleFactor
+            height: 50 * g_scaleFactor
             sourceSize.width: width
             sourceSize.height: height
             visible: gameTitle.y > 0
             source: ":/pics/gems/orangeGem.svg"
-            Shine { anchors { leftMargin: 10*g_scaleFactor; topMargin: 10*g_scaleFactor } }
+            Shine {
+                anchors {
+                    leftMargin: 10 * g_scaleFactor
+                    topMargin: 10 * g_scaleFactor
+                }
+            }
         }
     }
 
@@ -413,7 +464,7 @@ Rectangle {
         id: btnClassic
         caption: "CLASSIC"
         anchors.top: screen.top
-        anchors.margins: gameTitle.height + gameTitle.anchors.topMargin + 40*g_scaleFactor
+        anchors.margins: gameTitle.height + gameTitle.anchors.topMargin + 40 * g_scaleFactor
         color: "steelblue"
         onClicked: screen.state = "stateGame"
     }
@@ -423,7 +474,7 @@ Rectangle {
         enabled: false
         caption: "ENDLESS"
         anchors.top: btnClassic.bottom
-        anchors.margins: 10*g_scaleFactor
+        anchors.margins: 10 * g_scaleFactor
         color: "gray"
     }
 
@@ -432,7 +483,7 @@ Rectangle {
         enabled: false
         caption: "Action"
         anchors.top: btnEndless.bottom
-        anchors.margins: 10*g_scaleFactor
+        anchors.margins: 10 * g_scaleFactor
         color: "gray"
     }
 
@@ -440,7 +491,7 @@ Rectangle {
         id: btnAbout
         caption: "settings"
         anchors.top: btnAction.bottom
-        anchors.margins: 10*g_scaleFactor
+        anchors.margins: 10 * g_scaleFactor
         color: "steelblue"
         onClicked: screen.state = "stateSettings"
     }
@@ -449,56 +500,134 @@ Rectangle {
         State {
             name: "stateMainMenu"
             /* Main menu elements anchors */
-            AnchorChanges { target: gameTitle; anchors.top: screen.top }
-            AnchorChanges { target: btnClassic; anchors.horizontalCenter: screen.horizontalCenter }
-            AnchorChanges { target: btnEndless; anchors.horizontalCenter: screen.horizontalCenter }
-            AnchorChanges { target: btnAction; anchors.horizontalCenter: screen.horizontalCenter }
-            AnchorChanges { target: btnAbout; anchors.horizontalCenter: screen.horizontalCenter }
+            AnchorChanges {
+                target: gameTitle
+                anchors.top: screen.top
+            }
+            AnchorChanges {
+                target: btnClassic
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+            AnchorChanges {
+                target: btnEndless
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+            AnchorChanges {
+                target: btnAction
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+            AnchorChanges {
+                target: btnAbout
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
 
             /* Game elements anchors */
-            AnchorChanges { target: toolBar; anchors.top: screen.bottom }
-            AnchorChanges { target: gameBoard; anchors.left: screen.right }
+            AnchorChanges {
+                target: toolBar
+                anchors.top: screen.bottom
+            }
+            AnchorChanges {
+                target: gameBoard
+                anchors.left: screen.right
+            }
         },
         State {
             name: "stateGame"
             /* Main menu elements anchors */
-            AnchorChanges { target: gameTitle; anchors.bottom: screen.top }
-            AnchorChanges { target: btnClassic; anchors.right: screen.left }
-            AnchorChanges { target: btnEndless; anchors.left: screen.right }
-            AnchorChanges { target: btnAction; anchors.right: screen.left }
-            AnchorChanges { target: btnAbout; anchors.left: screen.right }
+            AnchorChanges {
+                target: gameTitle
+                anchors.bottom: screen.top
+            }
+            AnchorChanges {
+                target: btnClassic
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnEndless
+                anchors.left: screen.right
+            }
+            AnchorChanges {
+                target: btnAction
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnAbout
+                anchors.left: screen.right
+            }
 
             /* Game elements anchors */
-            AnchorChanges { target: toolBar; anchors.top: pbLevelProgress.bottom }
-            AnchorChanges { target: gameBoard; anchors.left: screen.left }
+            AnchorChanges {
+                target: toolBar
+                anchors.top: pbLevelProgress.bottom
+            }
+            AnchorChanges {
+                target: gameBoard
+                anchors.left: screen.left
+            }
         },
         State {
             name: "stateSettings"
             /* Main menu elements anchors */
-            AnchorChanges { target: gameTitle; anchors.bottom: screen.top }
-            AnchorChanges { target: btnClassic; anchors.right: screen.left }
-            AnchorChanges { target: btnEndless; anchors.left: screen.right }
-            AnchorChanges { target: btnAction; anchors.right: screen.left }
-            AnchorChanges { target: btnAbout; anchors.left: screen.right }
+            AnchorChanges {
+                target: gameTitle
+                anchors.bottom: screen.top
+            }
+            AnchorChanges {
+                target: btnClassic
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnEndless
+                anchors.left: screen.right
+            }
+            AnchorChanges {
+                target: btnAction
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnAbout
+                anchors.left: screen.right
+            }
 
             /* Game elements anchors */
-            AnchorChanges { target: toolBar; anchors.top: screen.bottom }
+            AnchorChanges {
+                target: toolBar
+                anchors.top: screen.bottom
+            }
 
             /* Showing Settings and hiding About dialog */
-            PropertyChanges { target: dlgSettings; opacity: 1.0 }
-            PropertyChanges { target: dlgAbout; opacity: 0.0 }
+            PropertyChanges {
+                target: dlgSettings
+                opacity: 1.0
+            }
+            PropertyChanges {
+                target: dlgAbout
+                opacity: 0.0
+            }
         },
         State {
             name: "stateAbout"
             /* Showing About and hiding Settings dialogs */
-            PropertyChanges { target: dlgSettings; opacity: 0.0 }
-            PropertyChanges { target: dlgAbout; opacity: 1.0 }
+            PropertyChanges {
+                target: dlgSettings
+                opacity: 0.0
+            }
+            PropertyChanges {
+                target: dlgAbout
+                opacity: 1.0
+            }
 
             /* Showing info about app version */
-            PropertyChanges { target: txtAppVersion; opacity: 1.0 }
+            PropertyChanges {
+                target: txtAppVersion
+                opacity: 1.0
+            }
 
             /* Game elements anchors */
-            AnchorChanges { target: toolBar; anchors.top: screen.bottom }
+            AnchorChanges {
+                target: toolBar
+                anchors.top: screen.bottom
+            }
         }
     ]
 
@@ -508,56 +637,83 @@ Rectangle {
             to: "stateGame"
             SequentialAnimation {
                 AnchorAnimation {
-                    targets: [
-                        gameTitle,
-                        btnClassic,
-                        btnEndless,
-                        btnAction,
-                        btnAbout
-                    ]
-                    duration: 500;
+                    targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                    duration: 500
                     easing.type: Easing.InOutQuad
                 }
 
                 ScriptAction {
                     script: {
-                        setBackgroundSource();
+                        setBackgroundSource()
                         if (gameBoard.hasSave()) {
-                            dlgLoadSave.show();
+                            dlgLoadSave.show()
                         } else {
-                            gameBoard.newGame();
+                            gameBoard.newGame()
                         }
                     }
                 }
 
-                ScriptAction { script: txtAppVersion.opacity = 0.0 }
-                PropertyAction { target: bgrMainMenu; property: "visible"; value: false }
-                PropertyAction { target: gameBoard; property: "opacity"; value: 1.0 }
+                ScriptAction {
+                    script: txtAppVersion.opacity = 0.0
+                }
+                PropertyAction {
+                    target: bgrMainMenu
+                    property: "visible"
+                    value: false
+                }
+                PropertyAction {
+                    target: gameBoard
+                    property: "opacity"
+                    value: 1.0
+                }
                 AnchorAnimation {
-                    duration: 500;
-                    targets: gameBoard;
+                    duration: 500
+                    targets: gameBoard
                 }
 
                 ParallelAnimation {
-                    PropertyAction { target: scoreBox; property: "state"; value: "stateNormal" }
-                    AnchorAnimation { targets: toolBar; duration: 200 }
+                    PropertyAction {
+                        target: scoreBox
+                        property: "state"
+                        value: "stateNormal"
+                    }
+                    AnchorAnimation {
+                        targets: toolBar
+                        duration: 200
+                    }
                 }
             }
         },
         Transition {
             from: "stateMainMenu"
             to: "stateSettings"
-            AnchorAnimation { duration: 500; easing.type: Easing.InOutQuad }
-            PropertyAction { target: scoreBox; property: "state"; value: "stateHidden" }
-            ScriptAction { script: txtAppVersion.opacity = 0.0 }
+            AnchorAnimation {
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+            PropertyAction {
+                target: scoreBox
+                property: "state"
+                value: "stateHidden"
+            }
+            ScriptAction {
+                script: txtAppVersion.opacity = 0.0
+            }
         },
         Transition {
             from: "stateSettings"
             to: "stateMainMenu"
             SequentialAnimation {
-                ScriptAction { script: dlgSettings.opacity = 0.0 }
-                ScriptAction { script: txtAppVersion.opacity = 1.0 }
-                AnchorAnimation { duration: 500; easing.type: Easing.InOutQuad }
+                ScriptAction {
+                    script: dlgSettings.opacity = 0.0
+                }
+                ScriptAction {
+                    script: txtAppVersion.opacity = 1.0
+                }
+                AnchorAnimation {
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
             }
         },
         Transition {
@@ -567,34 +723,44 @@ Rectangle {
                 ScriptAction {
                     script: {
                         if (!gameBoard.gameLost)
-                            gameBoard.saveBoardStateToFile();
+                            gameBoard.saveBoardStateToFile()
                     }
                 }
-                ScriptAction { script: txtAppVersion.opacity = 1.0 }
-                PropertyAction { target: gameBoard; property: "opacity"; value: 0.0 }
-                PropertyAction { target: scoreBox; property: "state"; value: "stateHidden" }
-                AnchorAnimation { targets: toolBar; duration: 400; }
-                PropertyAction { target: bgrMainMenu; property: "visible"; value: true }
+                ScriptAction {
+                    script: txtAppVersion.opacity = 1.0
+                }
+                PropertyAction {
+                    target: gameBoard
+                    property: "opacity"
+                    value: 0.0
+                }
+                PropertyAction {
+                    target: scoreBox
+                    property: "state"
+                    value: "stateHidden"
+                }
                 AnchorAnimation {
-                    targets: [
-                        gameTitle,
-                        btnClassic,
-                        btnEndless,
-                        btnAction,
-                        btnAbout
-                    ]
-                    duration: 500;
+                    targets: toolBar
+                    duration: 400
+                }
+                PropertyAction {
+                    target: bgrMainMenu
+                    property: "visible"
+                    value: true
+                }
+                AnchorAnimation {
+                    targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                    duration: 500
                     easing.type: Easing.InOutQuad
                 }
-//                ScriptAction {
-//                    script: {
-//                        gameBoard.clearBoard();
-//                        pbLevelProgress.minimum = 0;
-//                        pbLevelProgress.maximum = gameBoard.levelCap(1);
-//                    }
-//                }
+                //                ScriptAction {
+                //                    script: {
+                //                        gameBoard.clearBoard();
+                //                        pbLevelProgress.minimum = 0;
+                //                        pbLevelProgress.maximum = gameBoard.levelCap(1);
+                //                    }
+                //                }
             }
         }
     ]
-
 }
