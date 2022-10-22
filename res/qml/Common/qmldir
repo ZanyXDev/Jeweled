@@ -1,0 +1,4 @@
+module Common
+MyDebugRect 1.0 mydebugrect.qml
+Toast 1.0 toast.qml
+
