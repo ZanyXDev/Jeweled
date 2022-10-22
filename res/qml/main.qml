@@ -6,13 +6,323 @@ import QtQuick.Layouts 1.15
 //import com.mycompany.gemcell 1.0
 Rectangle {
     id: screen
+    // ----- Property Declarations
+    // Required properties should be at the top.
+    property double g_scaleFactor: gameBoard.cellSize / 40
+    // ----- Signal declarations
 
+    // ----- In this section, we group the size and position information together.
     width: 8 * gameBoard.cellSize
     height: 12 * gameBoard.cellSize
-    property double g_scaleFactor: gameBoard.cellSize / 40
-    state: "stateMainMenu"
-    z: -10
+    // ----- Then comes the other properties. There's no predefined order to these.
 
+    // Do not use empty lines to separate the assignments. Empty lines are reserved
+    // for separating type declarations.
+    z: -10
+    // ----- Then attached properties and attached signal handlers.
+
+    // ----- States and transitions.
+    state: "stateMainMenu"
+
+    states: [
+        State {
+            name: "stateMainMenu"
+            /* Main menu elements anchors */
+            AnchorChanges {
+                target: gameTitle
+                anchors.top: screen.top
+            }
+            AnchorChanges {
+                target: btnClassic
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+            AnchorChanges {
+                target: btnEndless
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+            AnchorChanges {
+                target: btnAction
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+            AnchorChanges {
+                target: btnAbout
+                anchors.horizontalCenter: screen.horizontalCenter
+            }
+
+            /* Game elements anchors */
+            AnchorChanges {
+                target: toolBar
+                anchors.top: screen.bottom
+            }
+            AnchorChanges {
+                target: gameBoard
+                anchors.left: screen.right
+            }
+        },
+        State {
+            name: "stateGame"
+            /* Main menu elements anchors */
+            AnchorChanges {
+                target: gameTitle
+                anchors.bottom: screen.top
+            }
+            AnchorChanges {
+                target: btnClassic
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnEndless
+                anchors.left: screen.right
+            }
+            AnchorChanges {
+                target: btnAction
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnAbout
+                anchors.left: screen.right
+            }
+
+            /* Game elements anchors */
+            AnchorChanges {
+                target: toolBar
+                anchors.top: pbLevelProgress.bottom
+            }
+            AnchorChanges {
+                target: gameBoard
+                anchors.left: screen.left
+            }
+        },
+        State {
+            name: "stateSettings"
+            /* Main menu elements anchors */
+            AnchorChanges {
+                target: gameTitle
+                anchors.bottom: screen.top
+            }
+            AnchorChanges {
+                target: btnClassic
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnEndless
+                anchors.left: screen.right
+            }
+            AnchorChanges {
+                target: btnAction
+                anchors.right: screen.left
+            }
+            AnchorChanges {
+                target: btnAbout
+                anchors.left: screen.right
+            }
+
+            /* Game elements anchors */
+            AnchorChanges {
+                target: toolBar
+                anchors.top: screen.bottom
+            }
+
+            /* Showing Settings and hiding About dialog */
+            PropertyChanges {
+                target: dlgSettings
+                opacity: 1.0
+            }
+            PropertyChanges {
+                target: dlgAbout
+                opacity: 0.0
+            }
+        },
+        State {
+            name: "stateAbout"
+            /* Showing About and hiding Settings dialogs */
+            PropertyChanges {
+                target: dlgSettings
+                opacity: 0.0
+            }
+            PropertyChanges {
+                target: dlgAbout
+                opacity: 1.0
+            }
+
+            /* Showing info about app version */
+            PropertyChanges {
+                target: txtAppVersion
+                opacity: 1.0
+            }
+
+            /* Game elements anchors */
+            AnchorChanges {
+                target: toolBar
+                anchors.top: screen.bottom
+            }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            from: "stateMainMenu"
+            to: "stateGame"
+            SequentialAnimation {
+                AnchorAnimation {
+                    targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
+
+                ScriptAction {
+                    script: {
+                        setBackgroundSource()
+                        if (gameBoard.hasSave()) {
+                            dlgLoadSave.show()
+                        } else {
+                            gameBoard.newGame()
+                        }
+                    }
+                }
+
+                ScriptAction {
+                    script: txtAppVersion.opacity = 0.0
+                }
+                PropertyAction {
+                    target: bgrMainMenu
+                    property: "visible"
+                    value: false
+                }
+                PropertyAction {
+                    target: gameBoard
+                    property: "opacity"
+                    value: 1.0
+                }
+                AnchorAnimation {
+                    duration: 500
+                    targets: gameBoard
+                }
+
+                ParallelAnimation {
+                    PropertyAction {
+                        target: scoreBox
+                        property: "state"
+                        value: "stateNormal"
+                    }
+                    AnchorAnimation {
+                        targets: toolBar
+                        duration: 200
+                    }
+                }
+            }
+        },
+        Transition {
+            from: "stateMainMenu"
+            to: "stateSettings"
+            AnchorAnimation {
+                duration: 500
+                easing.type: Easing.InOutQuad
+            }
+            PropertyAction {
+                target: scoreBox
+                property: "state"
+                value: "stateHidden"
+            }
+            ScriptAction {
+                script: txtAppVersion.opacity = 0.0
+            }
+        },
+        Transition {
+            from: "stateSettings"
+            to: "stateMainMenu"
+            SequentialAnimation {
+                ScriptAction {
+                    script: dlgSettings.opacity = 0.0
+                }
+                ScriptAction {
+                    script: txtAppVersion.opacity = 1.0
+                }
+                AnchorAnimation {
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
+            }
+        },
+        Transition {
+            from: "stateGame"
+            to: "stateMainMenu"
+            SequentialAnimation {
+                ScriptAction {
+                    script: {
+                        if (!gameBoard.gameLost)
+                            gameBoard.saveBoardStateToFile()
+                    }
+                }
+                ScriptAction {
+                    script: txtAppVersion.opacity = 1.0
+                }
+                PropertyAction {
+                    target: gameBoard
+                    property: "opacity"
+                    value: 0.0
+                }
+                PropertyAction {
+                    target: scoreBox
+                    property: "state"
+                    value: "stateHidden"
+                }
+                AnchorAnimation {
+                    targets: toolBar
+                    duration: 400
+                }
+                PropertyAction {
+                    target: bgrMainMenu
+                    property: "visible"
+                    value: true
+                }
+                AnchorAnimation {
+                    targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
+                //                ScriptAction {
+                //                    script: {
+                //                        gameBoard.clearBoard();
+                //                        pbLevelProgress.minimum = 0;
+                //                        pbLevelProgress.maximum = gameBoard.levelCap(1);
+                //                    }
+                //                }
+            }
+        }
+    ]
+
+    // ----- Signal handlers
+    // Always use curly braces.
+
+    // onCompleted and onDestruction signal handlers are always the last in
+    // the order.
+    Component.onCompleted: {
+
+    }
+    Component.onDestruction: {
+
+    }
+
+    // ----- Visual children.
+    // ----- Qt provided non-visual children
+    SystemPalette {
+        id: activePalette
+    }
+
+    FontLoader {
+        id: gameFont
+        source: "qrc:/res/fonts/mailrays.ttf"
+    }
+
+    FontLoader {
+        id: buttonFont
+        source: "qrc:/res/fonts/pirulen.ttf"
+    }
+
+    // ----- Custom non-visual children
+
+    // ----- JavaScript functions
     function setBackgroundSource() {
         var source = generateBackgroundFileName()
         while (source === background.source) {
@@ -27,19 +337,6 @@ Rectangle {
             bgrStr = "0" + bgrStr
         }
         return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
-    }
-
-    SystemPalette {
-        id: activePalette
-    }
-
-    FontLoader {
-        id: gameFont
-        source: "qrc:/res/fonts/mailrays.ttf"
-    }
-    FontLoader {
-        id: buttonFont
-        source: "qrc:/res/fonts/pirulen.ttf"
     }
 
     Image {
@@ -495,272 +792,4 @@ Rectangle {
         color: "steelblue"
         onClicked: screen.state = "stateSettings"
     }
-
-    states: [
-        State {
-            name: "stateMainMenu"
-            /* Main menu elements anchors */
-            AnchorChanges {
-                target: gameTitle
-                anchors.top: screen.top
-            }
-            AnchorChanges {
-                target: btnClassic
-                anchors.horizontalCenter: screen.horizontalCenter
-            }
-            AnchorChanges {
-                target: btnEndless
-                anchors.horizontalCenter: screen.horizontalCenter
-            }
-            AnchorChanges {
-                target: btnAction
-                anchors.horizontalCenter: screen.horizontalCenter
-            }
-            AnchorChanges {
-                target: btnAbout
-                anchors.horizontalCenter: screen.horizontalCenter
-            }
-
-            /* Game elements anchors */
-            AnchorChanges {
-                target: toolBar
-                anchors.top: screen.bottom
-            }
-            AnchorChanges {
-                target: gameBoard
-                anchors.left: screen.right
-            }
-        },
-        State {
-            name: "stateGame"
-            /* Main menu elements anchors */
-            AnchorChanges {
-                target: gameTitle
-                anchors.bottom: screen.top
-            }
-            AnchorChanges {
-                target: btnClassic
-                anchors.right: screen.left
-            }
-            AnchorChanges {
-                target: btnEndless
-                anchors.left: screen.right
-            }
-            AnchorChanges {
-                target: btnAction
-                anchors.right: screen.left
-            }
-            AnchorChanges {
-                target: btnAbout
-                anchors.left: screen.right
-            }
-
-            /* Game elements anchors */
-            AnchorChanges {
-                target: toolBar
-                anchors.top: pbLevelProgress.bottom
-            }
-            AnchorChanges {
-                target: gameBoard
-                anchors.left: screen.left
-            }
-        },
-        State {
-            name: "stateSettings"
-            /* Main menu elements anchors */
-            AnchorChanges {
-                target: gameTitle
-                anchors.bottom: screen.top
-            }
-            AnchorChanges {
-                target: btnClassic
-                anchors.right: screen.left
-            }
-            AnchorChanges {
-                target: btnEndless
-                anchors.left: screen.right
-            }
-            AnchorChanges {
-                target: btnAction
-                anchors.right: screen.left
-            }
-            AnchorChanges {
-                target: btnAbout
-                anchors.left: screen.right
-            }
-
-            /* Game elements anchors */
-            AnchorChanges {
-                target: toolBar
-                anchors.top: screen.bottom
-            }
-
-            /* Showing Settings and hiding About dialog */
-            PropertyChanges {
-                target: dlgSettings
-                opacity: 1.0
-            }
-            PropertyChanges {
-                target: dlgAbout
-                opacity: 0.0
-            }
-        },
-        State {
-            name: "stateAbout"
-            /* Showing About and hiding Settings dialogs */
-            PropertyChanges {
-                target: dlgSettings
-                opacity: 0.0
-            }
-            PropertyChanges {
-                target: dlgAbout
-                opacity: 1.0
-            }
-
-            /* Showing info about app version */
-            PropertyChanges {
-                target: txtAppVersion
-                opacity: 1.0
-            }
-
-            /* Game elements anchors */
-            AnchorChanges {
-                target: toolBar
-                anchors.top: screen.bottom
-            }
-        }
-    ]
-
-    transitions: [
-        Transition {
-            from: "stateMainMenu"
-            to: "stateGame"
-            SequentialAnimation {
-                AnchorAnimation {
-                    targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
-                    duration: 500
-                    easing.type: Easing.InOutQuad
-                }
-
-                ScriptAction {
-                    script: {
-                        setBackgroundSource()
-                        if (gameBoard.hasSave()) {
-                            dlgLoadSave.show()
-                        } else {
-                            gameBoard.newGame()
-                        }
-                    }
-                }
-
-                ScriptAction {
-                    script: txtAppVersion.opacity = 0.0
-                }
-                PropertyAction {
-                    target: bgrMainMenu
-                    property: "visible"
-                    value: false
-                }
-                PropertyAction {
-                    target: gameBoard
-                    property: "opacity"
-                    value: 1.0
-                }
-                AnchorAnimation {
-                    duration: 500
-                    targets: gameBoard
-                }
-
-                ParallelAnimation {
-                    PropertyAction {
-                        target: scoreBox
-                        property: "state"
-                        value: "stateNormal"
-                    }
-                    AnchorAnimation {
-                        targets: toolBar
-                        duration: 200
-                    }
-                }
-            }
-        },
-        Transition {
-            from: "stateMainMenu"
-            to: "stateSettings"
-            AnchorAnimation {
-                duration: 500
-                easing.type: Easing.InOutQuad
-            }
-            PropertyAction {
-                target: scoreBox
-                property: "state"
-                value: "stateHidden"
-            }
-            ScriptAction {
-                script: txtAppVersion.opacity = 0.0
-            }
-        },
-        Transition {
-            from: "stateSettings"
-            to: "stateMainMenu"
-            SequentialAnimation {
-                ScriptAction {
-                    script: dlgSettings.opacity = 0.0
-                }
-                ScriptAction {
-                    script: txtAppVersion.opacity = 1.0
-                }
-                AnchorAnimation {
-                    duration: 500
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        },
-        Transition {
-            from: "stateGame"
-            to: "stateMainMenu"
-            SequentialAnimation {
-                ScriptAction {
-                    script: {
-                        if (!gameBoard.gameLost)
-                            gameBoard.saveBoardStateToFile()
-                    }
-                }
-                ScriptAction {
-                    script: txtAppVersion.opacity = 1.0
-                }
-                PropertyAction {
-                    target: gameBoard
-                    property: "opacity"
-                    value: 0.0
-                }
-                PropertyAction {
-                    target: scoreBox
-                    property: "state"
-                    value: "stateHidden"
-                }
-                AnchorAnimation {
-                    targets: toolBar
-                    duration: 400
-                }
-                PropertyAction {
-                    target: bgrMainMenu
-                    property: "visible"
-                    value: true
-                }
-                AnchorAnimation {
-                    targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
-                    duration: 500
-                    easing.type: Easing.InOutQuad
-                }
-                //                ScriptAction {
-                //                    script: {
-                //                        gameBoard.clearBoard();
-                //                        pbLevelProgress.minimum = 0;
-                //                        pbLevelProgress.maximum = gameBoard.levelCap(1);
-                //                    }
-                //                }
-            }
-        }
-    ]
 }
