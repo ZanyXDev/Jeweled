@@ -35,7 +35,8 @@ SOURCES += \
 RESOURCES += \
      qml.qrc \
      fonts.qrc \
-     images.qrc
+     backgrounds.qrc
+#     images.qrc
 
 #TRANSLATIONS += \
 #    G2_ru_RU.ts
