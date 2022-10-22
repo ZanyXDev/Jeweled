@@ -5,6 +5,8 @@
         <file>res/qml/Common/qmldir</file>
         <file>res/qml/Common/mydebugrect.qml</file>
         <file>res/qml/Common/toast.qml</file>
+        <file>res/qml/Dialogs/aboutdialog.qml</file>
+        <file>res/qml/Dialogs/qmldir</file>
         <file>res/qml/Theme/theme.qml</file>
         <file>res/qml/Theme/qmldir</file>
     </qresource>

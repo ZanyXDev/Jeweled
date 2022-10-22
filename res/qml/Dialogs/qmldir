@@ -1,0 +1,3 @@
+module Dialogs
+AboutDialog 1.0 aboutdialog.qml
+
