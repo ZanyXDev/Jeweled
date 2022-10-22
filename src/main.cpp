@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     // create folder AppConfigLocation
     createAppConfigFolder();
 
-    AppCore appCore;    // Create the application core with signals and slots
+    //AppCore appCore;    // Create the application core with signals and slots
 
     QTranslator myappTranslator;
     myappTranslator.load(QLocale(), QLatin1String("Jeweled"), QLatin1String("_"),
