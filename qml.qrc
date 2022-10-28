@@ -10,5 +10,6 @@
         <file>res/qml/Theme/theme.qml</file>
         <file>res/qml/Theme/qmldir</file>
         <file>res/qml/Common/scorebox.qml</file>
+        <file>res/qml/Common/gameboard.qml</file>
     </qresource>
 </RCC>
