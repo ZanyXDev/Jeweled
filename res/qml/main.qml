@@ -98,7 +98,6 @@ QQC2.ApplicationWindow {
         // ----- Property Declarations
         // Required properties should be at the top.
         property int cellSize: 80
-        property double g_scaleFactor: cellSize / 40
         // ----- Signal declarations
 
         // ----- In this section, we group the size and position information together.
@@ -424,7 +423,7 @@ QQC2.ApplicationWindow {
         //        color: "white"
         //        opacity: 0.5
         //        anchors.top: scoreBox.bottom
-        //        height: 5 * g_scaleFactor
+        //        height: 5 * DevicePixelRatio
         //        width: parent.width
         //    }
 
@@ -434,7 +433,7 @@ QQC2.ApplicationWindow {
         //        color: "white"
         //        opacity: 0.5
         //        anchors.top: gameBoard.bottom
-        //        height: 5 * g_scaleFactor
+        //        height: 5 * DevicePixelRatio
         //        width: parent.width
         //    }
 
@@ -524,7 +523,7 @@ QQC2.ApplicationWindow {
 
         //        onNoMoreMoves: {
         //            msgText.text = "NO MORE MOVES"
-        //            msgText.font.pointSize = 30 * g_scaleFactor
+        //            msgText.font.pointSize = 30 * DevicePixelRatio
         //            msgText.show()
         //            dlgEndGame.show()
         //        }
@@ -534,7 +533,7 @@ QQC2.ApplicationWindow {
             ScriptAction {
                 script: {
                     msgText.text = "LEVEL UP!"
-                    msgText.font.pointSize = 38 * g_scaleFactor
+                    msgText.font.pointSize = 38 * DevicePixelRatio
                     msgText.show()
                     gameBoard.dropGemsDown()
                 }
@@ -545,7 +544,7 @@ QQC2.ApplicationWindow {
             ScriptAction {
                 script: {
                     msgText.text = "LEVEL " + gameBoard.level
-                    msgText.font.pointSize = 38 * g_scaleFactor
+                    msgText.font.pointSize = 38 * DevicePixelRatio
                     msgText.show()
                     pbLevelProgress.minimum = gameBoard.levelCap(
                                 gameBoard.level - 1)
@@ -584,7 +583,7 @@ QQC2.ApplicationWindow {
         //        anchors.top: bottomGameBoardBorder.bottom
         //        color: "white"
         //        secondColor: "green"
-        //        height: 20 * g_scaleFactor
+        //        height: 20 * DevicePixelRatio
         //        maximum: gameBoard.levelCap(gameBoard.level)
         //        value: gameBoard.score
         //    }
@@ -593,7 +592,7 @@ QQC2.ApplicationWindow {
         //        id: scoreBox
 
         //        width: parent.width
-        //        height: 60 * g_scaleFactor /* cellSize*1.5, actually */
+        //        height: 60 * DevicePixelRatio /* cellSize*1.5, actually */
         //        state: "stateHidden"
 
         //        anchors.top: parent.top
@@ -602,24 +601,24 @@ QQC2.ApplicationWindow {
         //            id: txtScore
         //            color: "white"
         //            font.family: gameFont.name
-        //            font.pointSize: 16 * g_scaleFactor
+        //            font.pointSize: 16 * DevicePixelRatio
         //            font.bold: true
         //            text: gameBoard.score
         //            anchors.bottom: parent.bottom
-        //            anchors.leftMargin: 10 * g_scaleFactor
-        //            anchors.bottomMargin: 5 * g_scaleFactor
+        //            anchors.leftMargin: 10 * DevicePixelRatio
+        //            anchors.bottomMargin: 5 * DevicePixelRatio
         //        }
 
         //        Text {
         //            id: txtLevel
         //            color: "white"
         //            font.family: gameFont.name
-        //            font.pointSize: 16 * g_scaleFactor
+        //            font.pointSize: 16 * DevicePixelRatio
         //            font.bold: true
         //            text: "Level " + gameBoard.level + " "
         //            anchors.bottom: parent.bottom
-        //            anchors.rightMargin: 10 * g_scaleFactor
-        //            anchors.bottomMargin: 5 * g_scaleFactor
+        //            anchors.rightMargin: 10 * DevicePixelRatio
+        //            anchors.bottomMargin: 5 * DevicePixelRatio
         //        }
 
         //        states: [
@@ -746,7 +745,7 @@ QQC2.ApplicationWindow {
 
         //    Image {
         //        id: gameTitle
-        //        anchors.topMargin: 30 * g_scaleFactor
+        //        anchors.topMargin: 30 * DevicePixelRatio
         //        anchors.horizontalCenter: parent.horizontalCenter
         //        width: parent.width * 0.9
         //        height: 126. / 346. * width
@@ -758,16 +757,16 @@ QQC2.ApplicationWindow {
 
         //        Image {
         //            anchors.centerIn: parent
-        //            width: 50 * g_scaleFactor
-        //            height: 50 * g_scaleFactor
+        //            width: 50 * DevicePixelRatio
+        //            height: 50 * DevicePixelRatio
         //            sourceSize.width: width
         //            sourceSize.height: height
         //            visible: gameTitle.y > 0
         //            source: ":/pics/gems/orangeGem.svg"
         //            Shine {
         //                anchors {
-        //                    leftMargin: 10 * g_scaleFactor
-        //                    topMargin: 10 * g_scaleFactor
+        //                    leftMargin: 10 * DevicePixelRatio
+        //                    topMargin: 10 * DevicePixelRatio
         //                }
         //            }
         //        }
@@ -777,7 +776,7 @@ QQC2.ApplicationWindow {
         //        id: btnClassic
         //        caption: "CLASSIC"
         //        anchors.top: screen.top
-        //        anchors.margins: gameTitle.height + gameTitle.anchors.topMargin + 40 * g_scaleFactor
+        //        anchors.margins: gameTitle.height + gameTitle.anchors.topMargin + 40 * DevicePixelRatio
         //        color: "steelblue"
         //        onClicked: screen.state = "stateGame"
         //    }
@@ -787,7 +786,7 @@ QQC2.ApplicationWindow {
         //        enabled: false
         //        caption: "ENDLESS"
         //        anchors.top: btnClassic.bottom
-        //        anchors.margins: 10 * g_scaleFactor
+        //        anchors.margins: 10 * DevicePixelRatio
         //        color: "gray"
         //    }
 
@@ -796,7 +795,7 @@ QQC2.ApplicationWindow {
         //        enabled: false
         //        caption: "Action"
         //        anchors.top: btnEndless.bottom
-        //        anchors.margins: 10 * g_scaleFactor
+        //        anchors.margins: 10 * DevicePixelRatio
         //        color: "gray"
         //    }
 
@@ -804,7 +803,7 @@ QQC2.ApplicationWindow {
         //        id: btnAbout
         //        caption: "settings"
         //        anchors.top: btnAction.bottom
-        //        anchors.margins: 10 * g_scaleFactor
+        //        anchors.margins: 10 * DevicePixelRatio
         //        color: "steelblue"
         //        onClicked: screen.state = "stateSettings"
         //    }
