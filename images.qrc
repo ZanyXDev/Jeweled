@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/images/field.svg</file>
+        <file>res/images/selectionBorder.png</file>
+        <file>res/images/titleText.svg</file>
+        <file>res/images/hintArrow.svg</file>
+    </qresource>
+</RCC>
