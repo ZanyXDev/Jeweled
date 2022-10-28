@@ -417,25 +417,6 @@ QQC2.ApplicationWindow {
         //        onBackPressed: screen.state = "stateMainMenu"
         //        onAboutPressed: screen.state = "stateAbout"
         //    }
-        //    Rectangle {
-        //        id: topGameBoardBorder
-        //        visible: screen.state == "stateGame"
-        //        color: "white"
-        //        opacity: 0.5
-        //        anchors.top: scoreBox.bottom
-        //        height: 5 * DevicePixelRatio
-        //        width: parent.width
-        //    }
-
-        //    Rectangle {
-        //        id: bottomGameBoardBorder
-        //        visible: screen.state == "stateGame"
-        //        color: "white"
-        //        opacity: 0.5
-        //        anchors.top: gameBoard.bottom
-        //        height: 5 * DevicePixelRatio
-        //        width: parent.width
-        //    }
 
         //    GameBoard {
         //        id: gameBoard
@@ -827,6 +808,27 @@ QQC2.ApplicationWindow {
             }
         }
     }
+
+    Rectangle {
+        id: topGameBoardBorder
+        visible: screen.state == "stateGame"
+        color: "white"
+        opacity: 0.5
+        anchors.top: scoreBox.bottom
+        height: 5 * DevicePixelRatio
+        width: parent.width
+    }
+
+    Rectangle {
+        id: bottomGameBoardBorder
+        visible: screen.state == "stateGame"
+        color: "white"
+        opacity: 0.5
+        anchors.top: gameBoard.bottom
+        height: 5 * DevicePixelRatio
+        width: parent.width
+    }
+
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction
