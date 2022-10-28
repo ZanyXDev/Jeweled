@@ -744,25 +744,6 @@ QQC2.ApplicationWindow {
         //        }
         //    }
 
-        //    Text {
-        //        id: txtAppVersion
-        //        text: g_appVersion
-        //        font.pointSize: 14 * g_scaleFactor
-        //        font.family: buttonFont.name
-        //        color: "lightgray"
-        //        visible: opacity > 0
-        //        anchors {
-        //            bottom: screen.bottom
-        //            right: screen.right
-        //            margins: 3 * g_scaleFactor
-        //        }
-        //        Behavior on opacity {
-        //            NumberAnimation {
-        //                duration: 500
-        //            }
-        //        }
-        //    }
-
         //    Image {
         //        id: gameTitle
         //        anchors.topMargin: 30 * g_scaleFactor
@@ -829,6 +810,24 @@ QQC2.ApplicationWindow {
         //    }
     }
 
+    Text {
+        id: txtAppVersion
+        text: g_appVersion
+        font.pointSize: 14 * DevicePixelRatio
+        font.family: buttonFont.name
+        color: "lightgray"
+        visible: opacity > 0
+        anchors {
+            bottom: screen.bottom
+            right: screen.right
+            margins: 3 * DevicePixelRatio
+        }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 500
+            }
+        }
+    }
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction

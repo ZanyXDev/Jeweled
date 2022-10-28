@@ -24,8 +24,6 @@
 #include <QDirIterator>
 #endif
 
-#include "appcore.h"
-
 void createAppConfigFolder()
 {
     QDir dirConfig(
@@ -61,10 +59,10 @@ int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+    QString g_appVersion = QString("%1.%2").arg(VERSION).arg(GIT_HASH);
     QCoreApplication::setOrganizationName("ZanyXDev");
     QCoreApplication::setApplicationName("Jeweled");
-    QCoreApplication::setApplicationVersion(
-                QString("%1.%2").arg(VERSION).arg(GIT_HASH));
+    QCoreApplication::setApplicationVersion( g_appVersion );
 
     ///TODO usage QVersionNumber version(1, 2, 3);
 
@@ -167,6 +165,7 @@ int main(int argc, char *argv[]) {
     context->setContextProperty("DevicePixelRatio", scale);
     context->setContextProperty("isMobile",isMobile);
     context->setContextProperty("font_families",getAppFont() );
+    context->setContextProperty("g_appVersion",g_appVersion);
 #ifdef QT_DEBUG
     context->setContextProperty("isDebugMode",true );
 #endif
