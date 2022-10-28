@@ -78,21 +78,6 @@ QQC2.ApplicationWindow {
         source: "qrc:/res/images/backgrounds/bgr00.jpg"
     }
 
-    AboutDialog {
-        id: dlgAbout
-        visible: opacity > 0
-        opacity: 0.0
-        MouseArea {
-            anchors.fill: parent
-            onClicked: screen.state = "stateSettings"
-        }
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 500
-            }
-        }
-    }
-
     Rectangle {
         id: screen
         // ----- Property Declarations
@@ -395,6 +380,153 @@ QQC2.ApplicationWindow {
         }
 
         // ----- Visual children.
+        AboutDialog {
+            id: dlgAbout
+            visible: opacity > 0
+            opacity: 0.0
+            MouseArea {
+                anchors.fill: parent
+                onClicked: screen.state = "stateSettings"
+            }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 500
+                }
+            }
+        }
+
+        Text {
+            id: txtAppVersion
+            text: g_appVersion
+            font.pointSize: 14 * DevicePixelRatio
+            font.family: buttonFont.name
+            color: "lightgray"
+            visible: opacity > 0
+            anchors {
+                bottom: screen.bottom
+                right: screen.right
+                margins: 3 * DevicePixelRatio
+            }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 500
+                }
+            }
+        }
+
+        ScoreBox {
+            id: scoreBox
+        }
+
+        Rectangle {
+            id: topGameBoardBorder
+            visible: screen.state == "stateGame"
+            color: "white"
+            opacity: 0.5
+            anchors.top: scoreBox.bottom
+            height: 5 * DevicePixelRatio
+            width: parent.width
+        }
+
+        GameBoard {
+            id: gameBoard
+            width: 8 * gameBoard.cellSize
+            height: 8 * gameBoard.cellSize
+            anchors.top: topGameBoardBorder.bottom
+            visible: true //opacity > 0
+            opacity: 0
+
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: gameBoard.handleClick(mouse.x, mouse.y)
+            }
+
+            Image {
+                id: gbBackground
+                source: "qrc:/res/images/field.svg"
+                anchors.fill: parent
+                sourceSize.width: gbBackground.width
+                sourceSize.height: gbBackground.height
+            }
+
+            Item {
+                id: selectionRect
+                width: gameBoard.cellSize
+                height: gameBoard.cellSize
+                visible: gameBoard.gemSelected
+                x: gameBoard.selGemColumn * width
+                y: gameBoard.selGemRow * width
+
+                Image {
+                    anchors.fill: parent
+                    source: "qrc:/res/images/selectionBorder.png"
+                    opacity: 0.8
+                    fillMode: Image.PreserveAspectCrop
+                }
+            }
+
+            Image {
+                id: hintImage
+                source: "qrc:/res/images/hintArrow.svg"
+                x: gameBoard.hintX
+                y: gameBoard.hintY - height / 4
+                width: gameBoard.cellSize
+                height: gameBoard.cellSize / 2
+                sourceSize.width: width
+                sourceSize.height: height
+
+                visible: gameBoard.hintVisible
+                z: 5
+                ParallelAnimation {
+                    running: hintImage.visible
+                    SequentialAnimation {
+                        loops: Animation.Infinite
+                        PropertyAnimation {
+                            target: hintImage
+                            property: "y"
+                            to: gameBoard.hintY - 3 * hintImage.height / 4
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                        PropertyAnimation {
+                            target: hintImage
+                            property: "y"
+                            to: gameBoard.hintY - hintImage.height / 4
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
+                    SequentialAnimation {
+                        PauseAnimation {
+                            duration: 3000
+                        }
+                        ScriptAction {
+                            script: gameBoard.hintVisible = false
+                        }
+                    }
+                }
+            }
+
+            //onLevelUp: levelUpAnimation.start()
+
+            //            onNoMoreMoves: {
+            //                msgText.text = "NO MORE MOVES"
+            //                msgText.font.pointSize = 30 * DevicePixelRatio
+            //                msgText.show()
+            //                dlgEndGame.show()
+            //            }
+        }
+
+        Rectangle {
+            id: bottomGameBoardBorder
+            visible: screen.state == "stateGame"
+            color: "white"
+            opacity: 0.5
+            anchors.top: gameBoard.bottom
+            height: 5 * DevicePixelRatio
+            width: parent.width
+        }
 
         // ----- Qt provided non-visual children
         SystemPalette {
@@ -417,106 +549,15 @@ QQC2.ApplicationWindow {
         //        onBackPressed: screen.state = "stateMainMenu"
         //        onAboutPressed: screen.state = "stateAbout"
         //    }
-
-        //    GameBoard {
-        //        id: gameBoard
-        //        width: 8 * gameBoard.cellSize
-        //        height: 8 * gameBoard.cellSize
-        //        anchors.top: topGameBoardBorder.bottom
-        //        visible: opacity > 0
-        //        opacity: 0
-        //        property int hintX: 0
-        //        property int hintY: 0
-        //        property bool hintVisible: false
-
-        //        MouseArea {
-        //            anchors.fill: parent
-        //            onClicked: gameBoard.handleClick(mouse.x, mouse.y)
-        //        }
-
-        //        Image {
-        //            id: gbBackground
-        //            source: ":/pics/field.svg"
-        //            anchors.fill: parent
-        //            sourceSize.width: gbBackground.width
-        //            sourceSize.height: gbBackground.height
-        //        }
-
-        //        Item {
-        //            id: selectionRect
-        //            width: gameBoard.cellSize
-        //            height: gameBoard.cellSize
-        //            visible: gameBoard.gemSelected
-        //            x: gameBoard.selGemColumn * width
-        //            y: gameBoard.selGemRow * width
-
-        //            Image {
-        //                anchors.fill: parent
-        //                source: ":/pics/selectionBorder.png"
-        //                opacity: 0.8
-        //                fillMode: Image.PreserveAspectCrop
-        //            }
-        //        }
-
-        //        Image {
-        //            id: hintImage
-        //            source: ":/pics/hintArrow.svg"
-        //            x: gameBoard.hintX
-        //            y: gameBoard.hintY - height / 4
-        //            width: gameBoard.cellSize
-        //            height: gameBoard.cellSize / 2
-        //            sourceSize.width: width
-        //            sourceSize.height: height
-
-        //            visible: gameBoard.hintVisible
-        //            z: 5
-        //            ParallelAnimation {
-        //                running: hintImage.visible
-        //                SequentialAnimation {
-        //                    loops: Animation.Infinite
-        //                    PropertyAnimation {
-        //                        target: hintImage
-        //                        property: "y"
-        //                        to: gameBoard.hintY - 3 * hintImage.height / 4
-        //                        duration: 300
-        //                        easing.type: Easing.InOutQuad
-        //                    }
-        //                    PropertyAnimation {
-        //                        target: hintImage
-        //                        property: "y"
-        //                        to: gameBoard.hintY - hintImage.height / 4
-        //                        duration: 300
-        //                        easing.type: Easing.InOutQuad
-        //                    }
-        //                }
-        //                SequentialAnimation {
-        //                    PauseAnimation {
-        //                        duration: 3000
-        //                    }
-        //                    ScriptAction {
-        //                        script: gameBoard.hintVisible = false
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        onLevelUp: levelUpAnimation.start()
-
-        //        onNoMoreMoves: {
-        //            msgText.text = "NO MORE MOVES"
-        //            msgText.font.pointSize = 30 * DevicePixelRatio
-        //            msgText.show()
-        //            dlgEndGame.show()
-        //        }
-        //    }
         SequentialAnimation {
             id: levelUpAnimation
             ScriptAction {
                 script: {
-                    msgText.text = "LEVEL UP!"
-                    msgText.font.pointSize = 38 * DevicePixelRatio
-                    msgText.show()
-                    gameBoard.dropGemsDown()
+
+                    //                    msgText.text = "LEVEL UP!"
+                    //                    msgText.font.pointSize = 38 * DevicePixelRatio
+                    //                    msgText.show()
+                    //                    gameBoard.dropGemsDown()
                 }
             }
             PauseAnimation {
@@ -524,15 +565,16 @@ QQC2.ApplicationWindow {
             }
             ScriptAction {
                 script: {
-                    msgText.text = "LEVEL " + gameBoard.level
-                    msgText.font.pointSize = 38 * DevicePixelRatio
-                    msgText.show()
-                    pbLevelProgress.minimum = gameBoard.levelCap(
-                                gameBoard.level - 1)
-                    pbLevelProgress.maximum = gameBoard.levelCap(
-                                gameBoard.level)
-                    setBackgroundSource()
-                    gameBoard.resetBoard()
+
+                    //                    msgText.text = "LEVEL " + gameBoard.level
+                    //                    msgText.font.pointSize = 38 * DevicePixelRatio
+                    //                    msgText.show()
+                    //                    pbLevelProgress.minimum = gameBoard.levelCap(
+                    //                                gameBoard.level - 1)
+                    //                    pbLevelProgress.maximum = gameBoard.levelCap(
+                    //                                gameBoard.level)
+                    //                    setBackgroundSource()
+                    //                    gameBoard.resetBoard()
                 }
             }
         }
@@ -710,49 +752,6 @@ QQC2.ApplicationWindow {
         //        color: "steelblue"
         //        onClicked: screen.state = "stateSettings"
         //    }
-    }
-
-    Text {
-        id: txtAppVersion
-        text: g_appVersion
-        font.pointSize: 14 * DevicePixelRatio
-        font.family: buttonFont.name
-        color: "lightgray"
-        visible: opacity > 0
-        anchors {
-            bottom: screen.bottom
-            right: screen.right
-            margins: 3 * DevicePixelRatio
-        }
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 500
-            }
-        }
-    }
-
-    Rectangle {
-        id: topGameBoardBorder
-        visible: screen.state == "stateGame"
-        color: "white"
-        opacity: 0.5
-        anchors.top: scoreBox.bottom
-        height: 5 * DevicePixelRatio
-        width: parent.width
-    }
-
-    Rectangle {
-        id: bottomGameBoardBorder
-        visible: screen.state == "stateGame"
-        color: "white"
-        opacity: 0.5
-        anchors.top: gameBoard.bottom
-        height: 5 * DevicePixelRatio
-        width: parent.width
-    }
-
-    ScoreBox {
-        id: scorebox
     }
 
     // ----- Qt provided non-visual children
