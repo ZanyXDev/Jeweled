@@ -779,6 +779,19 @@ QQC2.ApplicationWindow {
         source: "qrc:/res/fonts/pirulen.ttf"
     }
 
+    // a globally avalable utility object
+    QtObject {
+        id: global
+
+        readonly property real winScale: Math.min(width / 1280.0,
+                                                  height / 720.0)
+
+        property QtObject fonts: QtObject {
+            readonly property string gamefont: gameFont.name
+            readonly property string buttonfont: buttonFont.name
+        }
+    }
+
     // ----- JavaScript functions
     function setBackgroundSource() {
         var source = generateBackgroundFileName()
