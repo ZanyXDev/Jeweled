@@ -154,9 +154,21 @@ QQC2.ApplicationWindow {
                         scorebox.state = "stateShowScore"
                     }
                 }
+                QQC2.Button {
+                    id: tstButton3
+                    text: "showAbout"
+                    onClicked: {
+                        dlgAbout.open()
+                    }
+                }
             }
         }
     }
+
+    AboutDialog {
+        id: dlgAbout
+    }
+
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction
