@@ -9,6 +9,7 @@ import QtQuick.Controls.Material.impl 2.15
 import Common 1.0
 import Theme 1.0
 import Dialogs 1.0
+import Components 1.0
 
 QQC2.ApplicationWindow {
     id: appWnd
@@ -73,17 +74,6 @@ QQC2.ApplicationWindow {
     }
 
     // ----- Visual children
-    MyDebugRect {
-        id: debugRect
-
-        MouseArea {
-            id: testArea
-            anchors.fill: parent
-            onClicked: {
-                setBackgroundSource()
-            }
-        }
-    }
 
     // ----- Qt provided non-visual children
     QQC2.Action {
