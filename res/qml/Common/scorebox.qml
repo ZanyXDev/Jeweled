@@ -6,83 +6,100 @@ import QtQuick.Layouts 1.15
 Item {
     id: control
 
-    property string gameBoardScore: ""
+    property string appTitle: ""
     property int gameBoardLevel: 1
+    property string gameBoardScore: ""
 
-    //    anchors.fill: parent
-    state: "stateHidden"
-    QQC2.Label {
-        id: txtScore
+    component InfoLablel: QQC2.Label {
         anchors.fill: parent
 
-        font.family: global.fonts.gamefont
-        font.pointSize: 16 * DevicePixelRatio
-        font.bold: true
-        color: "white"
+        font {
+            family: global.fonts.gamefont
+            pointSize: global.middleFontSize
+            bold: true
+        }
 
-        anchors.margins: 10 * DevicePixelRatio
-        text: gameBoardScore
         scale: 0
+
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+
+        Behavior on scale {
+            NumberAnimation {
+                easing.type: Easing.InQuad
+                duration: 300
+            }
+        }
     }
 
-    QQC2.Label {
+    InfoLablel {
+        id: txtAppTitle
+        text: appTitle
+    }
+
+    InfoLablel {
+        id: txtScore
+        text: gameBoardScore
+    }
+
+    InfoLablel {
         id: txtLevel
-        anchors.fill: parent
-        color: "white"
-        font.family: global.fonts.gamefont
-        font.pointSize: 16 * DevicePixelRatio
-        font.bold: true
         text: "Level " + gameBoardLevel + " "
-        anchors.margins: 10 * DevicePixelRatio
-        scale: 1
     }
 
     states: [
+        // Explicit properties for default state (show AppTitle).
         State {
-            name: "stateNormal"
+            name: ""
+            PropertyChanges {
+                target: control
+                visible: true
+                opacity: 1
+            }
         },
         State {
-            name: "stateHidden"
-        }
-    ]
-
-    transitions: [
-        Transition {
-            from: "stateHidden"
-            to: "stateNormal"
-
-            ScaleAnimator {
-                target: txtScore
-                from: 0
-                to: 1
-                duration: 300
-                easing.type: Easing.OutQuad
+            name: "stateShowAppTitle"
+            PropertyChanges {
+                target: txtAppTitle
+                scale: 1
             }
-            ScaleAnimator {
+            PropertyChanges {
                 target: txtLevel
-                from: 1
-                to: 0
-                duration: 300
-                easing.type: Easing.OutQuad
+                scale: 0
+            }
+            PropertyChanges {
+                target: txtScore
+                scale: 0
             }
         },
-        Transition {
-            from: "stateNormal"
-            to: "stateHidden"
-
-            ScaleAnimator {
-                target: txtScore
-                from: 1
-                to: 0
-                duration: 300
-                easing.type: Easing.OutQuad
+        State {
+            name: "stateShowLevel"
+            PropertyChanges {
+                target: txtAppTitle
+                scale: 0
             }
-            ScaleAnimator {
+            PropertyChanges {
                 target: txtLevel
-                from: 0
-                to: 1
-                duration: 300
-                easing.type: Easing.OutQuad
+                scale: 1
+            }
+            PropertyChanges {
+                target: txtScore
+                scale: 0
+            }
+        },
+        State {
+            name: "stateShowScore"
+            PropertyChanges {
+                target: txtAppTitle
+                scale: 0
+            }
+            PropertyChanges {
+                target: txtLevel
+                scale: 0
+            }
+            PropertyChanges {
+                target: txtScore
+                scale: 1
             }
         }
     ]
