@@ -9,11 +9,6 @@ Item {
 
     anchors.fill: parent
 
-    FontLoader {
-        id: aboutFont
-        source: "qrc:/res/fonts/forgotte.ttf"
-    }
-
     Rectangle {
         anchors.fill: dlgAbout
         color: "black"
@@ -30,8 +25,8 @@ Item {
         text: "About"
         color: "white"
         font.bold: true
-        font.pointSize: 36 * cellSize / 40
-        font.family: aboutFont.name
+        font.pointSize: largeFontSize
+        font.family: aboutfont
     }
 
     Text {
@@ -41,8 +36,8 @@ Item {
             top: dlgTitle.bottom
         }
         width: dlgAbout.width - 2 * anchors.margins
-        font.pointSize: 16 * cellSize / 40
-        font.family: aboutFont.name
+        font.pointSize: smallFontSize
+        font.family: aboutfont
         color: "white"
         wrapMode: Text.WordWrap
         text: "<p align=\"center\"><b>FreeJeweled</b> is a free Bejeweled2 inspired game</p>"
