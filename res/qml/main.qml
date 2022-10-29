@@ -189,6 +189,11 @@ QQC2.ApplicationWindow {
         source: "qrc:/res/fonts/pirulen.ttf"
     }
 
+    FontLoader {
+        id: aboutFont
+        source: "qrc:/res/fonts/forgotte.ttf"
+    }
+
     // a globally avalable utility object
     QtObject {
         id: global
@@ -196,13 +201,14 @@ QQC2.ApplicationWindow {
         readonly property real winScale: Math.min(width / 1280.0,
                                                   height / 720.0)
 
-        readonly property int largeFontSize: 32
+        readonly property int largeFontSize: 36
         readonly property int middleFontSize: 24
         readonly property int smallFontSize: 16
 
         property QtObject fonts: QtObject {
             readonly property string gamefont: gameFont.name
             readonly property string buttonfont: buttonFont.name
+            readonly property string aboutfont: aboutFont.name
         }
     }
 
