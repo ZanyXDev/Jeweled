@@ -14,7 +14,6 @@ import Components 1.0
 QQC2.ApplicationWindow {
     id: appWnd
     // ----- Property Declarations
-    property bool isMoreMenuNeed: true
 
     // Required properties should be at the top.
     readonly property int screenOrientation: Screen.orientation
@@ -126,8 +125,7 @@ QQC2.ApplicationWindow {
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction
-        //text: qsTr("&Options...")
-        //icon.name: "menu"
+
         onTriggered: {
             //optionsMenu.open()
             if (isDebugMode)
@@ -136,6 +134,15 @@ QQC2.ApplicationWindow {
         }
     }
 
+    QQC2.Action {
+        id: changeThemeMenuAction
+
+        onTriggered: {
+            Theme.toggleTheme()
+            if (isDebugMode)
+                console.log("changeThemeMenuAction click")
+        }
+    }
     // ----- Custom non-visual children
     FontLoader {
         id: gameFont
