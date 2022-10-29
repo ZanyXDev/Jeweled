@@ -9,31 +9,31 @@ Item {
     property string gameBoardScore: ""
     property int gameBoardLevel: 1
 
-    width: parent.width
-    height: 60 * DevicePixelRatio /* cellSize*1.5, actually */
+    //    anchors.fill: parent
     state: "stateHidden"
-
-    Text {
+    QQC2.Label {
         id: txtScore
+        anchors.fill: parent
 
         font.family: global.fonts.gamefont
         font.pointSize: 16 * DevicePixelRatio
         font.bold: true
         color: "white"
 
-        anchors.margins: 15 * DevicePixelRatio
+        anchors.margins: 10 * DevicePixelRatio
         text: gameBoardScore
         scale: 0
     }
 
-    Text {
+    QQC2.Label {
         id: txtLevel
+        anchors.fill: parent
         color: "white"
         font.family: global.fonts.gamefont
         font.pointSize: 16 * DevicePixelRatio
         font.bold: true
         text: "Level " + gameBoardLevel + " "
-        anchors.margins: 15 * DevicePixelRatio
+        anchors.margins: 10 * DevicePixelRatio
         scale: 1
     }
 
