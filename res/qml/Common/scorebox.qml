@@ -7,24 +7,23 @@ Item {
     id: control
 
     property string gameBoardScore: ""
-    property int gameBoardLevel: 0
+    property int gameBoardLevel: 1
 
     width: parent.width
     height: 60 * DevicePixelRatio /* cellSize*1.5, actually */
     state: "stateHidden"
 
-    anchors.top: parent.top
-
     Text {
         id: txtScore
-        color: "white"
+
         font.family: global.fonts.gamefont
         font.pointSize: 16 * DevicePixelRatio
         font.bold: true
+        color: "white"
+
+        anchors.margins: 15 * DevicePixelRatio
         text: gameBoardScore
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 10 * DevicePixelRatio
-        anchors.bottomMargin: 5 * DevicePixelRatio
+        scale: 0
     }
 
     Text {
@@ -34,33 +33,16 @@ Item {
         font.pointSize: 16 * DevicePixelRatio
         font.bold: true
         text: "Level " + gameBoardLevel + " "
-        anchors.bottom: parent.bottom
-        anchors.rightMargin: 10 * DevicePixelRatio
-        anchors.bottomMargin: 5 * DevicePixelRatio
+        anchors.margins: 15 * DevicePixelRatio
+        scale: 1
     }
 
     states: [
         State {
             name: "stateNormal"
-            AnchorChanges {
-                target: txtScore
-                anchors.left: control.left
-            }
-            AnchorChanges {
-                target: txtLevel
-                anchors.right: control.right
-            }
         },
         State {
             name: "stateHidden"
-            AnchorChanges {
-                target: txtScore
-                anchors.right: control.left
-            }
-            AnchorChanges {
-                target: txtLevel
-                anchors.left: control.right
-            }
         }
     ]
 
@@ -68,17 +50,39 @@ Item {
         Transition {
             from: "stateHidden"
             to: "stateNormal"
-            AnchorAnimation {
-                duration: 200
-                easing.type: Easing.Linear
+
+            ScaleAnimator {
+                target: txtScore
+                from: 0
+                to: 1
+                duration: 300
+                easing.type: Easing.OutQuad
+            }
+            ScaleAnimator {
+                target: txtLevel
+                from: 1
+                to: 0
+                duration: 300
+                easing.type: Easing.OutQuad
             }
         },
         Transition {
             from: "stateNormal"
             to: "stateHidden"
-            AnchorAnimation {
-                duration: 200
-                easing.type: Easing.Linear
+
+            ScaleAnimator {
+                target: txtScore
+                from: 1
+                to: 0
+                duration: 300
+                easing.type: Easing.OutQuad
+            }
+            ScaleAnimator {
+                target: txtLevel
+                from: 0
+                to: 1
+                duration: 300
+                easing.type: Easing.OutQuad
             }
         }
     ]
