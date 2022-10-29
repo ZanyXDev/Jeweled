@@ -74,7 +74,55 @@ QQC2.ApplicationWindow {
     }
 
     // ----- Visual children
+    ColumnLayout {
+        id: mainLayout
+        anchors.fill: parent
+        spacing: 2 * DevicePixelRatio
 
+        ScoreBox {
+            id: scorebox
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.fillWidth: true
+            Layout.preferredHeight: 40 * DevicePixelRatio /* cellSize*1.5, actually */
+
+            gameBoardScore: "0000"
+            gameBoardLevel: 1
+        }
+
+        QQC2.Frame {
+            id: spacerFrame
+            visible: true
+            Layout.fillWidth: true
+            Layout.preferredHeight: 2 * DevicePixelRatio
+        }
+
+        Item {
+            id: gameScreen
+            Layout.fillWidth: true
+            Layout.preferredHeight: 420 * DevicePixelRatio
+
+            RowLayout {
+                id: testButton
+                anchors.fill: parent
+                spacing: 8 * DevicePixelRatio
+                QQC2.Button {
+                    id: tstButton1
+                    text: "stateNormal"
+                    onClicked: {
+                        scorebox.state = "stateNormal"
+                    }
+                }
+
+                QQC2.Button {
+                    id: tstButton2
+                    text: "stateHidden"
+                    onClicked: {
+                        scorebox.state = "stateHidden"
+                    }
+                }
+            }
+        }
+    }
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction
