@@ -73,20 +73,55 @@ QQC2.ApplicationWindow {
     }
 
     // ----- Visual children
+    header: QQC2.ToolBar {
+        id: pageHeader
+        background: Rectangle {
+            color: "transparent"
+        }
+
+        RowLayout {
+            anchors.fill: parent
+            spacing: 2 * DevicePixelRatio
+            QQC2.ToolButton {
+                id: btnHelp
+                Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+
+                icon.source: "qrc:/res/images/icons/ic_help.svg"
+
+                action: changeThemeMenuAction
+            }
+
+            Item {
+                Layout.fillHeight: true
+            } // spacer item
+
+            ScoreBox {
+                id: scorebox
+                Layout.fillWidth: true
+                appTitle: qsTr("Jeweled Puzzle")
+                gameBoardScore: (isDebugMode) ? "0000" : "9999" //AppCore.getBoardScore
+                gameBoardLevel: (isDebugMode) ? 13 : 1 //AppCore.getBoardLevel
+                state: "stateShowAppTitle"
+            }
+
+            // spacer item
+            Item {
+                Layout.fillHeight: true
+            }
+
+            QQC2.ToolButton {
+                id: btnMoreMenu
+                visible: true
+                icon.source: "qrc:/res/images/icons/ic_bullet.svg"
+                action: optionsMenuAction
+            }
+        }
+    }
+
     ColumnLayout {
         id: mainLayout
         anchors.fill: parent
         spacing: 2 * DevicePixelRatio
-
-        ScoreBox {
-            id: scorebox
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Layout.fillWidth: true
-            Layout.preferredHeight: 40 * DevicePixelRatio /* cellSize*1.5, actually */
-
-            gameBoardScore: "0000"
-            gameBoardLevel: 1
-        }
 
         QQC2.Frame {
             id: spacerFrame
@@ -106,17 +141,17 @@ QQC2.ApplicationWindow {
                 spacing: 8 * DevicePixelRatio
                 QQC2.Button {
                     id: tstButton1
-                    text: "stateNormal"
+                    text: "stateShowLevel"
                     onClicked: {
-                        scorebox.state = "stateNormal"
+                        scorebox.state = "stateShowLevel"
                     }
                 }
 
                 QQC2.Button {
                     id: tstButton2
-                    text: "stateHidden"
+                    text: "stateShowScore"
                     onClicked: {
-                        scorebox.state = "stateHidden"
+                        scorebox.state = "stateShowScore"
                     }
                 }
             }
