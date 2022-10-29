@@ -6,20 +6,36 @@ import QtGraphicalEffects 1.0
 
 Rectangle {
     id: button
-    color: "white"s
-    width: buttonLabel.width + 20 * DevicePixelRatio
-    height: buttonLabel.height + 5 * DevicePixelRatio
-    radius: button.height / 2.1
-    smooth: true
+    // ----- Property Declarations
 
+    // Required properties should be at the top.
     property alias caption: buttonLabel.text
     property alias textColor: buttonLabel.color
     property color borderColor: "transparent"
     property int borderWidth: 0
     property int fontSize: 12
     property bool enabled: true
+
+    // ----- Signal declarations
     signal clicked
 
+    // ----- In this section, we group the size and position information together.
+    width: buttonLabel.width + 20 * DevicePixelRatio
+    height: buttonLabel.height + 5 * DevicePixelRatio
+    radius: button.height / 2.1
+    // ----- Then comes the other properties. There's no predefined order to these.
+    color: "white"
+    smooth: true
+
+    // ----- Then attached properties and attached signal handlers.
+    // ----- States and transitions.
+    // ----- Signal handlers
+    // onCompleted and onDestruction signal handlers are always the last in
+    // the order.
+    //Component.onCompleted: {}
+    //Component.onDestruction: {}
+
+    // ----- Visual children.
     border {
         width: borderWidth
         color: borderColor
@@ -59,10 +75,11 @@ Rectangle {
         id: buttonLabel
         anchors.centerIn: parent
         font.pointSize: fontSize
-        font.family: buttonFont.name
+        font.family: global.fonts.buttonfont
         color: "white"
     }
 
+    // ----- Qt provided non-visual children
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -71,4 +88,6 @@ Rectangle {
                 button.clicked()
         }
     }
+    // ----- Custom non-visual children
+    // ----- JavaScript functions
 }
