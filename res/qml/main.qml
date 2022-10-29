@@ -98,7 +98,7 @@ QQC2.ApplicationWindow {
             ScoreBox {
                 id: scorebox
                 Layout.fillWidth: true
-                appTitle: qsTr("Jeweled Puzzle")
+                appTitle: qsTr("FreeJeweled")
                 gameBoardScore: (isDebugMode) ? "0000" : "9999" //AppCore.getBoardScore
                 gameBoardLevel: (isDebugMode) ? 13 : 1 //AppCore.getBoardLevel
                 state: "stateShowAppTitle"
