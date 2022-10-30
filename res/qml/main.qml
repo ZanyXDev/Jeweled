@@ -78,22 +78,19 @@ QQC2.ApplicationWindow {
         background: Rectangle {
             color: "transparent"
         }
-
         RowLayout {
             anchors.fill: parent
             spacing: 2 * DevicePixelRatio
             QQC2.ToolButton {
                 id: btnHelp
                 Layout.alignment: Qt.AlignTop | Qt.AlignLeft
-
                 icon.source: "qrc:/res/images/icons/ic_help.svg"
-
                 action: changeThemeMenuAction
             }
 
             Item {
                 Layout.fillHeight: true
-            } // spacer item
+            }
 
             ScoreBox {
                 id: scorebox
@@ -104,7 +101,6 @@ QQC2.ApplicationWindow {
                 state: "stateShowAppTitle"
             }
 
-            // spacer item
             Item {
                 Layout.fillHeight: true
             }
@@ -115,6 +111,11 @@ QQC2.ApplicationWindow {
                 icon.source: "qrc:/res/images/icons/ic_bullet.svg"
                 action: optionsMenuAction
             }
+        }
+        Component.onCompleted: {
+            if (isDebugMode)
+                console.log("pageHeader.size:[" + pageHeader.width / 1.5 + ","
+                            + pageHeader.height / 1.5 + "]")
         }
     }
 
@@ -129,16 +130,28 @@ QQC2.ApplicationWindow {
             Layout.fillWidth: true
             Layout.preferredHeight: 2 * DevicePixelRatio
         }
-
-        Item {
-            id: gameScreen
+        GameBoard {
+            id: gameBoard
             Layout.fillWidth: true
-            Layout.preferredHeight: 420 * DevicePixelRatio
+            Layout.preferredHeight: 400 * DevicePixelRatio
+            Component.onCompleted: {
+                if (isDebugMode)
+                    console.log("gameBoard.size:[" + gameBoard.width / 1.5 + ","
+                                + gameBoard.height / 1.5 + "]")
+            }
+        }
+        Item {
+            id: debugRect
+            Layout.fillWidth: true
+            Layout.preferredHeight: 48 * DevicePixelRatio
 
             RowLayout {
                 id: testButton
                 anchors.fill: parent
                 spacing: 8 * DevicePixelRatio
+                Item {
+                    Layout.fillHeight: true
+                }
                 QQC2.Button {
                     id: tstButton1
                     text: "stateShowLevel"
@@ -161,7 +174,15 @@ QQC2.ApplicationWindow {
                         dlgAbout.open()
                     }
                 }
+                Item {
+                    Layout.fillHeight: true
+                }
             }
+        }
+        Component.onCompleted: {
+            if (isDebugMode)
+                console.log("mainLayout.size:[" + mainLayout.width / 1.5 + ","
+                            + mainLayout.height / 1.5 + "]")
         }
     }
 
