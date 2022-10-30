@@ -1,2 +1,3 @@
 module Components
 BaseButton 1.0 basebutton.qml
+GemCell 1.0 gemcell.qml
