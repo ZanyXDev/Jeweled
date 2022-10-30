@@ -24,12 +24,7 @@ Item {
     property int srcSize: 80
     property int type: 0
 
-    enum Modifier {
-        Normal,
-        Explosive,
-        HyperCube,
-        RowColumnRemove
-    }
+    property int modifer: Modifier.CellState.Normal
 
     // ----- Signal declarations
     signal behaviorEnabledChanged
