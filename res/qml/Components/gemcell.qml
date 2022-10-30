@@ -92,11 +92,13 @@ Item {
 
     // ----- JavaScript functions
     function isOpacity() {
-        halfWidth = control.width / 2
-        eightWidth = control.width * 8
+        var halfWidth = control.width / 2
+        var eightWidth = control.width * 8
 
         return ((control.x < -halfWidth) || (control.y < -halfWidth)
                 || (control.x >= eightWidth)
                 || (control.y >= eightWidth)) ? 0 : 1
+    }
+    function getGemsImageSource() {//qrc:/res/images/gems/blueGem.svg
     }
 }
