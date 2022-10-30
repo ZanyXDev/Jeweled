@@ -6,5 +6,13 @@
         <file>res/images/hintArrow.svg</file>
         <file>res/images/icons/ic_bullet.svg</file>
         <file>res/images/icons/ic_help.svg</file>
+        <file>res/images/gems/blueGem.svg</file>
+        <file>res/images/gems/purpleGem.svg</file>
+        <file>res/images/gems/redGem.svg</file>
+        <file>res/images/gems/yellowGem.svg</file>
+        <file>res/images/gems/orangeGem.svg</file>
+        <file>res/images/gems/greenGem.svg</file>
+        <file>res/images/gems/whiteGem.svg</file>
+        <file>res/images/gems/hyperCube.svg</file>
     </qresource>
 </RCC>
