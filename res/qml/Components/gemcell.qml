@@ -9,29 +9,29 @@ Item {
 
     // ----- Property Declarations
     // Required properties should be at the top.
-    property bool m_behaviorEnabled: false
-    property bool m_timeToDie: false
-    property bool m_shouldBeRemoved: false
-    property bool m_explodedOnce: false
-    property bool m_invincible: false
+    property bool myBehaviorEnabled: false
+    property bool timeToDie: false
+    property bool shouldBeRemoved: false
+    property bool explodedOnce: false
+    property bool invincible: false
     property bool spawned: false
     property bool normalDying: false
     property bool explodeDying: false
     property bool explodable: false
     property bool selected: false
 
-    property int behaviorPause: 0
+    property int myBehaviorPause: 0
     property int srcSize: 80
     property int type: 0
 
     property int modifer: Modifier.CellState.Normal
 
     // ----- Signal declarations
-    signal behaviorEnabledChanged
-    signal timeToDieChanged
-    signal shouldBeRemovedChanged
-    signal explodedOnceChanged
-    signal modifierChanged
+    //    signal myBehaviorEnabledChanged
+    //    signal timeToDieChanged
+    //    signal shouldBeRemovedChanged
+    //    signal explodedOnceChanged
+    //    signal modifierChanged
 
     // ----- In this section, we group the size and position information together.
     width: 40 * DevicePixelRatio
@@ -74,14 +74,17 @@ Item {
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
-
+        if (isDebugMode)
+            console.log("GemCell modifier:" + modifer)
     }
     Component.onDestruction: {
 
     }
 
     // ----- Visual children.
-    Image {}
+    Image {
+        id: img
+    }
 
     // ----- Qt provided non-visual children
 
