@@ -180,6 +180,10 @@ Item {
         return (control.modifer === Modifier.CellState.HyperCube) ? 1 : 0
     }
 
+    function calcRandomDuration() {
+        var rnd = 1 + Math.random() * 0.4 - 0.2
+        return Math.floor(control.myBehaviorPause * rnd)
+    }
 
     function getGemImageSource() {
         var sourceImage
