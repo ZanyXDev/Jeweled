@@ -83,23 +83,51 @@ Item {
     }
 
     // ----- States and transitions.
+    states: [
+        State {
+            name: "Normal"
+            when: (spawned === true && timeToDie === false
+                   && explodedOnce === false)
+            PropertyChanges {
+                target: img
+                opacity: 1
+            }
+        },
+        State {
+            name: "ExplodeDeathState"
+            when: (timeToDie === true && explodedOnce === true)
+            StateChangeScript {
+                script: {
+                    if (explodable) {
 
-    //    states: [
-    //        State {
+                        // particles.burst(100)
+                    } else {
 
-    //        }
-    //    ]
-    //    transitions: [
-    //        Transitions {
-
-    //        }
-    //    ]
+                        // particles.burst(50)
+                    }
+                }
+            }
+            PropertyChanges {
+                target: img
+                opacity: 0
+            }
+        },
+        State {
+            name: "NormalDeathState"
+            when: (timeToDie == true && explodedOnce == false)
+            PropertyChanges {
+                target: img
+                scale: 0.1
+            }
+            PropertyChanges {
+                target: img
+                opacity: 0
+            }
+        }
+    ]
 
     // ----- Signal handlers
-    onWidthChanged: {
 
-        // Always use curly braces.
-    }
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
