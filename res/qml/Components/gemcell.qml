@@ -21,9 +21,8 @@ Item {
     property bool selected: false
 
     property int myBehaviorPause: 0
-    property int srcSize: 80
+    property int srcSize: 80 * DevicePixelRatio
     property int type: 0
-
     property int modifer: Modifier.CellState.Normal
 
     // ----- Signal declarations
