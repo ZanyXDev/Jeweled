@@ -15,5 +15,7 @@
         <file>res/qml/Components/basebutton.qml</file>
         <file>res/qml/Components/gemcell.qml</file>
         <file>res/qml/Components/modifier.qml</file>
+        <file>res/qml/DataModels/qmldir</file>
+        <file>res/qml/DataModels/gemitemsmodel.qml</file>
     </qresource>
 </RCC>
