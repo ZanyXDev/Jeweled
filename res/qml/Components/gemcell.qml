@@ -139,6 +139,27 @@ Item {
     // ----- Visual children.
     Image {
         id: img
+        opacity: 1
+        smooth: isHyperCube()
+        source: getGemImageSource()
+        sourceSize.width: control.srcSize
+        sourceSize.height: control.srcSize
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 400
+                easing.type: Easing.InQuad
+                properties: "opacity"
+            }
+        }
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: 400
+                easing.type: Easing.InQuad
+                properties: "scale"
+            }
+        }
     }
 
     // ----- Qt provided non-visual children
@@ -154,6 +175,46 @@ Item {
                 || (control.x >= eightWidth)
                 || (control.y >= eightWidth)) ? 0 : 1
     }
-    function getGemsImageSource() {//qrc:/res/images/gems/blueGem.svg
+
+    function isHyperCube() {
+        return (control.modifer === Modifier.CellState.HyperCube) ? 1 : 0
+    }
+
+
+    function getGemImageSource() {
+        var sourceImage
+
+        if (isHyperCube()) {
+            sourceImage = "qrc:/res/images/gems/hyperCube.svg"
+        }
+
+        switch (control.type) {
+        case 0:
+            sourceImage = "qrc:/res/images/gems/yellowGem.svg"
+            break
+        case 1:
+            sourceImage = "qrc:/res/images/gems/redGem.svg"
+            break
+        case 2:
+            sourceImage = "qrc:/res/images/gems/blueGem.svg"
+            break
+        case 3:
+            sourceImage = "qrc:/res/images/gems/greenGem.svg"
+            break
+        case 4:
+            sourceImage = "qrc:/res/images/gems/purpleGem.svg"
+            break
+        case 5:
+            sourceImage = "qrc:/res/images/gems/whiteGem.svg"
+            break
+        case 6:
+            sourceImage = "qrc:/res/images/gems/orangeGem.svg"
+            break
+        default:
+            break
+        }
+        if (isDebugMode)
+            console.log("GemCell sourceImage:" + sourceImage)
+        return sourceImage
     }
 }
