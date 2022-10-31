@@ -49,8 +49,38 @@ Item {
     layer.enabled: true
 
     // ----- Then attached properties and attached signal handlers.
+    Behavior on x {
+        enabled: spawned && myBehaviorEnabled
+        PropertyAnimation {
+            easing.type: Easing.OutBack
+            duration: 400
+        }
+    }
+    Behavior on y {
+        enabled: myBehaviorEnabled
+        SequentialAnimation {
+            PauseAnimation {
+                duration: calcRandomDuration()
+            }
+            PropertyAnimation {
+                duration: 400
+                easing.type: Easing.OutBack
+            }
 
-    //Layout.fillWidth: true
+            ScriptAction {
+                script: myBehaviorPause = 0
+            }
+        }
+    }
+
+    NumberAnimation {
+        target: img
+        running: isHyperCube()
+        property: "rotation"
+        to: 360
+        duration: 4000
+        loops: Animation.Infinite
+    }
 
     // ----- States and transitions.
 
@@ -76,9 +106,7 @@ Item {
         if (isDebugMode)
             console.log("GemCell modifier:" + modifer)
     }
-    Component.onDestruction: {
-
-    }
+    // Component.onDestruction: {}
 
     // ----- Visual children.
     Image {
