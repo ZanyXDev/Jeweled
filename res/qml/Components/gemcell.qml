@@ -21,9 +21,10 @@ Item {
     property bool selected: false
 
     property int myBehaviorPause: 0
-    property int srcSize: 80 * DevicePixelRatio
+    property int srcSize: 40 * DevicePixelRatio
     property int type: 0
     property int modifer: Modifier.CellState.Normal
+    property int index: 0
 
     // ----- Signal declarations
     //    signal myBehaviorEnabledChanged
@@ -37,7 +38,7 @@ Item {
     height: 40 * DevicePixelRatio
 
     opacity: isOpacity()
-    anchors.top: parent.top // If a single assignment, dot notation can be used.
+    // If a single assignment, dot notation can be used.
     // If the item is an image, sourceSize is also set here.
     // sourceSize: Qt.size(12, 12)
 
@@ -131,8 +132,9 @@ Item {
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
-        if (isDebugMode)
-            console.log("GemCell modifier:" + modifer)
+
+        //        if (isDebugMode)
+        //            console.log("GemCell modifier:" + modifer)
     }
     // Component.onDestruction: {}
 
@@ -217,8 +219,8 @@ Item {
         default:
             break
         }
-        if (isDebugMode)
-            console.log("GemCell sourceImage:" + sourceImage)
+        //        if (isDebugMode)
+        //            console.log("GemCell sourceImage:" + sourceImage)
         return sourceImage
     }
 }
