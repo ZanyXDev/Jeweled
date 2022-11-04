@@ -14,5 +14,6 @@
         <file>res/images/gems/greenGem.svg</file>
         <file>res/images/gems/whiteGem.svg</file>
         <file>res/images/gems/hyperCube.svg</file>
+        <file>res/images/tile_background.png</file>
     </qresource>
 </RCC>
