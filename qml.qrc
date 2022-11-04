@@ -5,11 +5,17 @@
         <file>res/qml/Common/qmldir</file>
         <file>res/qml/Common/mydebugrect.qml</file>
         <file>res/qml/Common/toast.qml</file>
-        <file>res/qml/Dialogs/aboutdialog.qml</file>
-        <file>res/qml/Dialogs/qmldir</file>
-        <file>res/qml/Theme/theme.qml</file>
-        <file>res/qml/Theme/qmldir</file>
         <file>res/qml/Common/scorebox.qml</file>
         <file>res/qml/Common/gameboard.qml</file>
+        <file>res/qml/Dialogs/qmldir</file>
+        <file>res/qml/Dialogs/aboutdialog.qml</file>
+        <file>res/qml/Theme/qmldir</file>
+        <file>res/qml/Theme/theme.qml</file>
+        <file>res/qml/Components/qmldir</file>
+        <file>res/qml/Components/basebutton.qml</file>
+        <file>res/qml/Components/gemcell.qml</file>
+        <file>res/qml/Components/modifier.qml</file>
+        <file>res/qml/DataModels/qmldir</file>
+        <file>res/qml/DataModels/gemitemsmodel.qml</file>
     </qresource>
 </RCC>

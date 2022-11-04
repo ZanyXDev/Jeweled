@@ -1,7 +1,7 @@
 !versionAtLeast(QT_VERSION, 5.15.0):error("Requires Qt version 5.15.0 or greater.")
 
 TEMPLATE +=app
-TARGET = Jeweled
+TARGET = FreeJeweled
 
 QT       += core gui concurrent qml quick quickcontrols2 multimedia
 

@@ -6,79 +6,100 @@ import QtQuick.Layouts 1.15
 Item {
     id: control
 
+    property string appTitle: ""
+    property int gameBoardLevel: 1
     property string gameBoardScore: ""
-    property int gameBoardLevel: 0
 
-    width: parent.width
-    height: 60 * DevicePixelRatio /* cellSize*1.5, actually */
-    state: "stateHidden"
+    component InfoLablel: QQC2.Label {
+        anchors.fill: parent
 
-    anchors.top: parent.top
+        font {
+            family: global.fonts.gamefont
+            pointSize: global.middleFontSize
+            bold: true
+        }
 
-    Text {
-        id: txtScore
-        color: "white"
-        font.family: global.fonts.gamefont
-        font.pointSize: 16 * DevicePixelRatio
-        font.bold: true
-        text: gameBoardScore
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 10 * DevicePixelRatio
-        anchors.bottomMargin: 5 * DevicePixelRatio
+        scale: 0
+
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+
+        Behavior on scale {
+            NumberAnimation {
+                easing.type: Easing.InQuad
+                duration: 300
+            }
+        }
     }
 
-    Text {
+    InfoLablel {
+        id: txtAppTitle
+        text: appTitle
+    }
+
+    InfoLablel {
+        id: txtScore
+        text: gameBoardScore
+    }
+
+    InfoLablel {
         id: txtLevel
-        color: "white"
-        font.family: global.fonts.gamefont
-        font.pointSize: 16 * DevicePixelRatio
-        font.bold: true
         text: "Level " + gameBoardLevel + " "
-        anchors.bottom: parent.bottom
-        anchors.rightMargin: 10 * DevicePixelRatio
-        anchors.bottomMargin: 5 * DevicePixelRatio
     }
 
     states: [
+        // Explicit properties for default state (show AppTitle).
         State {
-            name: "stateNormal"
-            AnchorChanges {
-                target: txtScore
-                anchors.left: control.left
-            }
-            AnchorChanges {
-                target: txtLevel
-                anchors.right: control.right
+            name: ""
+            PropertyChanges {
+                target: control
+                visible: true
+                opacity: 1
             }
         },
         State {
-            name: "stateHidden"
-            AnchorChanges {
-                target: txtScore
-                anchors.right: control.left
+            name: "stateShowAppTitle"
+            PropertyChanges {
+                target: txtAppTitle
+                scale: 1
             }
-            AnchorChanges {
+            PropertyChanges {
                 target: txtLevel
-                anchors.left: control.right
+                scale: 0
             }
-        }
-    ]
-
-    transitions: [
-        Transition {
-            from: "stateHidden"
-            to: "stateNormal"
-            AnchorAnimation {
-                duration: 200
-                easing.type: Easing.Linear
+            PropertyChanges {
+                target: txtScore
+                scale: 0
             }
         },
-        Transition {
-            from: "stateNormal"
-            to: "stateHidden"
-            AnchorAnimation {
-                duration: 200
-                easing.type: Easing.Linear
+        State {
+            name: "stateShowLevel"
+            PropertyChanges {
+                target: txtAppTitle
+                scale: 0
+            }
+            PropertyChanges {
+                target: txtLevel
+                scale: 1
+            }
+            PropertyChanges {
+                target: txtScore
+                scale: 0
+            }
+        },
+        State {
+            name: "stateShowScore"
+            PropertyChanges {
+                target: txtAppTitle
+                scale: 0
+            }
+            PropertyChanges {
+                target: txtLevel
+                scale: 0
+            }
+            PropertyChanges {
+                target: txtScore
+                scale: 1
             }
         }
     ]
