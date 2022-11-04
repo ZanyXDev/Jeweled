@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
     engine.addImportPath(":/res/qml");
 
 #ifdef QT_DEBUG
-    scale = 1.75;
+    scale = 1.5;
 #endif
 
     QQmlContext *context = engine.rootContext();
