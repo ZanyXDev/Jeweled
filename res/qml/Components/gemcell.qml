@@ -9,6 +9,7 @@ Item {
 
     // ----- Property Declarations
     // Required properties should be at the top.
+    property point originPosition: mapToItem(parent, 0, 0)
     property bool myBehaviorEnabled: false
     property bool timeToDie: false
     property bool shouldBeRemoved: false
@@ -73,7 +74,6 @@ Item {
             }
         }
     }
-
     NumberAnimation {
         target: img
         running: isHyperCube()
@@ -133,8 +133,21 @@ Item {
     // the order.
     Component.onCompleted: {
 
-        //        if (isDebugMode)
-        //            console.log("GemCell modifier:" + modifer)
+        //        if (isDebugMode) {
+        //            console.log("Parent objectName:" + parent.objectName)
+        //            console.log("GemCell x_y:", this.x + ":" + this.y)
+        //            console.log("GemCell abs_pos:", originPosition)
+        //            var globalCoordinates = mapToGlobal(0, 0)
+        //            console.log("GlobalCoordinates X: " + globalCoordinates.x + " Y: "
+        //                        + globalCoordinates.y)
+        //            console.log("------------ debugRect ----------")
+        //            console.log("parent.height:" + parent.height)
+        //            console.log("parent.width:" + parent.width)
+
+        //            for (var prop in control) {
+        //                print(prop += " (" + typeof (control[prop]) + ") = " + control[prop])
+        //            }
+        //        }
     }
     // Component.onDestruction: {}
 
