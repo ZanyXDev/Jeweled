@@ -76,15 +76,4 @@ Item {
                 console.log(p + ": " + item[p] + "\n")
         }
     }
-
-    function drawBackGroundCells(item, cols, rows) {
-        for (var x = 0; x < cols; x++) {
-            for (var y = 0; y < rows; y++) {
-                if (isDebugMode) {
-                    console.log("Cell parent:" + item)
-                    console.log("draw Cell [" + x + ":", +y + "]\n")
-                }
-            }
-        }
-    }
 }
