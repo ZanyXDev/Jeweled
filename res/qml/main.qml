@@ -10,6 +10,7 @@ import Common 1.0
 import Theme 1.0
 import Dialogs 1.0
 import Components 1.0
+import DataModels 1.0
 
 QQC2.ApplicationWindow {
     id: appWnd
@@ -123,21 +124,116 @@ QQC2.ApplicationWindow {
         id: mainLayout
         anchors.fill: parent
         spacing: 2 * DevicePixelRatio
-
         QQC2.Frame {
             id: spacerFrame
             visible: true
             Layout.fillWidth: true
             Layout.preferredHeight: 2 * DevicePixelRatio
         }
+        RowLayout {
+            id: hideGemItemsLayout
+            Layout.fillWidth: true
+            Layout.preferredHeight: 37 * DevicePixelRatio
+            spacing: 2 * DevicePixelRatio
+
+            component StartGemColumn: Rectangle {
+                Layout.preferredHeight: 37 * DevicePixelRatio
+                Layout.preferredWidth: 37 * DevicePixelRatio
+                color: "red"
+                Component.onCompleted: {
+
+                    //                    if (isDebugMode)
+                    //                        console.log("StartGemColumn[" + width / 1.5 + "," + height / 1.5 + "]")
+                }
+            }
+
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 2 * DevicePixelRatio
+                Component.onCompleted: {
+
+                    //                    if (isDebugMode)
+                    //                        console.log("Fill item before[" + width / 1.5 + "," + height / 1.5 + "]")
+                }
+            }
+            StartGemColumn {
+                id: column_1
+            }
+            StartGemColumn {
+                id: column_2
+                GemCell {
+                    id: testGem_1
+                    type: 2
+                    width: 37 * DevicePixelRatio
+                    height: 37 * DevicePixelRatio
+                    srcSize: 37 * DevicePixelRatio
+                }
+            }
+            StartGemColumn {
+                id: column_3
+            }
+            StartGemColumn {
+                id: column_4
+            }
+            StartGemColumn {
+                id: column_5
+            }
+            StartGemColumn {
+                id: column_6
+            }
+            StartGemColumn {
+                id: column_7
+            }
+            StartGemColumn {
+                id: column_8
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+        }
+
         GameBoard {
             id: gameBoard
             Layout.fillWidth: true
-            Layout.preferredHeight: 400 * DevicePixelRatio
+            Layout.preferredHeight: 320 * DevicePixelRatio
+
+            GridLayout {
+                id: gameGrid
+                anchors.fill: parent
+
+                columns: 8
+                columnSpacing: 2 * DevicePixelRatio
+                Repeater {
+                    id: gemsRepeater
+                    objectName: "gemsRepeater"
+                    model: 64
+                    delegate: GemCell {
+                        readonly property int r_index: model.index
+                        readonly property int pos_col: Layout.column
+
+                        type: 0
+                        width: 37 * DevicePixelRatio
+                        height: 37 * DevicePixelRatio
+                        srcSize: 37 * DevicePixelRatio
+                        Component.onCompleted: {
+                            //debugPos(this, DevicePixelRatio)
+                            console.log("Item Layout[col,row]:" + pos_col + "," + Layout.row)
+                        }
+                    }
+                }
+            }
             Component.onCompleted: {
-                if (isDebugMode)
+                if (isDebugMode) {
                     console.log("gameBoard.size:[" + gameBoard.width / 1.5 + ","
                                 + gameBoard.height / 1.5 + "]")
+                    console.log("gameBoard mapToItem abs_pos:",
+                                this.mapToItem(mainLayout, 0, 0))
+                    console.log("gameBoard mapFromItem abs_pos:",
+                                mapFromItem(mainLayout, 0, 0))
+                    var globalCoordinates = mapToGlobal(0, 0)
+                    console.log("GlobalCoordinates X: " + globalCoordinates.x
+                                + " Y: " + globalCoordinates.y)
+                }
             }
         }
         Item {
@@ -174,11 +270,19 @@ QQC2.ApplicationWindow {
                         dlgAbout.open()
                     }
                 }
+                QQC2.Button {
+                    id: tstButton4
+                    text: "moveGem"
+                    onClicked: {
+                        logRepeaterItems(gemsRepeater)
+                    }
+                }
                 Item {
                     Layout.fillHeight: true
                 }
             }
         }
+
         Component.onCompleted: {
             if (isDebugMode)
                 console.log("mainLayout.size:[" + mainLayout.width / 1.5 + ","
@@ -211,7 +315,6 @@ QQC2.ApplicationWindow {
                 console.log("changeThemeMenuAction click")
         }
     }
-    // ----- Custom non-visual children
     FontLoader {
         id: gameFont
         source: "qrc:/res/fonts/mailrays.ttf"
@@ -226,6 +329,12 @@ QQC2.ApplicationWindow {
         id: aboutFont
         source: "qrc:/res/fonts/forgotte.ttf"
     }
+
+    GemItemsModel {
+        id: gemItemsModel
+    }
+
+    // ----- Custom non-visual children
 
     // a globally avalable utility object
     QtObject {
@@ -262,5 +371,37 @@ QQC2.ApplicationWindow {
             bgrStr = "0" + bgrStr
         }
         return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
+    }
+
+    function logRepeaterItems(repeaterItem) {
+        var new_place = Math.floor(Math.random() * 63 + 1)
+        testGem_1.parent = repeaterItem.itemAt(new_place)
+
+        //        for (var i = 0; i < repeaterItem.count; i++) {
+        //        console.log("repeaterItem:" + 5 + " Properties\n")
+        //        var item = repeaterItem.itemAt(i)
+        //        for (var p in item)
+        //            console.log(p + ": " + item[p] + "\n")
+        //        }
+    }
+
+    function updatePos(item_orig, item_dest) {
+        var pos_abs = appWnd.mapFromItem(item_orig.parent, item_orig.x,
+                                         item_orig.y)
+        if (isDebugMode)
+            console.log("updatePos() pos_abs:" + pos_abs)
+        return appWnd.mapToItem(item_dest.parent, pos_abs.x, pos_abs.y)
+    }
+
+    function debugPos(item, dp) {
+        console.log("---------- Item pos -------------")
+        console.log("Item parent:" + item.parent)
+        console.log("Item index:" + item.r_index)
+
+        console.log("size:[" + item.width / dp + "," + item.height / dp + "]")
+        console.log("pos:[" + item.x + "," + item.y + "]")
+        console.log("mapToItem abs_pos:", item.mapToItem(item.parent, 0, 0))
+        console.log("mapFromItem abs_pos:", item.mapFromItem(item.parent, 0, 0))
+        console.log("mapToGlobal pos: " + item.mapToGlobal(0, 0))
     }
 }
