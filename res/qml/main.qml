@@ -187,6 +187,7 @@ QQC2.ApplicationWindow {
             Layout.fillWidth: true
             Layout.preferredHeight: 320 * DevicePixelRatio
         }
+
         Item {
             id: debugRect
             Layout.fillWidth: true
@@ -225,7 +226,7 @@ QQC2.ApplicationWindow {
                     id: tstButton4
                     text: "moveGem"
                     onClicked: {
-                        gameBoard.startNewGame = true
+                        gameBoard.state = "beginRound"
                     }
                 }
                 Item {

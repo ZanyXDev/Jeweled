@@ -25,29 +25,38 @@ Item {
     property bool gameLost: false //READ gameLost)
     property bool hintVisible: false
     property bool startNewGame: false
+    property bool isRunning: false
 
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
     // sourceSize: Qt.size(12, 12)
-
     // ----- Then comes the other properties. There's no predefined order to these.
-
     // Do not use empty lines to separate the assignments. Empty lines are reserved
     // for separating type declarations.
     // ----- Then attached properties and attached signal handlers.
     // ----- States and transitions.
+    states: [
+        State {
+            name: "beginRound"
+            PropertyChanges {
+                target: control
+                isRunning: true
+            }
+        }
+    ]
 
-    //    states: [
-    //        State {
+    transitions: [
+        Transition {
+            from: "*"
+            to: "beginRound"
 
-    //        }
-    //    ]
-    //    transitions: [
-    //        Transitions {
+            ScriptAction {
+                script: doFillBgrCells()
+            }
+        }
+    ]
 
-    //        }
-    //    ]
     // ----- Signal handlers
     onStartNewGameChanged: {
         if (isDebugMode)
@@ -99,13 +108,13 @@ Item {
                 sourceSize.height: control.cellSize
                 fillMode: Image.PreserveAspectFit
 
-                Behavior on x {
-                    enabled: true
-                    PropertyAnimation {
-                        easing.type: Easing.OutBack
-                        duration: 350
-                    }
-                }
+                //                Behavior on x {
+                //                    enabled: true
+                //                    PropertyAnimation {
+                //                        easing.type: Easing.OutBack
+                //                        duration: 350
+                //                    }
+                //                }
                 Behavior on y {
                     enabled: true
                     PropertyAnimation {
@@ -164,6 +173,12 @@ Item {
             bgrItemsModel.setProperty(index, "x", -100)
             bgrItemsModel.setProperty(index, "y", -100)
             bgrItemsModel.setProperty(index, "visible", false)
+        }
+    }
+    function doFillBgrCells() {
+        var cnt = (control.colums * control.rows)
+        for (var index = 0; index < cnt; index++) {
+            setupBgrItem(index)
         }
     }
 }
