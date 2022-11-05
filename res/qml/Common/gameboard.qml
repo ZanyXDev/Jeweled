@@ -7,6 +7,9 @@ import QtQml.Models 2.15
 Item {
     id: control
 
+    // ----- Property Declarations
+
+    // Required properties should be at the top.
     property int hintX: 0
     property int hintY: 0
     property int level: 1 //READ level WRITE setLevel NOTIFY levelChanged)
@@ -23,6 +26,55 @@ Item {
     property bool hintVisible: false
     property bool startNewGame: false
 
+    // ----- Signal declarations
+    // ----- In this section, we group the size and position information together.
+    // If the item is an image, sourceSize is also set here.
+    // sourceSize: Qt.size(12, 12)
+
+    // ----- Then comes the other properties. There's no predefined order to these.
+
+    // Do not use empty lines to separate the assignments. Empty lines are reserved
+    // for separating type declarations.
+    // ----- Then attached properties and attached signal handlers.
+    // ----- States and transitions.
+
+    //    states: [
+    //        State {
+
+    //        }
+    //    ]
+    //    transitions: [
+    //        Transitions {
+
+    //        }
+    //    ]
+    // ----- Signal handlers
+    onStartNewGameChanged: {
+        if (isDebugMode)
+            console.log("startNewGame:" + startNewGame)
+        if (startNewGame) {
+            startNewGame = false
+            hideBgrItem()
+            var cnt = (control.colums * control.rows)
+            for (var index = 0; index < cnt; index++) {
+                control.nextBgrItem++
+            }
+            control.nextBgrItem = -1
+        }
+    }
+
+    onNextBgrItemChanged: {
+        setupBgrItem(nextBgrItem) // move background item for here place
+    }
+    // onCompleted and onDestruction signal handlers are always the last in
+    // the order.
+    Component.onCompleted: {
+
+    }
+    Component.onDestruction: {
+
+    }
+    // ----- Visual children.
     Rectangle {
         id: bgrRect
         anchors.fill: parent
@@ -51,14 +103,14 @@ Item {
                     enabled: true
                     PropertyAnimation {
                         easing.type: Easing.OutBack
-                        duration: 150
+                        duration: 350
                     }
                 }
                 Behavior on y {
                     enabled: true
                     PropertyAnimation {
                         easing.type: Easing.OutBack
-                        duration: 150
+                        duration: 350
                     }
                 }
 
@@ -67,24 +119,7 @@ Item {
         }
     }
 
-    onStartNewGameChanged: {
-        if (isDebugMode)
-            console.log("startNewGame:" + startNewGame)
-        if (startNewGame) {
-            startNewGame = false
-            hideBgrItem()
-            var cnt = (control.colums * control.rows)
-            for (var index = 0; index < cnt; index++) {
-                control.nextBgrItem++
-            }
-            control.nextBgrItem = -1
-        }
-    }
-
-    onNextBgrItemChanged: {
-        setupBgrItem(nextBgrItem) // move background item for here place
-    }
-
+    // ----- Qt provided non-visual children
     ListModel {
         id: bgrItemsModel
         Component.onCompleted: {
@@ -92,6 +127,8 @@ Item {
         }
     }
 
+    // ----- Custom non-visual children
+    // ----- JavaScript functions
     function fillBackgroundModel(m_model) {
         // All item placed left corner
         var cnt = (control.colums * control.rows)
