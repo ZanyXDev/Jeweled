@@ -140,21 +140,11 @@ QQC2.ApplicationWindow {
                 Layout.preferredHeight: 37 * DevicePixelRatio
                 Layout.preferredWidth: 37 * DevicePixelRatio
                 color: "red"
-                Component.onCompleted: {
-
-                    //                    if (isDebugMode)
-                    //                        console.log("StartGemColumn[" + width / 1.5 + "," + height / 1.5 + "]")
-                }
             }
 
             Item {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 2 * DevicePixelRatio
-                Component.onCompleted: {
-
-                    //                    if (isDebugMode)
-                    //                        console.log("Fill item before[" + width / 1.5 + "," + height / 1.5 + "]")
-                }
             }
             StartGemColumn {
                 id: column_1
@@ -196,45 +186,6 @@ QQC2.ApplicationWindow {
             id: gameBoard
             Layout.fillWidth: true
             Layout.preferredHeight: 320 * DevicePixelRatio
-
-            GridLayout {
-                id: gameGrid
-                anchors.fill: parent
-
-                columns: 8
-                columnSpacing: 2 * DevicePixelRatio
-                Repeater {
-                    id: gemsRepeater
-                    objectName: "gemsRepeater"
-                    model: 64
-                    delegate: GemCell {
-                        readonly property int r_index: model.index
-                        readonly property int pos_col: Layout.column
-
-                        type: 0
-                        width: 37 * DevicePixelRatio
-                        height: 37 * DevicePixelRatio
-                        srcSize: 37 * DevicePixelRatio
-                        Component.onCompleted: {
-                            //debugPos(this, DevicePixelRatio)
-                            console.log("Item Layout[col,row]:" + pos_col + "," + Layout.row)
-                        }
-                    }
-                }
-            }
-            Component.onCompleted: {
-                if (isDebugMode) {
-                    console.log("gameBoard.size:[" + gameBoard.width / 1.5 + ","
-                                + gameBoard.height / 1.5 + "]")
-                    console.log("gameBoard mapToItem abs_pos:",
-                                this.mapToItem(mainLayout, 0, 0))
-                    console.log("gameBoard mapFromItem abs_pos:",
-                                mapFromItem(mainLayout, 0, 0))
-                    var globalCoordinates = mapToGlobal(0, 0)
-                    console.log("GlobalCoordinates X: " + globalCoordinates.x
-                                + " Y: " + globalCoordinates.y)
-                }
-            }
         }
         Item {
             id: debugRect
@@ -274,7 +225,7 @@ QQC2.ApplicationWindow {
                     id: tstButton4
                     text: "moveGem"
                     onClicked: {
-                        logRepeaterItems(gemsRepeater)
+                        gameBoard.startNewGame = true
                     }
                 }
                 Item {
