@@ -65,20 +65,19 @@ Item {
                 opacity: 0.55
             }
         }
-
-        Timer {
-            id: timerBgrItem
-            interval: 50
-            repeat: true
-            running: (control.nextBgrItem >= 0
-                      && control.nextBgrItem < (control.colums * control.rows) - 1)
-            onTriggered: control.nextBgrItem++
-        }
     }
 
     onStartNewGameChanged: {
+        if (isDebugMode)
+            console.log("startNewGame:" + startNewGame)
         if (startNewGame) {
-            nextBgrItem = 0 // start Timer
+            startNewGame = false
+            hideBgrItem()
+            var cnt = (control.colums * control.rows)
+            for (var index = 0; index < cnt; index++) {
+                control.nextBgrItem++
+            }
+            control.nextBgrItem = -1
         }
     }
 
@@ -95,7 +94,7 @@ Item {
 
     function fillBackgroundModel(m_model) {
         // All item placed left corner
-        var cnt = control.colums * control.rows
+        var cnt = (control.colums * control.rows)
         for (var x = 0; x < cnt; x++) {
             m_model.append({
                                "x": -100,
@@ -106,6 +105,9 @@ Item {
     }
 
     function setupBgrItem(index) {
+        if (index < 0) {
+            return
+        }
         var m_col = index % 8
         var m_row = (index > 7) ? ((index - m_col) / 8) : 0
         var x = m_col * (control.cellSize + 3 * DevicePixelRatio)
@@ -117,5 +119,14 @@ Item {
         bgrItemsModel.setProperty(index, "x", x)
         bgrItemsModel.setProperty(index, "y", y)
         bgrItemsModel.setProperty(index, "visible", true)
+    }
+
+    function hideBgrItem() {
+        var cnt = (control.colums * control.rows)
+        for (var index = 0; index < cnt; index++) {
+            bgrItemsModel.setProperty(index, "x", -100)
+            bgrItemsModel.setProperty(index, "y", -100)
+            bgrItemsModel.setProperty(index, "visible", false)
+        }
     }
 }
