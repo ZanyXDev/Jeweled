@@ -15,8 +15,8 @@ Item {
     // Required properties should be at the top.
     property int hintX: 0
     property int hintY: 0
-    property int level: 1 //READ level WRITE setLevel NOTIFY levelChanged)
-    property int score: 0 //READ score WRITE setScore NOTIFY scoreChanged)
+    property int level: 0
+    property int score: 0
     property int selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
     property int selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
     property int cellSize: 37 * DevicePixelRatio
@@ -24,11 +24,11 @@ Item {
     property int rows: 8
     property int m_currentStepDelay: 0
 
-    property bool gemSelected: false //READ gemSelected WRITE setGemSelected NOTIFY gemSelectedChanged)
-    property bool gameLost: false //READ gameLost)
     property bool hintVisible: false
-    property bool startNewGame: false
-    property bool isRunning: false
+    property bool gemSelected: false
+    property bool gameLost: false
+    property bool gameStarted: false
+
     property string scoreBoxState: "stateShowAppTitle"
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
@@ -41,14 +41,26 @@ Item {
     // ----- States and transitions.
     states: [
         State {
-            name: "beginRound"
+            name: "newGame"
             PropertyChanges {
                 target: bgrRect
                 scale: 1.0
             }
             PropertyChanges {
                 target: control
-                isRunning: true
+                gameStarted: true
+            }
+            PropertyChanges {
+                target: control
+                gameLost: false
+            }
+            PropertyChanges {
+                target: control
+                level: 1
+            }
+            PropertyChanges {
+                target: control
+                score: 0
             }
             PropertyChanges {
                 target: control
@@ -60,7 +72,7 @@ Item {
     transitions: [
         Transition {
             from: "*"
-            to: "beginRound"
+            to: "newGame"
             SequentialAnimation {
                 PropertyAnimation {
                     target: bgrRect
@@ -201,8 +213,9 @@ Item {
                                "type": generateCellType(),
                                "width": control.cellSize,
                                "height": control.cellSize,
-                               "x"//"startRow":startRow,
-                               //"behaviorPause":Math.abs(startRow)*50 + control.m_currentStepDelay,
+                               "x"// "startRow": startRow,
+                               // "behaviorPause": Math.abs(
+                               //                      startRow) * 50 + control.m_currentStepDelay,
                                : -100,
                                "y": -100,
                                "spawned": true,
