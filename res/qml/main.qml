@@ -147,7 +147,7 @@ QQC2.ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 20 * DevicePixelRatio
                 visible: true //screen.state == "stateGame"
-                value: 0.8 //gameBoard.levelCap()
+                value: gameBoard.levelCap
                 color: "white"
                 secondColor: "green"
             }
@@ -283,6 +283,20 @@ QQC2.ApplicationWindow {
             readonly property string buttonfont: buttonFont.name
             readonly property string aboutfont: aboutFont.name
         }
+        readonly property int smallCellSize: 40
+        readonly property int bigSellSize: 80
+        readonly property int defaultRowCount: 8
+        readonly property int defaultColumnCount: 8
+
+        /* This is msecs. Half of second is enough for smooth animation. */
+        readonly property int timerIterval: 500
+        readonly property int enoughTimeToDie: 1000 // достаточноеВремяДляСмерти
+
+        readonly property int animationStopTreshhold: 3
+        readonly property int levelCapMultiplayer: 60
+
+        readonly property int huperCubeMultiplayer: 2
+        readonly property double difficultyMultiplayer: 1.07
     }
 
     // ----- JavaScript functions
