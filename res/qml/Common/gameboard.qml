@@ -4,6 +4,8 @@ import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 1.15
 import QtQml.Models 2.15
 
+import Components 1.0
+
 Item {
     id: control
 
@@ -19,7 +21,7 @@ Item {
     property int cellSize: 37 * DevicePixelRatio
     property int colums: 8
     property int rows: 8
-    property int nextBgrItem: -1
+    property int m_currentStepDelay: 0
 
     property bool gemSelected: false //READ gemSelected WRITE setGemSelected NOTIFY gemSelectedChanged)
     property bool gameLost: false //READ gameLost)
@@ -54,27 +56,17 @@ Item {
             ScriptAction {
                 script: doFillBgrCells()
             }
+            PauseAnimation {
+                duration: 100
+            }
+            ScriptAction {
+                script: generatedGems()
+            }
         }
     ]
 
     // ----- Signal handlers
-    onStartNewGameChanged: {
-        if (isDebugMode)
-            console.log("startNewGame:" + startNewGame)
-        if (startNewGame) {
-            startNewGame = false
-            hideBgrItem()
-            var cnt = (control.colums * control.rows)
-            for (var index = 0; index < cnt; index++) {
-                control.nextBgrItem++
-            }
-            control.nextBgrItem = -1
-        }
-    }
 
-    onNextBgrItemChanged: {
-        setupBgrItem(nextBgrItem) // move background item for here place
-    }
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
@@ -135,7 +127,12 @@ Item {
             fillBackgroundModel(bgrItemsModel)
         }
     }
-
+    ListModel {
+        id: gemsModel
+        Component.onCompleted: {
+            createEmptyGems(gemsModel)
+        }
+    }
     // ----- Custom non-visual children
     // ----- JavaScript functions
     function fillBackgroundModel(m_model) {
@@ -150,35 +147,57 @@ Item {
         }
     }
 
-    function setupBgrItem(index) {
-        if (index < 0) {
-            return
-        }
-        var m_col = index % 8
-        var m_row = (index > 7) ? ((index - m_col) / 8) : 0
-        var x = m_col * (control.cellSize + 3 * DevicePixelRatio)
-        var y = m_row * (control.cellSize + 3 * DevicePixelRatio)
-
-        x += 2 * DevicePixelRatio
-        y += 2 * DevicePixelRatio
-
-        bgrItemsModel.setProperty(index, "x", x)
-        bgrItemsModel.setProperty(index, "y", y)
-        bgrItemsModel.setProperty(index, "visible", true)
-    }
-
-    function hideBgrItem() {
-        var cnt = (control.colums * control.rows)
-        for (var index = 0; index < cnt; index++) {
-            bgrItemsModel.setProperty(index, "x", -100)
-            bgrItemsModel.setProperty(index, "y", -100)
-            bgrItemsModel.setProperty(index, "visible", false)
-        }
-    }
     function doFillBgrCells() {
         var cnt = (control.colums * control.rows)
         for (var index = 0; index < cnt; index++) {
-            setupBgrItem(index)
+            bgrItemsModel.setProperty(index, "x", getXFromIndex(index))
+            bgrItemsModel.setProperty(index, "y", getYFromIndex(index))
+            bgrItemsModel.setProperty(index, "visible", true)
         }
+    }
+    function createEmptyGems(m_model) {
+        var cnt = (control.colums * control.rows)
+        for (var x = 0; x < cnt; x++) {
+            m_model.append({
+                               "type": generateCellType(),
+                               "width": control.cellSize,
+                               "height": control.cellSize,
+                               "x"//"startRow":startRow,
+                               //"behaviorPause":Math.abs(startRow)*50 + control.m_currentStepDelay,
+                               : -100,
+                               "y": -100,
+                               "spawned": true,
+                               "srcSize": control.cellSize,
+                               "modifier": Modifier.CellState.Normal
+                           })
+        }
+    }
+    function generatedGems() {}
+
+    // -------------------Utility function to use in different places. --------
+
+    // Generate random cell type.
+    function generateCellType() {
+        return Math.floor(Math.random() * 7.0)
+    }
+    function getXFromIndex(index) {
+        if (index < 0) {
+            return -1
+        }
+        var m_col = index % 8
+        var x = m_col * (control.cellSize + 3 * DevicePixelRatio)
+        x += 2 * DevicePixelRatio
+        return x
+    }
+    function getYFromIndex(index) {
+        if (index < 0) {
+            return -1
+        }
+        var m_col = index % 8
+        var m_row = (index > 7) ? ((index - m_col) / 8) : 0
+        var y = m_row * (control.cellSize + 3 * DevicePixelRatio)
+
+        y += 2 * DevicePixelRatio
+        return y
     }
 }
