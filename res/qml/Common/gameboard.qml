@@ -29,7 +29,7 @@ Item {
     property bool hintVisible: false
     property bool startNewGame: false
     property bool isRunning: false
-
+    property string scoreBoxState: "stateShowAppTitle"
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
@@ -49,6 +49,10 @@ Item {
             PropertyChanges {
                 target: control
                 isRunning: true
+            }
+            PropertyChanges {
+                target: control
+                scoreBoxState: "stateShowLevel"
             }
         }
     ]
@@ -76,12 +80,19 @@ Item {
                 ScriptAction {
                     script: generatedGems()
                 }
+                ScriptAction {
+                    script: oneSecondTimer.start()
+                }
             }
         }
     ]
 
     // ----- Signal handlers
-
+    onScoreChanged: {
+        if (scoreBoxState != "stateShowScore") {
+            scoreBoxState = "stateShowScore"
+        }
+    }
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
@@ -152,6 +163,15 @@ Item {
         }
     }
     // ----- Custom non-visual children
+    Timer {
+        id: oneSecondTimer
+        interval: 1000
+        repeat: true
+        running: false
+        onTriggered: control.score++
+        //control.score = Qt.binding(function () {  return 77     })
+    }
+
     // ----- JavaScript functions
     function fillBackgroundModel(m_model) {
         // All item placed left corner
@@ -173,6 +193,7 @@ Item {
             bgrItemsModel.setProperty(index, "visible", true)
         }
     }
+
     function createEmptyGems(m_model) {
         var cnt = (control.colums * control.rows)
         for (var x = 0; x < cnt; x++) {
@@ -190,6 +211,7 @@ Item {
                            })
         }
     }
+
     function generatedGems() {}
 
     // -------------------Utility function to use in different places. --------
@@ -198,6 +220,7 @@ Item {
     function generateCellType() {
         return Math.floor(Math.random() * 7.0)
     }
+
     function getXFromIndex(index) {
         if (index < 0) {
             return -1
@@ -207,6 +230,7 @@ Item {
         x += 2 * DevicePixelRatio
         return x
     }
+
     function getYFromIndex(index) {
         if (index < 0) {
             return -1
