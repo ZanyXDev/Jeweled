@@ -23,7 +23,7 @@ Item {
     property int colums: 8
     property int rows: 8
     property int m_currentStepDelay: 0
-
+    property real levelCap: 0.0
     property bool hintVisible: false
     property bool gemSelected: false
     property bool gameLost: false
@@ -64,6 +64,10 @@ Item {
             }
             PropertyChanges {
                 target: control
+                level: 1
+            }
+            PropertyChanges {
+                target: control
                 scoreBoxState: "stateShowLevel"
             }
         }
@@ -101,9 +105,11 @@ Item {
 
     // ----- Signal handlers
     onScoreChanged: {
+        ///TODO this dirty hack !!! need rewrite
         if (scoreBoxState != "stateShowScore") {
             scoreBoxState = "stateShowScore"
         }
+        calcLevelCap()
     }
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
@@ -226,6 +232,12 @@ Item {
     }
 
     function generatedGems() {}
+
+    function calcLevelCap() {
+        var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
+                           global.difficultyMultiplayer, level - 1))
+        levelCap = score / max_cap
+    }
 
     // -------------------Utility function to use in different places. --------
 
