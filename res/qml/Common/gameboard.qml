@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.15
 import QtQml.Models 2.15
 
 import Components 1.0
+import Theme 1.0
 
 Item {
     id: control
@@ -42,6 +43,10 @@ Item {
         State {
             name: "beginRound"
             PropertyChanges {
+                target: bgrRect
+                scale: 1.0
+            }
+            PropertyChanges {
                 target: control
                 isRunning: true
             }
@@ -52,15 +57,25 @@ Item {
         Transition {
             from: "*"
             to: "beginRound"
-
-            ScriptAction {
-                script: doFillBgrCells()
-            }
-            PauseAnimation {
-                duration: 100
-            }
-            ScriptAction {
-                script: generatedGems()
+            SequentialAnimation {
+                PropertyAnimation {
+                    target: bgrRect
+                    property: "scale"
+                    easing.type: Easing.InExpo
+                    duration: 450
+                }
+                PauseAnimation {
+                    duration: 250
+                }
+                ScriptAction {
+                    script: doFillBgrCells()
+                }
+                PauseAnimation {
+                    duration: 100
+                }
+                ScriptAction {
+                    script: generatedGems()
+                }
             }
         }
     ]
@@ -82,6 +97,9 @@ Item {
         radius: 4 * DevicePixelRatio
         color: "transparent"
         z: -1
+        scale: 0.1
+        border.color: Theme.primary
+        border.width: 1 * DevicePixelRatio
 
         Repeater {
             id: repeaterItem
