@@ -120,77 +120,107 @@ QQC2.ApplicationWindow {
         }
     }
 
-    ColumnLayout {
-        id: mainLayout
+    Item {
+        id: screen
+        // ----- Property Declarations
+        // Required properties should be at the top.
+        // ----- Signal declarations
+        // ----- In this section, we group the size and position information together.
         anchors.fill: parent
-        spacing: 2 * DevicePixelRatio
-        QQC2.Frame {
-            id: spacerFrame
-            visible: true
-            Layout.fillWidth: true
-            Layout.preferredHeight: 2 * DevicePixelRatio
-        }
+        // If a single assignment, dot notation can be used.
+        // ----- Then comes the other properties. There's no predefined order to these.
+        // ----- Then attached properties and attached signal handlers.
+        // ----- States and transitions.
+        // ----- Signal handlers
+        // ----- Visual children.
 
-        GameBoard {
-            id: gameBoard
-            Layout.fillWidth: true
-            Layout.preferredHeight: 320 * DevicePixelRatio
-        }
+        //state: "stateMainMenu"
+        ColumnLayout {
+            id: mainLayout
+            anchors.fill: parent
+            anchors.leftMargin: 2 * DevicePixelRatio
+            anchors.rightMargin: 2 * DevicePixelRatio
 
-        Item {
-            id: debugRect
-            Layout.fillWidth: true
-            Layout.preferredHeight: 48 * DevicePixelRatio
+            spacing: 2 * DevicePixelRatio
+            JProgressBar {
+                id: pbLevelProgress
+                Layout.fillWidth: true
+                Layout.preferredHeight: 20 * DevicePixelRatio
+                visible: true //screen.state == "stateGame"
+                value: 0.8 //gameBoard.levelCap()
+                color: "white"
+                secondColor: "green"
+            }
+            QQC2.Frame {
+                id: spacerFrame
+                visible: true
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2 * DevicePixelRatio
+            }
 
-            RowLayout {
-                id: testButton
-                anchors.fill: parent
-                spacing: 8 * DevicePixelRatio
-                Item {
-                    Layout.fillHeight: true
-                }
-                QQC2.Button {
-                    id: tstButton1
-                    text: "stateShowLevel"
-                    onClicked: {
-                        scorebox.state = "stateShowLevel"
-                    }
-                }
+            GameBoard {
+                id: gameBoard
+                Layout.fillWidth: true
+                Layout.preferredHeight: 320 * DevicePixelRatio
+            }
 
-                QQC2.Button {
-                    id: tstButton2
-                    text: "stateShowScore"
-                    onClicked: {
-                        scorebox.state = "stateShowScore"
+            Item {
+                id: debugRect
+                Layout.fillWidth: true
+                Layout.preferredHeight: 48 * DevicePixelRatio
+
+                RowLayout {
+                    id: testButton
+                    anchors.fill: parent
+                    spacing: 8 * DevicePixelRatio
+                    Item {
+                        Layout.fillHeight: true
                     }
-                }
-                QQC2.Button {
-                    id: tstButton3
-                    text: "showAbout"
-                    onClicked: {
-                        dlgAbout.open()
+                    QQC2.Button {
+                        id: tstButton1
+                        text: "stateShowLevel"
+                        onClicked: {
+                            scorebox.state = "stateShowLevel"
+                        }
                     }
-                }
-                QQC2.Button {
-                    id: tstButton4
-                    text: "moveGem"
-                    onClicked: {
-                        gameBoard.state = "beginRound"
+
+                    QQC2.Button {
+                        id: tstButton2
+                        text: "stateShowScore"
+                        onClicked: {
+                            scorebox.state = "stateShowScore"
+                        }
                     }
-                }
-                Item {
-                    Layout.fillHeight: true
+                    QQC2.Button {
+                        id: tstButton3
+                        text: "showAbout"
+                        onClicked: {
+                            dlgAbout.open()
+                        }
+                    }
+                    QQC2.Button {
+                        id: tstButton4
+                        text: "NewGame"
+                        onClicked: {
+                            gameBoard.state = "newGame"
+                        }
+                    }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
             }
-        }
 
-        Component.onCompleted: {
-            if (isDebugMode)
-                console.log("mainLayout.size:[" + mainLayout.width / 1.5 + ","
-                            + mainLayout.height / 1.5 + "]")
+            Component.onCompleted: {
+                if (isDebugMode)
+                    console.log("mainLayout.size:[" + mainLayout.width / 1.5
+                                + "," + mainLayout.height / 1.5 + "]")
+            }
         }
+        // ----- Qt provided non-visual children
+        // ----- Custom non-visual children
+        // ----- JavaScript functions
     }
-
     AboutDialog {
         id: dlgAbout
     }
