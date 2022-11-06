@@ -17,5 +17,6 @@
         <file>res/qml/Components/modifier.qml</file>
         <file>res/qml/DataModels/qmldir</file>
         <file>res/qml/DataModels/gemitemsmodel.qml</file>
+        <file>res/qml/Components/jprogressbar.qml</file>
     </qresource>
 </RCC>
