@@ -97,9 +97,9 @@ QQC2.ApplicationWindow {
                 id: scorebox
                 Layout.fillWidth: true
                 appTitle: qsTr("FreeJeweled")
-                gameBoardScore: (isDebugMode) ? "0000" : "9999" //AppCore.getBoardScore
-                gameBoardLevel: (isDebugMode) ? 13 : 1 //AppCore.getBoardLevel
-                state: "stateShowAppTitle"
+                gameBoardScore: gameBoard.score
+                gameBoardLevel: gameBoard.level
+                state: gameBoard.scoreBoxState
             }
 
             Item {
@@ -129,57 +129,6 @@ QQC2.ApplicationWindow {
             visible: true
             Layout.fillWidth: true
             Layout.preferredHeight: 2 * DevicePixelRatio
-        }
-        RowLayout {
-            id: hideGemItemsLayout
-            Layout.fillWidth: true
-            Layout.preferredHeight: 37 * DevicePixelRatio
-            spacing: 2 * DevicePixelRatio
-
-            component StartGemColumn: Rectangle {
-                Layout.preferredHeight: 37 * DevicePixelRatio
-                Layout.preferredWidth: 37 * DevicePixelRatio
-                color: "red"
-            }
-
-            Item {
-                Layout.fillHeight: true
-                Layout.preferredWidth: 2 * DevicePixelRatio
-            }
-            StartGemColumn {
-                id: column_1
-            }
-            StartGemColumn {
-                id: column_2
-                GemCell {
-                    id: testGem_1
-                    type: 2
-                    width: 37 * DevicePixelRatio
-                    height: 37 * DevicePixelRatio
-                    srcSize: 37 * DevicePixelRatio
-                }
-            }
-            StartGemColumn {
-                id: column_3
-            }
-            StartGemColumn {
-                id: column_4
-            }
-            StartGemColumn {
-                id: column_5
-            }
-            StartGemColumn {
-                id: column_6
-            }
-            StartGemColumn {
-                id: column_7
-            }
-            StartGemColumn {
-                id: column_8
-            }
-            Item {
-                Layout.fillWidth: true
-            }
         }
 
         GameBoard {
