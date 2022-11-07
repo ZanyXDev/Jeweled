@@ -144,20 +144,15 @@ QQC2.ApplicationWindow {
             anchors.rightMargin: 2 * DevicePixelRatio
 
             spacing: 2 * DevicePixelRatio
+
             JProgressBar {
                 id: pbLevelProgress
                 Layout.fillWidth: true
-                Layout.preferredHeight: 20 * DevicePixelRatio
+                Layout.preferredHeight: 25 * DevicePixelRatio
                 visible: true //screen.state == "stateGame"
                 value: gameBoard.levelCap
                 color: "white"
                 secondColor: "green"
-            }
-            QQC2.Frame {
-                id: spacerFrame
-                visible: true
-                Layout.fillWidth: true
-                Layout.preferredHeight: 2 * DevicePixelRatio
             }
 
             GameBoard {
@@ -165,51 +160,59 @@ QQC2.ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 320 * DevicePixelRatio
             }
-
-            Item {
-                id: debugRect
+            QQC2.Frame {
+                id: spacerFrame_3
+                visible: true
                 Layout.fillWidth: true
-                Layout.preferredHeight: 48 * DevicePixelRatio
+                Layout.preferredHeight: 2 * DevicePixelRatio
+            }
+            RowLayout {
+                id: toolBarLayout
+                Layout.fillWidth: true
+                Layout.preferredHeight: 20 * DevicePixelRatio
+                spacing: 10 * DevicePixelRatio
+                Item {
+                    Layout.fillWidth: true
+                }
+                BaseButton {
+                    id: btnRemoveAll
+                    text: qsTr("Run")
+                    font {
+                        family: global.fonts.buttonfont
+                        pointSize: global.smallFontSize
+                    }
+                    onClicked: {
+                        ///TODO need change state  screen item
+                        gameBoard.state = "newGame"
+                        //gameBoard.removeAll()
+                    }
+                }
+                BaseButton {
+                    id: btnReset
+                    text: qsTr("Reset")
+                    font {
+                        family: global.fonts.buttonfont
+                        pointSize: global.smallFontSize
+                    }
+                    onClicked: {
 
-                RowLayout {
-                    id: testButton
-                    anchors.fill: parent
-                    spacing: 8 * DevicePixelRatio
-                    Item {
-                        Layout.fillHeight: true
+                        //gameBoard.resetBoard()
                     }
-                    QQC2.Button {
-                        id: tstButton1
-                        text: "stateShowLevel"
-                        onClicked: {
-                            scorebox.state = "stateShowLevel"
-                        }
+                }
+                BaseButton {
+                    id: btnShowHint
+                    text: qsTr("Hint")
+                    font {
+                        family: global.fonts.buttonfont
+                        pointSize: global.smallFontSize
                     }
+                    onClicked: {
 
-                    QQC2.Button {
-                        id: tstButton2
-                        text: "stateShowScore"
-                        onClicked: {
-                            scorebox.state = "stateShowScore"
-                        }
+                        // gameBoard.showHint()
                     }
-                    QQC2.Button {
-                        id: tstButton3
-                        text: "showAbout"
-                        onClicked: {
-                            dlgAbout.open()
-                        }
-                    }
-                    QQC2.Button {
-                        id: tstButton4
-                        text: "NewGame"
-                        onClicked: {
-                            gameBoard.state = "newGame"
-                        }
-                    }
-                    Item {
-                        Layout.fillHeight: true
-                    }
+                }
+                Item {
+                    Layout.fillWidth: true
                 }
             }
 
@@ -318,37 +321,5 @@ QQC2.ApplicationWindow {
             bgrStr = "0" + bgrStr
         }
         return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
-    }
-
-    function logRepeaterItems(repeaterItem) {
-        var new_place = Math.floor(Math.random() * 63 + 1)
-        testGem_1.parent = repeaterItem.itemAt(new_place)
-
-        //        for (var i = 0; i < repeaterItem.count; i++) {
-        //        console.log("repeaterItem:" + 5 + " Properties\n")
-        //        var item = repeaterItem.itemAt(i)
-        //        for (var p in item)
-        //            console.log(p + ": " + item[p] + "\n")
-        //        }
-    }
-
-    function updatePos(item_orig, item_dest) {
-        var pos_abs = appWnd.mapFromItem(item_orig.parent, item_orig.x,
-                                         item_orig.y)
-        if (isDebugMode)
-            console.log("updatePos() pos_abs:" + pos_abs)
-        return appWnd.mapToItem(item_dest.parent, pos_abs.x, pos_abs.y)
-    }
-
-    function debugPos(item, dp) {
-        console.log("---------- Item pos -------------")
-        console.log("Item parent:" + item.parent)
-        console.log("Item index:" + item.r_index)
-
-        console.log("size:[" + item.width / dp + "," + item.height / dp + "]")
-        console.log("pos:[" + item.x + "," + item.y + "]")
-        console.log("mapToItem abs_pos:", item.mapToItem(item.parent, 0, 0))
-        console.log("mapFromItem abs_pos:", item.mapFromItem(item.parent, 0, 0))
-        console.log("mapToGlobal pos: " + item.mapToGlobal(0, 0))
     }
 }
