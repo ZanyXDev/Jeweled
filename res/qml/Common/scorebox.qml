@@ -39,12 +39,13 @@ Item {
 
     InfoLablel {
         id: txtScore
-        text: gameBoardScore
+        ///TODO score move if value changed . Need separate Score [Value]
+        text: qsTr("Score: ") + gameBoardScore + " "
     }
 
     InfoLablel {
         id: txtLevel
-        text: "Level " + gameBoardLevel + " "
+        text: qsTr("Level: ") + gameBoardLevel + " "
     }
 
     states: [
