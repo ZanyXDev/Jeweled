@@ -5,6 +5,8 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.LocalStorage 2.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Controls.Material.impl 2.15
+import QtQuick.Controls.impl 2.15
+import QtGraphicalEffects 1.0
 
 import Common 1.0
 import Theme 1.0
@@ -276,7 +278,7 @@ QQC2.ApplicationWindow {
 
         readonly property int largeFontSize: 36
         readonly property int middleFontSize: 24
-        readonly property int smallFontSize: 16
+        readonly property int smallFontSize: 12
 
         property QtObject fonts: QtObject {
             readonly property string gamefont: gameFont.name
