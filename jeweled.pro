@@ -5,7 +5,7 @@ TARGET = FreeJeweled
 
 QT       += core gui concurrent qml quick quickcontrols2 multimedia
 
-VERSION = 0.2
+VERSION = 0.5
 
 # allows use of version variable elsewhere
 DEFINES += "VERSION=$$VERSION"
