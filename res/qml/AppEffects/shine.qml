@@ -1,41 +1,61 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Controls.Material 2.15
-import QtQuick.Layouts 1.15
-import QtGraphicalEffects 1.0
 
 Item {
-    id: shineItem
-    width: 30*g_scaleFactor
-    height: 30*g_scaleFactor
-    z: 5
+    id: control
     property int animationDuration: 9000
+    width: 30 * DevicePixelRatio
+    height: 30 * DevicePixelRatio
+    z: 5
 
-    Image {
-        id: firstShine
-        opacity: 0.8
+    component ShineImage: Image {
         anchors.fill: parent
-        source: ":/pics/effects/shine.svg"
+        source: "qrc:/res/images/effects/shine.svg"
         smooth: true
-        sourceSize { width: shineItem.width; height: shineItem.height }
+        sourceSize {
+            width: parent.width
+            height: parent.height
+        }
     }
 
-    Image {
+    ShineImage {
+        id: firstShine
+        opacity: 0.8
+    }
+
+    ShineImage {
         id: secondShine
-        anchors.fill: parent
-        source: ":/pics/effects/shine.svg"
-        smooth: true
-        sourceSize { width: shineItem.width; height: shineItem.height }
     }
 
     ParallelAnimation {
-        running: shineItem.visible
-        NumberAnimation { target: firstShine; property: "rotation"; to: 360; duration: animationDuration; loops: Animation.Infinite }
-        NumberAnimation { target: secondShine; property: "rotation"; to: -360; duration: animationDuration/2; loops: Animation.Infinite }
+        running: control.visible
+        NumberAnimation {
+            target: firstShine
+            property: "rotation"
+            to: 360
+            duration: animationDuration
+            loops: Animation.Infinite
+        }
+        NumberAnimation {
+            target: secondShine
+            property: "rotation"
+            to: -360
+            duration: animationDuration / 2
+            loops: Animation.Infinite
+        }
         SequentialAnimation {
             loops: Animation.Infinite
-            NumberAnimation { target: secondShine; property: "opacity"; to: 0.0; duration: animationDuration/8 }
-            NumberAnimation { target: secondShine; property: "opacity"; to: 1.0; duration: animationDuration/8 }
+            NumberAnimation {
+                target: secondShine
+                property: "opacity"
+                to: 0.0
+                duration: animationDuration / 8
+            }
+            NumberAnimation {
+                target: secondShine
+                property: "opacity"
+                to: 1.0
+                duration: animationDuration / 8
+            }
         }
     }
 }
