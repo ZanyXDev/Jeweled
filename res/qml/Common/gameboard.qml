@@ -44,6 +44,10 @@ Item {
             name: "newGame"
             PropertyChanges {
                 target: bgrRect
+                visible: true
+            }
+            PropertyChanges {
+                target: bgrRect
                 scale: 1.0
             }
             PropertyChanges {
@@ -134,7 +138,7 @@ Item {
         scale: 0.1
         border.color: Theme.primary
         border.width: 1 * DevicePixelRatio
-
+        visible: false
         Repeater {
             id: repeaterItem
             model: bgrItemsModel
