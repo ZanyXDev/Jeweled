@@ -13,6 +13,7 @@ import Theme 1.0
 import Dialogs 1.0
 import Components 1.0
 import DataModels 1.0
+import AppEffects 1.0
 
 QQC2.ApplicationWindow {
     id: appWnd
@@ -266,11 +267,41 @@ QQC2.ApplicationWindow {
 
             spacing: 2 * DevicePixelRatio
 
+            Image {
+                id: gameTitle
+                Layout.preferredWidth: parent.width * 0.9
+                Layout.preferredHeight: 126. / 346. * width
+                Layout.topMargin: 30 * DevicePixelRatio
+                Layout.alignment: Qt.AlignHCenter
+
+                source: "qrc:/res/images/titleText.svg"
+                sourceSize {
+                    width: gameTitle.width
+                    height: gameTitle.height
+                }
+
+                Image {
+                    anchors.centerIn: parent
+                    width: 50 * DevicePixelRatio
+                    height: 50 * DevicePixelRatio
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    visible: gameTitle.y > 0
+                    source: "qrc:/res/images/gems/orangeGem.svg"
+                    Shine {
+                        anchors {
+                            leftMargin: 10 * DevicePixelRatio
+                            topMargin: 10 * DevicePixelRatio
+                        }
+                    }
+                }
+            }
+
             JProgressBar {
                 id: pbLevelProgress
                 Layout.fillWidth: true
                 Layout.preferredHeight: 25 * DevicePixelRatio
-                visible: true //screen.state == "stateGame"
+                visible: screen.state == "stateGame"
                 value: gameBoard.levelCap
                 color: "white"
                 secondColor: "green"
