@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.15
 import QtQml.Models 2.15
 
 import Components 1.0
+import Common 1.0
 import Theme 1.0
 
 Item {
@@ -138,33 +139,18 @@ Item {
         scale: 0.1
         border.color: Theme.primary
         border.width: 1 * DevicePixelRatio
-        visible: false
+        visible: true
         Repeater {
             id: repeaterItem
             model: bgrItemsModel
-            Image {
-                //TODO Move to separeted file
-                id: bgrImg
+            BgrTileItem {
                 readonly property int idx: model.index
                 x: model.x
                 y: model.y
                 visible: model.visible
-                width: control.cellSize
-                height: control.cellSize
-                source: "qrc:/res/images/tile_background.png"
-                sourceSize.width: control.cellSize
-                sourceSize.height: control.cellSize
-                fillMode: Image.PreserveAspectFit
-
-                Behavior on y {
-                    enabled: true
-                    PropertyAnimation {
-                        easing.type: Easing.OutBack
-                        duration: 350
-                    }
-                }
-
-                opacity: 0.55
+                width: global.smallCellSize
+                height: global.smallCellSize
+                animationTime: global.timerIterval
             }
         }
     }

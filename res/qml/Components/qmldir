@@ -3,4 +3,5 @@ BaseButton 1.0 basebutton.qml
 GemCell 1.0 gemcell.qml
 Modifier 1.0 modifier.qml
 JProgressBar 1.0 jprogressbar.qml
+BgrTileItem 1.0 bgr_item.qml
 
