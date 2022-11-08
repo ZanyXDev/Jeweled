@@ -43,7 +43,6 @@ QQC2.ApplicationWindow {
 
     // ----- Then attached properties and attached signal handlers.
 
-    // ----- States and transitions.
     // ----- Signal handlers
     onScreenOrientationChanged: {
         screenOrientationUpdated(screenOrientation)
@@ -63,9 +62,6 @@ QQC2.ApplicationWindow {
                 console.log("onAppInForegroundChanged-> [appInForeground:"
                             + appInForeground + ", appInitialized:" + appInitialized + "]")
         }
-    }
-    Component.onCompleted: {
-
     }
 
     background: Image {
@@ -96,12 +92,12 @@ QQC2.ApplicationWindow {
             }
 
             ScoreBox {
-                id: scorebox
+                id: scoreBox
                 Layout.fillWidth: true
                 appTitle: qsTr("FreeJeweled")
                 gameBoardScore: gameBoard.score
                 gameBoardLevel: gameBoard.level
-                state: gameBoard.scoreBoxState
+                state: "stateShowAppTitle"
             }
 
             Item {
@@ -123,6 +119,7 @@ QQC2.ApplicationWindow {
     }
 
     Item {
+        visible: true
         id: screen
         // ----- Property Declarations
         // Required properties should be at the top.
@@ -133,10 +130,134 @@ QQC2.ApplicationWindow {
         // ----- Then comes the other properties. There's no predefined order to these.
         // ----- Then attached properties and attached signal handlers.
         // ----- States and transitions.
+        states: [
+            State {
+                name: "stateMainMenu"
+                /* Main menu elements anchors */
+                //                AnchorChanges {
+                //                    target: gameTitle
+                //                    anchors.top: screen.top
+                //                }
+                /* Game elements anchors */
+            },
+            State {
+                name: "stateGame"
+                /* Main menu elements anchors */
+                /* Game elements anchors */
+            },
+            State {
+                name: "stateSettings"
+                /* Main menu elements anchors */
+                /* Game elements anchors */
+                /* Showing Settings and hiding About dialog */
+            },
+            State {
+                name: "stateAbout"
+                /* Showing About and hiding Settings dialogs */
+                /* Showing info about app version */
+                /* Showing info about app version */
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 1.0
+                }
+                /* Game elements anchors */
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "stateMainMenu"
+                to: "stateGame"
+                SequentialAnimation {
+
+                    ScriptAction {
+                        script: gameBoard.newGame()
+                    }
+                    ScriptAction {
+                        script: txtAppVersion.opacity = 0.0
+                    }
+                    PropertyAction {
+                        target: scoreBox
+                        property: "state"
+                        value: "stateShowLevel"
+                    }
+                }
+            },
+            Transition {
+                from: "stateMainMenu"
+                to: "stateSettings"
+                AnchorAnimation {
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
+                PropertyAction {
+                    target: scoreBox
+                    property: "state"
+                    value: "stateHidden"
+                }
+                ScriptAction {
+                    script: txtAppVersion.opacity = 0.0
+                }
+            },
+            Transition {
+                from: "stateSettings"
+                to: "stateMainMenu"
+                SequentialAnimation {
+                    ScriptAction {
+                        script: dlgSettings.opacity = 0.0
+                    }
+                    ScriptAction {
+                        script: txtAppVersion.opacity = 1.0
+                    }
+                    AnchorAnimation {
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            },
+            Transition {
+                from: "stateGame"
+                to: "stateMainMenu"
+                SequentialAnimation {
+                    ScriptAction {
+                        script: {
+                            if (!gameBoard.gameLost)
+                                gameBoard.saveBoardStateToFile()
+                        }
+                    }
+                    ScriptAction {
+                        script: txtAppVersion.opacity = 1.0
+                    }
+                    PropertyAction {
+                        target: gameBoard
+                        property: "opacity"
+                        value: 0.0
+                    }
+                    PropertyAction {
+                        target: scoreBox
+                        property: "state"
+                        value: "stateHidden"
+                    }
+                    AnchorAnimation {
+                        targets: toolBar
+                        duration: 400
+                    }
+                    PropertyAction {
+                        target: bgrMainMenu
+                        property: "visible"
+                        value: true
+                    }
+                    AnchorAnimation {
+                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
+        ]
+
         // ----- Signal handlers
         // ----- Visual children.
-
-        //state: "stateMainMenu"
+        state: "stateMainMenu"
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -175,16 +296,14 @@ QQC2.ApplicationWindow {
                     Layout.fillWidth: true
                 }
                 BaseButton {
-                    id: btnRemoveAll
+                    id: btnRun
                     text: qsTr("Run")
                     font {
                         family: global.fonts.buttonfont
                         pointSize: global.smallFontSize
                     }
                     onClicked: {
-                        ///TODO need change state  screen item
-                        gameBoard.state = "newGame"
-                        //gameBoard.removeAll()
+                        screen.state = "stateGame"
                     }
                 }
                 BaseButton {
@@ -195,8 +314,7 @@ QQC2.ApplicationWindow {
                         pointSize: global.smallFontSize
                     }
                     onClicked: {
-
-                        //gameBoard.resetBoard()
+                        gameBoard.resetBoard()
                     }
                 }
                 BaseButton {
@@ -226,10 +344,10 @@ QQC2.ApplicationWindow {
         // ----- Custom non-visual children
         // ----- JavaScript functions
     }
+
     AboutDialog {
         id: dlgAbout
     }
-
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction
