@@ -146,6 +146,18 @@ QQC2.ApplicationWindow {
                     target: scoreBox
                     state: "stateShowAppTitle"
                 }
+                PropertyChanges {
+                    target: btnRun
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnReset
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnShowHint
+                    enabled: false
+                }
             },
             State {
                 name: "stateMainMenu"
@@ -158,12 +170,50 @@ QQC2.ApplicationWindow {
                     target: gameTitle
                     opacity: 0.0
                 }
-
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowLevel"
+                }
+                PropertyChanges {
+                    target: btnRun
+                    enabled: true
+                }
+                PropertyChanges {
+                    target: btnReset
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnShowHint
+                    enabled: false
+                }
                 /* Game elements anchors */
             },
             State {
                 name: "stateGame"
-                /* Main menu elements anchors */
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowScore"
+                }
+                PropertyChanges {
+                    target: btnRun
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnReset
+                    enabled: true
+                }
+                PropertyChanges {
+                    target: btnShowHint
+                    enabled: true
+                }
                 /* Game elements anchors */
             },
             State {
@@ -186,105 +236,77 @@ QQC2.ApplicationWindow {
         ]
         transitions: [
             Transition {
-                from: "stateAppStarted"
-                to: "stateMainMenu"
-                SequentialAnimation {
-                    ScriptAction {
-                        script: console.log(
-                                    "Transition: stateAppStarted->stateMainMenu")
-                    }
-                    ScriptAction {
-                        script: {
-
-                            if (isDebugMode)
-                                console.log("txtAppVersion.opacity:" + txtAppVersion.opacity)
-                        }
-                    }
-                }
-            },
-            Transition {
                 from: "stateMainMenu"
                 to: "stateGame"
-                SequentialAnimation {
-
-                    ScriptAction {
-                        script: gameBoard.newGame()
-                    }
-                    ScriptAction {
-                        script: txtAppVersion.opacity = 0.0
-                    }
-                    PropertyAction {
-                        target: scoreBox
-                        property: "state"
-                        value: "stateShowLevel"
-                    }
+                ScriptAction {
+                    script: gameBoard.newGame()
                 }
             },
             Transition {
                 from: "stateMainMenu"
                 to: "stateSettings"
-                AnchorAnimation {
-                    duration: 500
-                    easing.type: Easing.InOutQuad
-                }
-                PropertyAction {
-                    target: scoreBox
-                    property: "state"
-                    value: "stateHidden"
-                }
-                ScriptAction {
-                    script: txtAppVersion.opacity = 0.0
-                }
+                //                AnchorAnimation {
+                //                    duration: 500
+                //                    easing.type: Easing.InOutQuad
+                //                }
+                //                PropertyAction {
+                //                    target: scoreBox
+                //                    property: "state"
+                //                    value: "stateHidden"
+                //                }
+                //                ScriptAction {
+                //                    script: txtAppVersion.opacity = 0.0
+                //                }
             },
             Transition {
                 from: "stateSettings"
                 to: "stateMainMenu"
-                SequentialAnimation {
-                    ScriptAction {
-                        script: dlgSettings.opacity = 0.0
-                    }
-                    ScriptAction {
-                        script: txtAppVersion.opacity = 1.0
-                    }
-                    AnchorAnimation {
-                        duration: 500
-                        easing.type: Easing.InOutQuad
-                    }
-                }
+                //                SequentialAnimation {
+                //                    ScriptAction {
+                //                        script: dlgSettings.opacity = 0.0
+                //                    }
+                //                    ScriptAction {
+                //                        script: txtAppVersion.opacity = 1.0
+                //                    }
+                //                    AnchorAnimation {
+                //                        duration: 500
+                //                        easing.type: Easing.InOutQuad
+                //                    }
+                //                }
             },
             Transition {
                 from: "stateGame"
                 to: "stateMainMenu"
-                SequentialAnimation {
+                //                SequentialAnimation {
 
-                    ScriptAction {
-                        script: txtAppVersion.opacity = 1.0
-                    }
-                    PropertyAction {
-                        target: gameBoard
-                        property: "opacity"
-                        value: 0.0
-                    }
-                    PropertyAction {
-                        target: scoreBox
-                        property: "state"
-                        value: "stateHidden"
-                    }
-                    AnchorAnimation {
-                        targets: toolBar
-                        duration: 400
-                    }
-                    //                    PropertyAction {
-                    //                        target: bgrMainMenu
-                    //                        property: "visible"
-                    //                        value: true
-                    //                    }
-                    //                    AnchorAnimation {
-                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
-                    //                        duration: 500
-                    //                        easing.type: Easing.InOutQuad
-                    //                    }
-                }
+                //                    ScriptAction {
+                //                        script: txtAppVersion.opacity = 1.0
+                //                    }
+                //                    PropertyAction {
+                //                        target: gameBoard
+                //                        property: "opacity"
+                //                        value: 0.0
+                //                    }
+                //                    PropertyAction {
+                //                        target: scoreBox
+                //                        property: "state"
+                //                        value: "stateHidden"
+                //                    }
+                //                    AnchorAnimation {
+                //                        targets: toolBar
+                //                        duration: 400
+                //                    }
+                //                    //                    PropertyAction {
+                //                    //                        target: bgrMainMenu
+                //                    //                        property: "visible"
+                //                    //                        value: true
+                //                    //                    }
+                //                    //                    AnchorAnimation {
+                //                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                //                    //                        duration: 500
+                //                    //                        easing.type: Easing.InOutQuad
+                //                    //                    }
+                //                }
             }
         ]
 
@@ -327,10 +349,12 @@ QQC2.ApplicationWindow {
 
             GameBoard {
                 id: gameBoard
-
                 Layout.fillWidth: true
                 Layout.preferredHeight: 320 * DevicePixelRatio
                 visible: screen.state == "stateGame"
+                onHeightChanged: {
+                    console.log("gameBoard.onHeightChanged:" + gameBoard.height)
+                }
             }
             QQC2.Frame {
                 id: spacerFrame_3
