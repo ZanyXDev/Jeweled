@@ -134,7 +134,6 @@ QQC2.ApplicationWindow {
         states: [
             State {
                 name: "stateAppStarted"
-                /* Showing info about app version */
                 PropertyChanges {
                     target: txtAppVersion
                     opacity: 1.0
@@ -361,6 +360,7 @@ QQC2.ApplicationWindow {
                 }
                 BaseButton {
                     id: btnReset
+
                     text: qsTr("Reset")
                     font {
                         family: global.fonts.buttonfont
@@ -439,8 +439,7 @@ QQC2.ApplicationWindow {
 
         onTriggered: {
             Theme.toggleTheme()
-            if (isDebugMode)
-                console.log("changeThemeMenuAction click")
+            global.toLog("changeThemeMenuAction click")
         }
     }
     FontLoader {
@@ -480,8 +479,8 @@ QQC2.ApplicationWindow {
             readonly property string buttonfont: buttonFont.name
             readonly property string aboutfont: aboutFont.name
         }
-        readonly property int smallCellSize: 40
-        readonly property int bigSellSize: 80
+        readonly property int smallCellSize: 37 * DevicePixelRatio
+        readonly property int bigSellSize: smallCellSize * 2
         readonly property int defaultRowCount: 8
         readonly property int defaultColumnCount: 8
 
@@ -494,6 +493,11 @@ QQC2.ApplicationWindow {
 
         readonly property int huperCubeMultiplayer: 2
         readonly property double difficultyMultiplayer: 1.07
+        function toLog(tag, msg) {
+            if (isDebugMode) {
+                console.log("I:" + tag + ":" + msg)
+            }
+        }
     }
 
     // ----- JavaScript functions
