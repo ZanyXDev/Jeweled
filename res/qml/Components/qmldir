@@ -3,5 +3,4 @@ BaseButton 1.0 basebutton.qml
 GemCell 1.0 gemcell.qml
 Modifier 1.0 modifier.qml
 JProgressBar 1.0 jprogressbar.qml
-GameTitle 1.0 g_title.qml
 
