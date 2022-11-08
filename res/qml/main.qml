@@ -313,6 +313,21 @@ QQC2.ApplicationWindow {
         // ----- Signal handlers
         // ----- Visual children.
         state: "stateAppStarted"
+        GameTitle {
+            id: gameTitle
+            width: parent.width * 0.9
+            height: 126. / 346. * width
+            anchors.topMargin: 30 * DevicePixelRatio
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea {
+                id: gameTitleMouseArea
+                anchors.fill: parent
+                onClicked: {
+                    screen.state = "stateMainMenu"
+                }
+            }
+        }
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -320,22 +335,6 @@ QQC2.ApplicationWindow {
             anchors.rightMargin: 2 * DevicePixelRatio
 
             spacing: 2 * DevicePixelRatio
-
-            GameTitle {
-                id: gameTitle
-                Layout.preferredWidth: parent.width * 0.9
-                Layout.preferredHeight: 126. / 346. * width
-                Layout.topMargin: 30 * DevicePixelRatio
-                Layout.alignment: Qt.AlignHCenter
-                MouseArea {
-                    id: gameTitleMouseArea
-                    anchors.fill: parent
-                    onClicked: {
-                        screen.state = "stateMainMenu"
-                        console.log("screen.state:" + screen.state)
-                    }
-                }
-            }
 
             JProgressBar {
                 id: pbLevelProgress
@@ -438,6 +437,31 @@ QQC2.ApplicationWindow {
                                 + "," + mainLayout.height / 1.5 + "]")
             }
         }
+        Text {
+            id: txtAppVersion
+            width: parent.width * 0.9
+
+            anchors {
+                bottom: screen.bottom
+                right: screen.right
+                margins: 3 * DevicePixelRatio
+            }
+            color: Theme.accent
+            visible: opacity > 0
+            text: g_appVersion
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignRight
+            font {
+                pointSize: global.smallFontSize
+                family: global.fonts.buttonfont
+            }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: global.timerIterval
+                }
+            }
+        }
+
         // ----- Qt provided non-visual children
         // ----- Custom non-visual children
         // ----- JavaScript functions
