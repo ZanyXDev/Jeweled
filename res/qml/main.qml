@@ -133,12 +133,33 @@ QQC2.ApplicationWindow {
         // ----- States and transitions.
         states: [
             State {
+                name: "stateAppStarted"
+                /* Showing info about app version */
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowAppTitle"
+                }
+            },
+            State {
                 name: "stateMainMenu"
                 /* Main menu elements anchors */
-                //                AnchorChanges {
-                //                    target: gameTitle
-                //                    anchors.top: screen.top
-                //                }
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 0.0
+                }
+
                 /* Game elements anchors */
             },
             State {
@@ -165,6 +186,23 @@ QQC2.ApplicationWindow {
             }
         ]
         transitions: [
+            Transition {
+                from: "stateAppStarted"
+                to: "stateMainMenu"
+                SequentialAnimation {
+                    ScriptAction {
+                        script: console.log(
+                                    "Transition: stateAppStarted->stateMainMenu")
+                    }
+                    ScriptAction {
+                        script: {
+
+                            if (isDebugMode)
+                                console.log("txtAppVersion.opacity:" + txtAppVersion.opacity)
+                        }
+                    }
+                }
+            },
             Transition {
                 from: "stateMainMenu"
                 to: "stateGame"
@@ -219,12 +257,7 @@ QQC2.ApplicationWindow {
                 from: "stateGame"
                 to: "stateMainMenu"
                 SequentialAnimation {
-                    ScriptAction {
-                        script: {
-                            if (!gameBoard.gameLost)
-                                gameBoard.saveBoardStateToFile()
-                        }
-                    }
+
                     ScriptAction {
                         script: txtAppVersion.opacity = 1.0
                     }
@@ -242,23 +275,23 @@ QQC2.ApplicationWindow {
                         targets: toolBar
                         duration: 400
                     }
-                    PropertyAction {
-                        target: bgrMainMenu
-                        property: "visible"
-                        value: true
-                    }
-                    AnchorAnimation {
-                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
-                        duration: 500
-                        easing.type: Easing.InOutQuad
-                    }
+                    //                    PropertyAction {
+                    //                        target: bgrMainMenu
+                    //                        property: "visible"
+                    //                        value: true
+                    //                    }
+                    //                    AnchorAnimation {
+                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                    //                        duration: 500
+                    //                        easing.type: Easing.InOutQuad
+                    //                    }
                 }
             }
         ]
 
         // ----- Signal handlers
         // ----- Visual children.
-        state: "stateMainMenu"
+        state: "stateAppStarted"
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -295,13 +328,28 @@ QQC2.ApplicationWindow {
                         }
                     }
                 }
+                visible: opacity > 0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: global.timerIterval
+                    }
+                }
+                MouseArea {
+                    id: gameTitleMouseArea
+                    anchors.fill: parent
+                    onClicked: {
+                        screen.state = "stateMainMenu"
+                        console.log("screen.state:" + screen.state)
+                    }
+                }
             }
 
             JProgressBar {
                 id: pbLevelProgress
                 Layout.fillWidth: true
                 Layout.preferredHeight: 25 * DevicePixelRatio
-                visible: screen.state == "stateGame"
+                visible: screen.state === "stateGame"
                 value: gameBoard.levelCap
                 color: "white"
                 secondColor: "green"
@@ -309,17 +357,20 @@ QQC2.ApplicationWindow {
 
             GameBoard {
                 id: gameBoard
+
                 Layout.fillWidth: true
                 Layout.preferredHeight: 320 * DevicePixelRatio
+                visible: screen.state == "stateGame"
             }
             QQC2.Frame {
                 id: spacerFrame_3
-                visible: true
+                visible: screen.state == "stateGame"
                 Layout.fillWidth: true
                 Layout.preferredHeight: 2 * DevicePixelRatio
             }
             RowLayout {
                 id: toolBarLayout
+                visible: screen.state == "stateGame"
                 Layout.fillWidth: true
                 Layout.preferredHeight: 20 * DevicePixelRatio
                 spacing: 10 * DevicePixelRatio
@@ -367,6 +418,9 @@ QQC2.ApplicationWindow {
             Text {
                 id: txtAppVersion
                 Layout.fillWidth: true
+                anchors.margins: 2 * DevicePixelRatio
+                color: Theme.accent
+                visible: opacity > 0
 
                 text: g_appVersion
                 verticalAlignment: Text.AlignVCenter
@@ -375,9 +429,6 @@ QQC2.ApplicationWindow {
                     pointSize: global.smallFontSize
                     family: global.fonts.buttonfont
                 }
-                color: Theme.accent
-                visible: opacity > 0
-                anchors.margins: 2 * DevicePixelRatio
 
                 Behavior on opacity {
                     NumberAnimation {
