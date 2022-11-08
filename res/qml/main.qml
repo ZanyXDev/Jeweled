@@ -300,41 +300,12 @@ QQC2.ApplicationWindow {
 
             spacing: 2 * DevicePixelRatio
 
-            Image {
+            GameTitle {
                 id: gameTitle
                 Layout.preferredWidth: parent.width * 0.9
                 Layout.preferredHeight: 126. / 346. * width
                 Layout.topMargin: 30 * DevicePixelRatio
                 Layout.alignment: Qt.AlignHCenter
-
-                source: "qrc:/res/images/titleText.svg"
-                sourceSize {
-                    width: gameTitle.width
-                    height: gameTitle.height
-                }
-
-                Image {
-                    anchors.centerIn: parent
-                    width: 50 * DevicePixelRatio
-                    height: 50 * DevicePixelRatio
-                    sourceSize.width: width
-                    sourceSize.height: height
-                    visible: gameTitle.y > 0
-                    source: "qrc:/res/images/gems/orangeGem.svg"
-                    Shine {
-                        anchors {
-                            leftMargin: 10 * DevicePixelRatio
-                            topMargin: 10 * DevicePixelRatio
-                        }
-                    }
-                }
-                visible: opacity > 0
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: global.timerIterval
-                    }
-                }
                 MouseArea {
                     id: gameTitleMouseArea
                     anchors.fill: parent

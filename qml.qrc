@@ -20,5 +20,6 @@
         <file>res/qml/Components/jprogressbar.qml</file>
         <file>res/qml/AppEffects/shine.qml</file>
         <file>res/qml/AppEffects/qmldir</file>
+        <file>res/qml/Components/g_title.qml</file>
     </qresource>
 </RCC>
