@@ -333,6 +333,27 @@ QQC2.ApplicationWindow {
                     Layout.fillWidth: true
                 }
             }
+            Text {
+                id: txtAppVersion
+                Layout.fillWidth: true
+
+                text: g_appVersion
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignRight
+                font {
+                    pointSize: global.smallFontSize
+                    family: global.fonts.buttonfont
+                }
+                color: Theme.accent
+                visible: opacity > 0
+                anchors.margins: 2 * DevicePixelRatio
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: global.timerIterval
+                    }
+                }
+            }
 
             Component.onCompleted: {
                 if (isDebugMode)
