@@ -363,9 +363,12 @@ QQC2.ApplicationWindow {
             }
             RowLayout {
                 id: toolBarLayout
-                visible: screen.state == "stateGame"
+
                 Layout.fillWidth: true
                 Layout.preferredHeight: 20 * DevicePixelRatio
+                Layout.alignment: Qt.AlignBottom
+                Layout.bottomMargin: 15 * DevicePixelRatio
+
                 spacing: 10 * DevicePixelRatio
                 Item {
                     Layout.fillWidth: true
@@ -407,27 +410,6 @@ QQC2.ApplicationWindow {
                 }
                 Item {
                     Layout.fillWidth: true
-                }
-            }
-            Text {
-                id: txtAppVersion
-                Layout.fillWidth: true
-                anchors.margins: 2 * DevicePixelRatio
-                color: Theme.accent
-                visible: opacity > 0
-
-                text: g_appVersion
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignRight
-                font {
-                    pointSize: global.smallFontSize
-                    family: global.fonts.buttonfont
-                }
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: global.timerIterval
-                    }
                 }
             }
 
