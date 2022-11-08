@@ -111,6 +111,11 @@ Item {
         }
         calcLevelCap()
     }
+    onLevelCapChanged: {
+
+        ///TODO levelCap == 1.0 -> signal levelUp()!!!
+    }
+
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
@@ -147,13 +152,6 @@ Item {
                 sourceSize.height: control.cellSize
                 fillMode: Image.PreserveAspectFit
 
-                //                Behavior on x {
-                //                    enabled: true
-                //                    PropertyAnimation {
-                //                        easing.type: Easing.OutBack
-                //                        duration: 350
-                //                    }
-                //                }
                 Behavior on y {
                     enabled: true
                     PropertyAnimation {
@@ -191,6 +189,10 @@ Item {
     }
 
     // ----- JavaScript functions
+    function newGame() {
+        level = 1
+    }
+
     function fillBackgroundModel(m_model) {
         // All item placed left corner
         var cnt = (control.colums * control.rows)
@@ -239,6 +241,14 @@ Item {
         levelCap = score / max_cap
     }
 
+
+    /**
+      * @brief Resets board for new level.
+      * Saves gem modifiers and restores it after new board is created.
+      * Also  checks for combos in newly created board and changes
+      * gem types so there are no combos
+      */
+    function resetBoard() {}
     // -------------------Utility function to use in different places. --------
 
     // Generate random cell type.
