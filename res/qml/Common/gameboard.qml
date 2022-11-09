@@ -20,9 +20,6 @@ Item {
     property int score: 0
     property int selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
     property int selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
-    property int cellSize: 37 * DevicePixelRatio
-    property int colums: 8
-    property int rows: 8
     property int m_currentStepDelay: 0
     property real levelCap: 0.0
     property bool hintVisible: false
@@ -30,7 +27,6 @@ Item {
     property bool gameLost: false
     property bool gameStarted: false
 
-    property string scoreBoxState: "stateShowAppTitle"
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
@@ -40,81 +36,73 @@ Item {
     // for separating type declarations.
     // ----- Then attached properties and attached signal handlers.
     // ----- States and transitions.
-    states: [
-        State {
-            name: "newGame"
-            PropertyChanges {
-                target: bgrRect
-                visible: true
-            }
-            PropertyChanges {
-                target: bgrRect
-                scale: 1.0
-            }
-            PropertyChanges {
-                target: control
-                gameStarted: true
-            }
-            PropertyChanges {
-                target: control
-                gameLost: false
-            }
-            PropertyChanges {
-                target: control
-                level: 1
-            }
-            PropertyChanges {
-                target: control
-                score: 0
-            }
-            PropertyChanges {
-                target: control
-                level: 1
-            }
-            PropertyChanges {
-                target: control
-                scoreBoxState: "stateShowLevel"
-            }
-        }
-    ]
+    //    states: [
+    //        State {
+    //            name: "newGame"
+    //            PropertyChanges {
+    //                target: bgrRect
+    //                visible: true
+    //            }
+    //            PropertyChanges {
+    //                target: bgrRect
+    //                scale: 1.0
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                gameStarted: true
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                gameLost: false
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                level: 1
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                score: 0
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                level: 1
+    //            }
+    //        }
+    //    ]
 
-    transitions: [
-        Transition {
-            from: "*"
-            to: "newGame"
-            SequentialAnimation {
-                PropertyAnimation {
-                    target: bgrRect
-                    property: "scale"
-                    easing.type: Easing.InExpo
-                    duration: 450
-                }
-                PauseAnimation {
-                    duration: 250
-                }
-                ScriptAction {
-                    script: doFillBgrCells()
-                }
-                PauseAnimation {
-                    duration: 100
-                }
-                ScriptAction {
-                    script: generatedGems()
-                }
-                ScriptAction {
-                    script: oneSecondTimer.start()
-                }
-            }
-        }
-    ]
+    //    transitions: [
+    //        Transition {
+    //            from: "*"
+    //            to: "newGame"
+    //            SequentialAnimation {
+    //                PropertyAnimation {
+    //                    target: bgrRect
+    //                    property: "scale"
+    //                    easing.type: Easing.InExpo
+    //                    duration: 450
+    //                }
+    //                PauseAnimation {
+    //                    duration: 250
+    //                }
+    //                ScriptAction {
+    //                    script: doFillBgrCells()
+    //                }
+    //                PauseAnimation {
+    //                    duration: 100
+    //                }
+    //                ScriptAction {
+    //                    script: generatedGems()
+    //                }
+    //                ScriptAction {
+    //                    script: oneSecondTimer.start()
+    //                }
+    //            }
+    //        }
+    //    ]
 
     // ----- Signal handlers
     onScoreChanged: {
-        ///TODO this dirty hack !!! need rewrite
-        if (scoreBoxState != "stateShowScore") {
-            scoreBoxState = "stateShowScore"
-        }
-        calcLevelCap()
+
     }
     onLevelCapChanged: {
 
@@ -136,10 +124,10 @@ Item {
         radius: 4 * DevicePixelRatio
         color: "transparent"
         z: -1
-        scale: 0.1
+
         border.color: Theme.primary
         border.width: 1 * DevicePixelRatio
-        visible: true
+
         Repeater {
             id: repeaterItem
             model: bgrItemsModel
@@ -181,6 +169,7 @@ Item {
     // ----- JavaScript functions
     function newGame() {
         level = 1
+        calcLevelCap()
     }
 
     function fillBackgroundModel(m_model) {
