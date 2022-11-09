@@ -5,12 +5,15 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.LocalStorage 2.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Controls.Material.impl 2.15
+import QtQuick.Controls.impl 2.15
+import QtGraphicalEffects 1.0
 
 import Common 1.0
 import Theme 1.0
 import Dialogs 1.0
 import Components 1.0
 import DataModels 1.0
+import AppEffects 1.0
 
 QQC2.ApplicationWindow {
     id: appWnd
@@ -41,7 +44,6 @@ QQC2.ApplicationWindow {
 
     // ----- Then attached properties and attached signal handlers.
 
-    // ----- States and transitions.
     // ----- Signal handlers
     onScreenOrientationChanged: {
         screenOrientationUpdated(screenOrientation)
@@ -61,9 +63,6 @@ QQC2.ApplicationWindow {
                 console.log("onAppInForegroundChanged-> [appInForeground:"
                             + appInForeground + ", appInitialized:" + appInitialized + "]")
         }
-    }
-    Component.onCompleted: {
-
     }
 
     background: Image {
@@ -94,12 +93,12 @@ QQC2.ApplicationWindow {
             }
 
             ScoreBox {
-                id: scorebox
+                id: scoreBox
                 Layout.fillWidth: true
                 appTitle: qsTr("FreeJeweled")
                 gameBoardScore: gameBoard.score
                 gameBoardLevel: gameBoard.level
-                state: gameBoard.scoreBoxState
+                state: "stateShowAppTitle"
             }
 
             Item {
@@ -120,81 +119,339 @@ QQC2.ApplicationWindow {
         }
     }
 
-    ColumnLayout {
-        id: mainLayout
+    Item {
+        visible: true
+        id: screen
+        // ----- Property Declarations
+        // Required properties should be at the top.
+        // ----- Signal declarations
+        // ----- In this section, we group the size and position information together.
         anchors.fill: parent
-        spacing: 2 * DevicePixelRatio
-        QQC2.Frame {
-            id: spacerFrame
-            visible: true
-            Layout.fillWidth: true
-            Layout.preferredHeight: 2 * DevicePixelRatio
-        }
+        // If a single assignment, dot notation can be used.
+        // ----- Then comes the other properties. There's no predefined order to these.
+        // ----- Then attached properties and attached signal handlers.
+        // ----- States and transitions.
+        states: [
+            State {
+                name: "stateAppStarted"
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowAppTitle"
+                }
+                PropertyChanges {
+                    target: btnRun
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnReset
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnShowHint
+                    enabled: false
+                }
+            },
+            State {
+                name: "stateMainMenu"
+                /* Main menu elements anchors */
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowLevel"
+                }
+                PropertyChanges {
+                    target: btnRun
+                    enabled: true
+                }
+                PropertyChanges {
+                    target: btnReset
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnShowHint
+                    enabled: false
+                }
+                /* Game elements anchors */
+            },
+            State {
+                name: "stateGame"
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowScore"
+                }
+                PropertyChanges {
+                    target: btnRun
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: btnReset
+                    enabled: true
+                }
+                PropertyChanges {
+                    target: btnShowHint
+                    enabled: true
+                }
+                /* Game elements anchors */
+            },
+            State {
+                name: "stateSettings"
+                /* Main menu elements anchors */
+                /* Game elements anchors */
+                /* Showing Settings and hiding About dialog */
+            },
+            State {
+                name: "stateAbout"
+                /* Showing About and hiding Settings dialogs */
+                /* Showing info about app version */
+                /* Showing info about app version */
+                PropertyChanges {
+                    target: txtAppVersion
+                    opacity: 1.0
+                }
+                /* Game elements anchors */
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "stateMainMenu"
+                to: "stateGame"
+                ScriptAction {
+                    script: gameBoard.newGame()
+                }
+            },
+            Transition {
+                from: "stateMainMenu"
+                to: "stateSettings"
+                //                AnchorAnimation {
+                //                    duration: 500
+                //                    easing.type: Easing.InOutQuad
+                //                }
+                //                PropertyAction {
+                //                    target: scoreBox
+                //                    property: "state"
+                //                    value: "stateHidden"
+                //                }
+                //                ScriptAction {
+                //                    script: txtAppVersion.opacity = 0.0
+                //                }
+            },
+            Transition {
+                from: "stateSettings"
+                to: "stateMainMenu"
+                //                SequentialAnimation {
+                //                    ScriptAction {
+                //                        script: dlgSettings.opacity = 0.0
+                //                    }
+                //                    ScriptAction {
+                //                        script: txtAppVersion.opacity = 1.0
+                //                    }
+                //                    AnchorAnimation {
+                //                        duration: 500
+                //                        easing.type: Easing.InOutQuad
+                //                    }
+                //                }
+            },
+            Transition {
+                from: "stateGame"
+                to: "stateMainMenu"
+                //                SequentialAnimation {
 
-        GameBoard {
-            id: gameBoard
-            Layout.fillWidth: true
-            Layout.preferredHeight: 320 * DevicePixelRatio
-        }
+                //                    ScriptAction {
+                //                        script: txtAppVersion.opacity = 1.0
+                //                    }
+                //                    PropertyAction {
+                //                        target: gameBoard
+                //                        property: "opacity"
+                //                        value: 0.0
+                //                    }
+                //                    PropertyAction {
+                //                        target: scoreBox
+                //                        property: "state"
+                //                        value: "stateHidden"
+                //                    }
+                //                    AnchorAnimation {
+                //                        targets: toolBar
+                //                        duration: 400
+                //                    }
+                //                    //                    PropertyAction {
+                //                    //                        target: bgrMainMenu
+                //                    //                        property: "visible"
+                //                    //                        value: true
+                //                    //                    }
+                //                    //                    AnchorAnimation {
+                //                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+                //                    //                        duration: 500
+                //                    //                        easing.type: Easing.InOutQuad
+                //                    //                    }
+                //                }
+            }
+        ]
 
-        Item {
-            id: debugRect
-            Layout.fillWidth: true
-            Layout.preferredHeight: 48 * DevicePixelRatio
-
-            RowLayout {
-                id: testButton
+        // ----- Signal handlers
+        // ----- Visual children.
+        state: "stateAppStarted"
+        GameTitle {
+            id: gameTitle
+            width: parent.width * 0.9
+            height: 126. / 346. * width
+            anchors.topMargin: 30 * DevicePixelRatio
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            MouseArea {
+                id: gameTitleMouseArea
                 anchors.fill: parent
-                spacing: 8 * DevicePixelRatio
-                Item {
-                    Layout.fillHeight: true
+                onClicked: {
+                    screen.state = "stateMainMenu"
                 }
-                QQC2.Button {
-                    id: tstButton1
-                    text: "stateShowLevel"
-                    onClicked: {
-                        scorebox.state = "stateShowLevel"
-                    }
-                }
+            }
+        }
+        ColumnLayout {
+            id: mainLayout
+            anchors.fill: parent
+            anchors.leftMargin: 2 * DevicePixelRatio
+            anchors.rightMargin: 2 * DevicePixelRatio
 
-                QQC2.Button {
-                    id: tstButton2
-                    text: "stateShowScore"
+            spacing: 2 * DevicePixelRatio
+
+            JProgressBar {
+                id: pbLevelProgress
+                Layout.fillWidth: true
+                Layout.preferredHeight: 25 * DevicePixelRatio
+                visible: screen.state === "stateGame"
+                value: gameBoard.levelCap
+                color: "white"
+                secondColor: "green"
+            }
+
+            GameBoard {
+                id: gameBoard
+                Layout.fillWidth: true
+                Layout.preferredHeight: 320 * DevicePixelRatio
+                visible: screen.state == "stateGame"
+                onHeightChanged: {
+                    console.log("gameBoard.onHeightChanged:" + gameBoard.height)
+                }
+            }
+            QQC2.Frame {
+                id: spacerFrame_3
+                visible: screen.state == "stateGame"
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2 * DevicePixelRatio
+            }
+            RowLayout {
+                id: toolBarLayout
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: 20 * DevicePixelRatio
+                Layout.alignment: Qt.AlignBottom
+                Layout.bottomMargin: 15 * DevicePixelRatio
+
+                spacing: 10 * DevicePixelRatio
+                Item {
+                    Layout.fillWidth: true
+                }
+                BaseButton {
+                    id: btnRun
+                    text: qsTr("Run")
+                    font {
+                        family: global.fonts.buttonfont
+                        pointSize: global.smallFontSize
+                    }
                     onClicked: {
-                        scorebox.state = "stateShowScore"
+                        screen.state = "stateGame"
                     }
                 }
-                QQC2.Button {
-                    id: tstButton3
-                    text: "showAbout"
+                BaseButton {
+                    id: btnReset
+
+                    text: qsTr("Reset")
+                    font {
+                        family: global.fonts.buttonfont
+                        pointSize: global.smallFontSize
+                    }
                     onClicked: {
-                        dlgAbout.open()
+                        gameBoard.resetBoard()
                     }
                 }
-                QQC2.Button {
-                    id: tstButton4
-                    text: "moveGem"
+                BaseButton {
+                    id: btnShowHint
+                    text: qsTr("Hint")
+                    font {
+                        family: global.fonts.buttonfont
+                        pointSize: global.smallFontSize
+                    }
                     onClicked: {
-                        gameBoard.state = "beginRound"
+
+                        // gameBoard.showHint()
                     }
                 }
                 Item {
-                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
+            }
+
+            Component.onCompleted: {
+                if (isDebugMode)
+                    console.log("mainLayout.size:[" + mainLayout.width / 1.5
+                                + "," + mainLayout.height / 1.5 + "]")
+            }
+        }
+        Text {
+            id: txtAppVersion
+            width: parent.width * 0.9
+
+            anchors {
+                bottom: screen.bottom
+                right: screen.right
+                margins: 3 * DevicePixelRatio
+            }
+            color: Theme.accent
+            visible: opacity > 0
+            text: g_appVersion
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignRight
+            font {
+                pointSize: global.smallFontSize
+                family: global.fonts.buttonfont
+            }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: global.timerIterval
                 }
             }
         }
 
-        Component.onCompleted: {
-            if (isDebugMode)
-                console.log("mainLayout.size:[" + mainLayout.width / 1.5 + ","
-                            + mainLayout.height / 1.5 + "]")
-        }
+        // ----- Qt provided non-visual children
+        // ----- Custom non-visual children
+        // ----- JavaScript functions
     }
 
     AboutDialog {
         id: dlgAbout
     }
-
     // ----- Qt provided non-visual children
     QQC2.Action {
         id: optionsMenuAction
@@ -212,8 +469,7 @@ QQC2.ApplicationWindow {
 
         onTriggered: {
             Theme.toggleTheme()
-            if (isDebugMode)
-                console.log("changeThemeMenuAction click")
+            global.toLog("changeThemeMenuAction click")
         }
     }
     FontLoader {
@@ -246,12 +502,31 @@ QQC2.ApplicationWindow {
 
         readonly property int largeFontSize: 36
         readonly property int middleFontSize: 24
-        readonly property int smallFontSize: 16
+        readonly property int smallFontSize: 12
 
         property QtObject fonts: QtObject {
             readonly property string gamefont: gameFont.name
             readonly property string buttonfont: buttonFont.name
             readonly property string aboutfont: aboutFont.name
+        }
+        readonly property int smallCellSize: 37 * DevicePixelRatio
+        readonly property int bigSellSize: smallCellSize * 2
+        readonly property int defaultRowCount: 8
+        readonly property int defaultColumnCount: 8
+
+        /* This is msecs. Half of second is enough for smooth animation. */
+        readonly property int timerIterval: 500
+        readonly property int enoughTimeToDie: 1000 // достаточноеВремяДляСмерти
+
+        readonly property int animationStopTreshhold: 3
+        readonly property int levelCapMultiplayer: 60
+
+        readonly property int huperCubeMultiplayer: 2
+        readonly property double difficultyMultiplayer: 1.07
+        function toLog(tag, msg) {
+            if (isDebugMode) {
+                console.log("I:" + tag + ":" + msg)
+            }
         }
     }
 
@@ -272,37 +547,5 @@ QQC2.ApplicationWindow {
             bgrStr = "0" + bgrStr
         }
         return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
-    }
-
-    function logRepeaterItems(repeaterItem) {
-        var new_place = Math.floor(Math.random() * 63 + 1)
-        testGem_1.parent = repeaterItem.itemAt(new_place)
-
-        //        for (var i = 0; i < repeaterItem.count; i++) {
-        //        console.log("repeaterItem:" + 5 + " Properties\n")
-        //        var item = repeaterItem.itemAt(i)
-        //        for (var p in item)
-        //            console.log(p + ": " + item[p] + "\n")
-        //        }
-    }
-
-    function updatePos(item_orig, item_dest) {
-        var pos_abs = appWnd.mapFromItem(item_orig.parent, item_orig.x,
-                                         item_orig.y)
-        if (isDebugMode)
-            console.log("updatePos() pos_abs:" + pos_abs)
-        return appWnd.mapToItem(item_dest.parent, pos_abs.x, pos_abs.y)
-    }
-
-    function debugPos(item, dp) {
-        console.log("---------- Item pos -------------")
-        console.log("Item parent:" + item.parent)
-        console.log("Item index:" + item.r_index)
-
-        console.log("size:[" + item.width / dp + "," + item.height / dp + "]")
-        console.log("pos:[" + item.x + "," + item.y + "]")
-        console.log("mapToItem abs_pos:", item.mapToItem(item.parent, 0, 0))
-        console.log("mapFromItem abs_pos:", item.mapFromItem(item.parent, 0, 0))
-        console.log("mapToGlobal pos: " + item.mapToGlobal(0, 0))
     }
 }

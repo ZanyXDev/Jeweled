@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.15
 import QtQml.Models 2.15
 
 import Components 1.0
+import Common 1.0
 import Theme 1.0
 
 Item {
@@ -15,21 +16,17 @@ Item {
     // Required properties should be at the top.
     property int hintX: 0
     property int hintY: 0
-    property int level: 1 //READ level WRITE setLevel NOTIFY levelChanged)
-    property int score: 0 //READ score WRITE setScore NOTIFY scoreChanged)
+    property int level: 0
+    property int score: 0
     property int selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
     property int selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
-    property int cellSize: 37 * DevicePixelRatio
-    property int colums: 8
-    property int rows: 8
     property int m_currentStepDelay: 0
-
-    property bool gemSelected: false //READ gemSelected WRITE setGemSelected NOTIFY gemSelectedChanged)
-    property bool gameLost: false //READ gameLost)
+    property real levelCap: 0.0
     property bool hintVisible: false
-    property bool startNewGame: false
-    property bool isRunning: false
-    property string scoreBoxState: "stateShowAppTitle"
+    property bool gemSelected: false
+    property bool gameLost: false
+    property bool gameStarted: false
+
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
@@ -39,60 +36,79 @@ Item {
     // for separating type declarations.
     // ----- Then attached properties and attached signal handlers.
     // ----- States and transitions.
-    states: [
-        State {
-            name: "beginRound"
-            PropertyChanges {
-                target: bgrRect
-                scale: 1.0
-            }
-            PropertyChanges {
-                target: control
-                isRunning: true
-            }
-            PropertyChanges {
-                target: control
-                scoreBoxState: "stateShowLevel"
-            }
-        }
-    ]
+    //    states: [
+    //        State {
+    //            name: "newGame"
+    //            PropertyChanges {
+    //                target: bgrRect
+    //                visible: true
+    //            }
+    //            PropertyChanges {
+    //                target: bgrRect
+    //                scale: 1.0
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                gameStarted: true
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                gameLost: false
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                level: 1
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                score: 0
+    //            }
+    //            PropertyChanges {
+    //                target: control
+    //                level: 1
+    //            }
+    //        }
+    //    ]
 
-    transitions: [
-        Transition {
-            from: "*"
-            to: "beginRound"
-            SequentialAnimation {
-                PropertyAnimation {
-                    target: bgrRect
-                    property: "scale"
-                    easing.type: Easing.InExpo
-                    duration: 450
-                }
-                PauseAnimation {
-                    duration: 250
-                }
-                ScriptAction {
-                    script: doFillBgrCells()
-                }
-                PauseAnimation {
-                    duration: 100
-                }
-                ScriptAction {
-                    script: generatedGems()
-                }
-                ScriptAction {
-                    script: oneSecondTimer.start()
-                }
-            }
-        }
-    ]
+    //    transitions: [
+    //        Transition {
+    //            from: "*"
+    //            to: "newGame"
+    //            SequentialAnimation {
+    //                PropertyAnimation {
+    //                    target: bgrRect
+    //                    property: "scale"
+    //                    easing.type: Easing.InExpo
+    //                    duration: 450
+    //                }
+    //                PauseAnimation {
+    //                    duration: 250
+    //                }
+    //                ScriptAction {
+    //                    script: doFillBgrCells()
+    //                }
+    //                PauseAnimation {
+    //                    duration: 100
+    //                }
+    //                ScriptAction {
+    //                    script: generatedGems()
+    //                }
+    //                ScriptAction {
+    //                    script: oneSecondTimer.start()
+    //                }
+    //            }
+    //        }
+    //    ]
 
     // ----- Signal handlers
     onScoreChanged: {
-        if (scoreBoxState != "stateShowScore") {
-            scoreBoxState = "stateShowScore"
-        }
+
     }
+    onLevelCapChanged: {
+
+        ///TODO levelCap == 1.0 -> signal levelUp()!!!
+    }
+
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
@@ -108,43 +124,21 @@ Item {
         radius: 4 * DevicePixelRatio
         color: "transparent"
         z: -1
-        scale: 0.1
+
         border.color: Theme.primary
         border.width: 1 * DevicePixelRatio
 
         Repeater {
             id: repeaterItem
             model: bgrItemsModel
-            Image {
-                //TODO Move to separeted file
-                id: bgrImg
+            BgrTileItem {
                 readonly property int idx: model.index
                 x: model.x
                 y: model.y
                 visible: model.visible
-                width: control.cellSize
-                height: control.cellSize
-                source: "qrc:/res/images/tile_background.png"
-                sourceSize.width: control.cellSize
-                sourceSize.height: control.cellSize
-                fillMode: Image.PreserveAspectFit
-
-                //                Behavior on x {
-                //                    enabled: true
-                //                    PropertyAnimation {
-                //                        easing.type: Easing.OutBack
-                //                        duration: 350
-                //                    }
-                //                }
-                Behavior on y {
-                    enabled: true
-                    PropertyAnimation {
-                        easing.type: Easing.OutBack
-                        duration: 350
-                    }
-                }
-
-                opacity: 0.55
+                width: global.smallCellSize
+                height: global.smallCellSize
+                animationTime: global.timerIterval
             }
         }
     }
@@ -173,6 +167,11 @@ Item {
     }
 
     // ----- JavaScript functions
+    function newGame() {
+        level = 1
+        calcLevelCap()
+    }
+
     function fillBackgroundModel(m_model) {
         // All item placed left corner
         var cnt = (control.colums * control.rows)
@@ -201,8 +200,9 @@ Item {
                                "type": generateCellType(),
                                "width": control.cellSize,
                                "height": control.cellSize,
-                               "x"//"startRow":startRow,
-                               //"behaviorPause":Math.abs(startRow)*50 + control.m_currentStepDelay,
+                               "x"// "startRow": startRow,
+                               // "behaviorPause": Math.abs(
+                               //                      startRow) * 50 + control.m_currentStepDelay,
                                : -100,
                                "y": -100,
                                "spawned": true,
@@ -214,6 +214,20 @@ Item {
 
     function generatedGems() {}
 
+    function calcLevelCap() {
+        var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
+                           global.difficultyMultiplayer, level - 1))
+        levelCap = score / max_cap
+    }
+
+
+    /**
+      * @brief Resets board for new level.
+      * Saves gem modifiers and restores it after new board is created.
+      * Also  checks for combos in newly created board and changes
+      * gem types so there are no combos
+      */
+    function resetBoard() {}
     // -------------------Utility function to use in different places. --------
 
     // Generate random cell type.
