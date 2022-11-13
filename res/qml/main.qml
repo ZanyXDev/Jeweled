@@ -328,6 +328,7 @@ QQC2.ApplicationWindow {
                 }
             }
         }
+
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -447,6 +448,13 @@ QQC2.ApplicationWindow {
         }
 
         // ----- Qt provided non-visual children
+        Timer {
+            id: autoStartTimer
+            interval: global.enoughTimeToDie * 3
+            repeat: true
+            running: gameTitle.visible
+            onTriggered: screen.state = "stateMainMenu"
+        }
         // ----- Custom non-visual children
         // ----- JavaScript functions
     }
