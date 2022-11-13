@@ -36,69 +36,40 @@ Item {
     // for separating type declarations.
     // ----- Then attached properties and attached signal handlers.
     // ----- States and transitions.
-    //    states: [
-    //        State {
-    //            name: "newGame"
-    //            PropertyChanges {
-    //                target: bgrRect
-    //                visible: true
-    //            }
-    //            PropertyChanges {
-    //                target: bgrRect
-    //                scale: 1.0
-    //            }
-    //            PropertyChanges {
-    //                target: control
-    //                gameStarted: true
-    //            }
-    //            PropertyChanges {
-    //                target: control
-    //                gameLost: false
-    //            }
-    //            PropertyChanges {
-    //                target: control
-    //                level: 1
-    //            }
-    //            PropertyChanges {
-    //                target: control
-    //                score: 0
-    //            }
-    //            PropertyChanges {
-    //                target: control
-    //                level: 1
-    //            }
-    //        }
-    //    ]
+    states: [
+        State {
+            name: "newGame"
+            PropertyChanges {
+                target: control
+                score: 0
+            }
+            PropertyChanges {
+                target: control
+                level: 1
+            }
+            PropertyChanges {
+                target: bgrRect
+                opacity: 1.0
+            }
+        }
+    ]
 
-    //    transitions: [
-    //        Transition {
-    //            from: "*"
-    //            to: "newGame"
-    //            SequentialAnimation {
-    //                PropertyAnimation {
-    //                    target: bgrRect
-    //                    property: "scale"
-    //                    easing.type: Easing.InExpo
-    //                    duration: 450
-    //                }
-    //                PauseAnimation {
-    //                    duration: 250
-    //                }
-    //                ScriptAction {
-    //                    script: doFillBgrCells()
-    //                }
-    //                PauseAnimation {
-    //                    duration: 100
-    //                }
-    //                ScriptAction {
-    //                    script: generatedGems()
-    //                }
-    //                ScriptAction {
-    //                    script: oneSecondTimer.start()
-    //                }
-    //            }
-    //        }
-    //    ]
+    transitions: [
+        Transition {
+            from: "*"
+            to: "newGame"
+            ScriptAction {
+                script: doFillBgrCells()
+            }
+            ScriptAction {
+                script: calcLevelCap()
+            }
+
+            ScriptAction {
+                script: oneSecondTimer.start()
+            }
+        }
+    ]
 
     // ----- Signal handlers
     onScoreChanged: {
@@ -124,21 +95,28 @@ Item {
         radius: 4 * DevicePixelRatio
         color: "transparent"
         z: -1
-
-        border.color: Theme.primary
+        opacity: 0
+        visible: opacity > 0
+        border.color: Theme.accent
         border.width: 1 * DevicePixelRatio
 
         Repeater {
             id: repeaterItem
             model: bgrItemsModel
-            BgrTileItem {
+            BgrItem {
                 readonly property int idx: model.index
                 x: model.x
                 y: model.y
                 visible: model.visible
                 width: global.smallCellSize
                 height: global.smallCellSize
-                animationTime: global.timerIterval
+                animationTime: global.timerInterval
+            }
+        }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: global.timerInterval
+                easing.type: Easing.InQuad
             }
         }
     }
@@ -168,8 +146,7 @@ Item {
 
     // ----- JavaScript functions
     function newGame() {
-        level = 1
-        calcLevelCap()
+        state = "newGame"
     }
 
     function fillBackgroundModel(m_model) {
@@ -185,6 +162,7 @@ Item {
     }
 
     function doFillBgrCells() {
+        console.log("doFillBgrCells()")
         var cnt = (control.colums * control.rows)
         for (var index = 0; index < cnt; index++) {
             bgrItemsModel.setProperty(index, "x", getXFromIndex(index))
@@ -210,14 +188,6 @@ Item {
                                "modifier": Modifier.CellState.Normal
                            })
         }
-    }
-
-    function generatedGems() {}
-
-    function calcLevelCap() {
-        var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
-                           global.difficultyMultiplayer, level - 1))
-        levelCap = score / max_cap
     }
 
 
@@ -255,5 +225,11 @@ Item {
 
         y += 2 * DevicePixelRatio
         return y
+    }
+
+    function calcLevelCap() {
+        var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
+                           global.difficultyMultiplayer, level - 1))
+        levelCap = score / max_cap
     }
 }

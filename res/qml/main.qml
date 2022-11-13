@@ -351,6 +351,7 @@ QQC2.ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 320 * DevicePixelRatio
                 visible: screen.state == "stateGame"
+
                 onHeightChanged: {
                     console.log("gameBoard.onHeightChanged:" + gameBoard.height)
                 }
@@ -439,7 +440,8 @@ QQC2.ApplicationWindow {
             }
             Behavior on opacity {
                 NumberAnimation {
-                    duration: global.timerIterval
+                    duration: global.timerInterval
+                    easing.type: Easing.InQuad
                 }
             }
         }
@@ -515,7 +517,7 @@ QQC2.ApplicationWindow {
         readonly property int defaultColumnCount: 8
 
         /* This is msecs. Half of second is enough for smooth animation. */
-        readonly property int timerIterval: 500
+        readonly property int timerInterval: 500
         readonly property int enoughTimeToDie: 1000 // достаточноеВремяДляСмерти
 
         readonly property int animationStopTreshhold: 3
