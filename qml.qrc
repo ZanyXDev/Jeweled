@@ -23,5 +23,6 @@
         <file>res/qml/DataModels/b_model.qml</file>
         <file>res/qml/AppEffects/qmldir</file>
         <file>res/qml/AppEffects/shine.qml</file>
+        <file>res/qml/Components/test.qml</file>
     </qresource>
 </RCC>
