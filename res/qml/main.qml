@@ -15,6 +15,8 @@ import Components 1.0
 import DataModels 1.0
 import AppEffects 1.0
 
+import "qrc:/res/js/util.js" as Utils
+
 QQC2.ApplicationWindow {
     id: appWnd
     // ----- Property Declarations

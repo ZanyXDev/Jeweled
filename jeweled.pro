@@ -28,7 +28,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #don't use precompiled headers https://www.kdab.com/beware-of-qt-module-wide-includes/
 
 SOURCES += \
-    src/main.cpp 
+    src/main.cpp
 
 #HEADERS += \
 
@@ -36,7 +36,8 @@ RESOURCES += \
      qml.qrc \
      fonts.qrc \
      backgrounds.qrc \
-     images.qrc
+     images.qrc \
+     js.qrc
 
 #TRANSLATIONS += \
 #    G2_ru_RU.ts
