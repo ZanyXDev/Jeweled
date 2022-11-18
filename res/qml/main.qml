@@ -66,7 +66,12 @@ QQC2.ApplicationWindow {
                             + appInForeground + ", appInitialized:" + appInitialized + "]")
         }
     }
-
+    Component.onCompleted: {
+        if (bgrModel != null) {
+            Utils.fillBgrModel(bgrModel, global.defaultRowCount,
+                               global.defaultColumnCount, DevicePixelRatio)
+        }
+    }
     background: Image {
         id: background
         anchors.fill: parent
@@ -353,8 +358,10 @@ QQC2.ApplicationWindow {
                 id: gameBoard
                 Layout.fillWidth: true
                 Layout.preferredHeight: 320 * DevicePixelRatio
-                visible: screen.state == "stateGame"
 
+                visible: screen.state == "stateGame"
+                modelBgr: bgrModel
+                modelGem: gemsModel
                 onHeightChanged: {
                     console.log("gameBoard.onHeightChanged:" + gameBoard.height)
                 }
@@ -423,6 +430,7 @@ QQC2.ApplicationWindow {
                                 + "," + mainLayout.height / 1.5 + "]")
             }
         }
+        ///TODO Move separate file
         Text {
             id: txtAppVersion
             width: parent.width * 0.9
@@ -475,7 +483,6 @@ QQC2.ApplicationWindow {
             Qt.quit()
         }
     }
-
     QQC2.Action {
         id: changeThemeMenuAction
 
@@ -488,21 +495,14 @@ QQC2.ApplicationWindow {
         id: gameFont
         source: "qrc:/res/fonts/mailrays.ttf"
     }
-
     FontLoader {
         id: buttonFont
         source: "qrc:/res/fonts/pirulen.ttf"
     }
-
     FontLoader {
         id: aboutFont
         source: "qrc:/res/fonts/forgotte.ttf"
     }
-
-    GemItemsModel {
-        id: gemItemsModel
-    }
-
     // ----- Custom non-visual children
 
     // a globally avalable utility object
@@ -535,6 +535,7 @@ QQC2.ApplicationWindow {
 
         readonly property int huperCubeMultiplayer: 2
         readonly property double difficultyMultiplayer: 1.07
+
         function toLog(tag, msg) {
             if (isDebugMode) {
                 console.log("I:" + tag + ":" + msg)
@@ -542,7 +543,16 @@ QQC2.ApplicationWindow {
         }
     }
 
+    GemItemsModel {
+        id: gemsModel
+    }
+
+    BackgroundItemModel {
+        id: bgrModel
+    }
+
     // ----- JavaScript functions
+    /// TODO move to Utils.js
     function setBackgroundSource() {
         var source = generateBackgroundFileName()
         while (source === background.source) {

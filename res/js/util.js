@@ -7,7 +7,7 @@ function getXFromIndex(index, m_size, m_dp) {
     var m_col = index % 8
     var x = m_col * (m_size + 2 * m_dp)
     x += 2 * m_dp
-    console.log("index:" + index + " x:" + x)
+
     return x
 }
 
@@ -28,8 +28,10 @@ function fillBgrModel(m_model, m_count, m_size, m_dp) {
     for (var index = 0; index < m_count; index++) {
 
         m_model.append({
-                           "x": getXFromIndex(index, m_size * m_dp, m_dp),
-                           "y": getYFromIndex(index, m_size * m_dp, m_dp),
+                           "x": 0,
+                           "y": 0,
+                           "new_x": getXFromIndex(index, m_size * m_dp, m_dp),
+                           "new_y": getYFromIndex(index, m_size * m_dp, m_dp),
                            "visible": true
                        })
     }
