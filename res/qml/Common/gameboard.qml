@@ -27,6 +27,8 @@ Item {
     property bool gameLost: false
     property bool gameStarted: false
 
+    property ListModel modelBgr: ListModel {}
+    property ListModel modelGem: ListModel {}
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
@@ -102,7 +104,7 @@ Item {
 
         Repeater {
             id: repeaterItem
-            model: bgrItemsModel
+            model: modelBgr
             BgrItem {
                 readonly property int idx: model.index
                 x: model.x
@@ -122,18 +124,7 @@ Item {
     }
 
     // ----- Qt provided non-visual children
-    ListModel {
-        id: bgrItemsModel
-        Component.onCompleted: {
-            fillBackgroundModel(bgrItemsModel)
-        }
-    }
-    ListModel {
-        id: gemsModel
-        Component.onCompleted: {
-            createEmptyGems(gemsModel)
-        }
-    }
+
     // ----- Custom non-visual children
     Timer {
         id: oneSecondTimer
