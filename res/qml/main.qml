@@ -465,7 +465,7 @@ QQC2.ApplicationWindow {
             id: autoStartTimer
             interval: global.enoughTimeToDie * 3
             repeat: false
-            running: false
+            running: gameTitle.opacity > 0
             onTriggered: {
                 console.log("autoStartTimer,  gameTitle.visible:" + gameTitle.opacity)
                 screen.state = "stateMainMenu"
