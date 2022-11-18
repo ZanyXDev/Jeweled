@@ -334,6 +334,9 @@ QQC2.ApplicationWindow {
                     screen.state = "stateMainMenu"
                 }
             }
+            Component.onCompleted: {
+                autoStartTimer.start()
+            }
         }
 
         ColumnLayout {
@@ -461,9 +464,13 @@ QQC2.ApplicationWindow {
         Timer {
             id: autoStartTimer
             interval: global.enoughTimeToDie * 3
-            repeat: true
-            running: gameTitle.visible
-            onTriggered: screen.state = "stateMainMenu"
+            repeat: false
+            running: false
+            onTriggered: {
+                console.log("autoStartTimer,  gameTitle.visible:" + gameTitle.opacity)
+                screen.state = "stateMainMenu"
+                autoStartTimer.stop()
+            }
         }
         // ----- Custom non-visual children
         // ----- JavaScript functions
