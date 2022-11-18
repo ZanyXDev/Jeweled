@@ -56,26 +56,26 @@ Item {
         }
     ]
 
-    transitions: [
-        Transition {
-            from: "*"
-            to: "newGame"
-            ScriptAction {
-                script: doFillBgrCells()
-            }
-            ScriptAction {
-                script: calcLevelCap()
-            }
+    //    transitions: [
+    //        Transition {
+    //            from: "*"
+    //            to: "newGame"
+    //            ScriptAction {
+    //                script: doFillBgrCells()
+    //            }
+    //            ScriptAction {
+    //                script: calcLevelCap()
+    //            }
 
-            ScriptAction {
-                script: oneSecondTimer.start()
-            }
-        }
-    ]
+    //            ScriptAction {
+    //                script: oneSecondTimer.start()
+    //            }
+    //        }
+    //    ]
 
     // ----- Signal handlers
     onScoreChanged: {
-
+        console.log("onScoreChanged")
     }
     onLevelCapChanged: {
 
@@ -138,28 +138,7 @@ Item {
     // ----- JavaScript functions
     function newGame() {
         state = "newGame"
-    }
-
-    function fillBackgroundModel(m_model) {
-        // All item placed left corner
-        var cnt = (control.colums * control.rows)
-        for (var x = 0; x < cnt; x++) {
-            m_model.append({
-                               "x": -100,
-                               "y": -100,
-                               "visible": false
-                           })
-        }
-    }
-
-    function doFillBgrCells() {
-        console.log("doFillBgrCells()")
-        var cnt = (control.colums * control.rows)
-        for (var index = 0; index < cnt; index++) {
-            bgrItemsModel.setProperty(index, "x", getXFromIndex(index))
-            bgrItemsModel.setProperty(index, "y", getYFromIndex(index))
-            bgrItemsModel.setProperty(index, "visible", true)
-        }
+        console.log("newGame()")
     }
 
     function createEmptyGems(m_model) {
@@ -189,35 +168,8 @@ Item {
       * gem types so there are no combos
       */
     function resetBoard() {}
+
     // -------------------Utility function to use in different places. --------
-
-    // Generate random cell type.
-    function generateCellType() {
-        return Math.floor(Math.random() * 7.0)
-    }
-
-    function getXFromIndex(index) {
-        if (index < 0) {
-            return -1
-        }
-        var m_col = index % 8
-        var x = m_col * (control.cellSize + 3 * DevicePixelRatio)
-        x += 2 * DevicePixelRatio
-        return x
-    }
-
-    function getYFromIndex(index) {
-        if (index < 0) {
-            return -1
-        }
-        var m_col = index % 8
-        var m_row = (index > 7) ? ((index - m_col) / 8) : 0
-        var y = m_row * (control.cellSize + 3 * DevicePixelRatio)
-
-        y += 2 * DevicePixelRatio
-        return y
-    }
-
     function calcLevelCap() {
         var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
                            global.difficultyMultiplayer, level - 1))
