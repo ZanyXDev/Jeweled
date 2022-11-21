@@ -1,25 +1,25 @@
 .pragma library
 
-function getXFromIndex(index, m_size, m_dp) {
+function getXFromIndex(index, m_size, m_offset) {
     if (index < 0) {
         return -1
     }
     var m_col = index % 8
-    var x = m_col * (m_size + 2 * m_dp)
-    x += 2 * m_dp
-
+    var x = m_col * (m_size + m_offset)
+    x += m_offset
+    //console.log(`getXFromIndex[${index}] is [x:${x}] position, size:${m_size}`)
     return x
 }
 
-function getYFromIndex(index, m_size, m_dp) {
+function getYFromIndex(index, m_size, m_offset) {
     if (index < 0) {
         return -1
     }
     var m_col = index % 8
     var m_row = (index > 7) ? ((index - m_col) / 8) : 0
-    var y = m_row * (m_size + 2 * m_dp)
+    var y = m_row * (m_size + m_offset)
 
-    y += 2 * m_dp
+    y += m_offset
     return y
 }
 
