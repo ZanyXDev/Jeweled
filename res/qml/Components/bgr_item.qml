@@ -1,22 +1,25 @@
 import QtQuick 2.15
 
-Item {
+Image {
     id: root
-    property int animationTime:0
-    Image {
-        anchors.fill: parent
-        opacity: 0.55
-        source: "qrc:/res/images/tile_background.png"
-        sourceSize.width: root.width
-        sourceSize.height: root.width
-        fillMode: Image.PreserveAspectFit
+    opacity: 0.75
+    source: "qrc:/res/images/tile_background.png"
 
-        Behavior on y {
-            enabled: true
-            PropertyAnimation {
-                easing.type: Easing.OutBack
-                duration: root.animationTime
-            }
+    fillMode: Image.PreserveAspectFit
+
+    Behavior on y {
+        enabled: true
+        PropertyAnimation {
+            easing.type: Easing.OutBack
+            duration: 1000
+        }
+    }
+
+    MouseArea {
+        id: mA
+        anchors.fill: parent
+        onClicked: {
+            console.log("bgr_item onClicked" + root.x)
         }
     }
 }
