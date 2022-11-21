@@ -66,12 +66,7 @@ QQC2.ApplicationWindow {
                             + appInForeground + ", appInitialized:" + appInitialized + "]")
         }
     }
-    Component.onCompleted: {
-        if (bgrModel != null) {
-            Utils.fillBgrModel(bgrModel, global.defaultRowCount,
-                               global.defaultColumnCount, DevicePixelRatio)
-        }
-    }
+
     background: Image {
         id: background
         anchors.fill: parent
@@ -532,6 +527,7 @@ QQC2.ApplicationWindow {
         readonly property int bigSellSize: smallCellSize * 2
         readonly property int defaultRowCount: 8
         readonly property int defaultColumnCount: 8
+        readonly property int cellCount: defaultRowCount * defaultColumnCount
 
         /* This is msecs. Half of second is enough for smooth animation. */
         readonly property int timerInterval: 500
@@ -556,6 +552,10 @@ QQC2.ApplicationWindow {
 
     BackgroundItemModel {
         id: bgrModel
+        Component.onCompleted: {
+            Utils.fillBgrModel(bgrModel, global.cellCount,
+                               global.smallCellSize, DevicePixelRatio)
+        }
     }
 
     // ----- JavaScript functions
