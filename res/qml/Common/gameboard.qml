@@ -7,9 +7,10 @@ import QtQml.Models 2.15
 import Components 1.0
 import Common 1.0
 import Theme 1.0
+import "qrc:/res/js/util.js" as Utils
 
 Item {
-    id: control
+    id: root
 
     // ----- Property Declarations
 
@@ -29,6 +30,7 @@ Item {
 
     property ListModel modelBgr: ListModel {}
     property ListModel modelGem: ListModel {}
+
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
@@ -42,11 +44,11 @@ Item {
         State {
             name: "newGame"
             PropertyChanges {
-                target: control
+                target: root
                 score: 0
             }
             PropertyChanges {
-                target: control
+                target: root
                 level: 1
             }
             PropertyChanges {
@@ -56,26 +58,27 @@ Item {
         }
     ]
 
-    //    transitions: [
-    //        Transition {
-    //            from: "*"
-    //            to: "newGame"
-    //            ScriptAction {
-    //                script: doFillBgrCells()
-    //            }
-    //            ScriptAction {
-    //                script: calcLevelCap()
-    //            }
+    transitions: [
+        Transition {
+            from: "*"
+            to: "newGame"
 
-    //            ScriptAction {
-    //                script: oneSecondTimer.start()
-    //            }
-    //        }
-    //    ]
+            ScriptAction {
+                script: Utils.moveBackgroundTile(modelBgr)
+            }
+            ScriptAction {
+                script: calcLevelCap()
+            }
+
+            ScriptAction {
+                script: oneSecondTimer.start()
+            }
+        }
+    ]
 
     // ----- Signal handlers
     onScoreChanged: {
-        console.log("onScoreChanged")
+
     }
     onLevelCapChanged: {
 
@@ -90,6 +93,7 @@ Item {
     Component.onDestruction: {
 
     }
+
     // ----- Visual children.
     Rectangle {
         id: bgrRect
@@ -101,24 +105,18 @@ Item {
         visible: opacity > 0
         border.color: Theme.accent
         border.width: 1 * DevicePixelRatio
+        Item {
+            anchors.fill: parent
+            Repeater {
 
-        Repeater {
-            id: repeaterItem
-            model: modelBgr
-            BgrItem {
-                readonly property int idx: model.index
-                x: model.x
-                y: model.y
-                visible: model.visible
-                width: global.smallCellSize
-                height: global.smallCellSize
-                animationTime: global.timerInterval
-            }
-        }
-        Behavior on opacity {
-            NumberAnimation {
-                duration: global.timerInterval
-                easing.type: Easing.InQuad
+                id: bgrRepeater
+                model: modelBgr
+                BgrItem {
+                    x: model.x
+                    y: model.y
+                    height: model.m_size
+                    width: model.m_size
+                }
             }
         }
     }
@@ -131,8 +129,8 @@ Item {
         interval: 1000
         repeat: true
         running: false
-        onTriggered: control.score++
-        //control.score = Qt.binding(function () {  return 77     })
+        onTriggered: root.score++
+        //root.score = Qt.binding(function () {  return 77     })
     }
 
     // ----- JavaScript functions
@@ -142,19 +140,19 @@ Item {
     }
 
     function createEmptyGems(m_model) {
-        var cnt = (control.colums * control.rows)
+        var cnt = (root.colums * root.rows)
         for (var x = 0; x < cnt; x++) {
             m_model.append({
                                "type": generateCellType(),
-                               "width": control.cellSize,
-                               "height": control.cellSize,
+                               "width": root.cellSize,
+                               "height": root.cellSize,
                                "x"// "startRow": startRow,
                                // "behaviorPause": Math.abs(
-                               //                      startRow) * 50 + control.m_currentStepDelay,
+                               //                      startRow) * 50 + root.m_currentStepDelay,
                                : -100,
                                "y": -100,
                                "spawned": true,
-                               "srcSize": control.cellSize,
+                               "srcSize": root.cellSize,
                                "modifier": Modifier.CellState.Normal
                            })
         }
