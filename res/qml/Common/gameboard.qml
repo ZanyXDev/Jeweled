@@ -8,6 +8,7 @@ import Components 1.0
 import Common 1.0
 import Theme 1.0
 import "qrc:/res/js/util.js" as Utils
+import "qrc:/res/js/game_logic.js" as Logic
 
 Item {
     id: root
@@ -19,14 +20,16 @@ Item {
     property int hintY: 0
     property int level: 0
     property int score: 0
-    property int selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
-    property int selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
+    property int m_selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
+    property int m_selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
     property int m_currentStepDelay: 0
     property real levelCap: 0.0
     property bool hintVisible: false
-    property bool gemSelected: false
-    property bool gameLost: false
-    property bool gameStarted: false
+    property bool m_gemSelected: false
+    property bool m_gameLost: false
+    property bool m_gameStarted: false
+    property bool m_gemMovedByUser: false
+    property bool m_userInteractionAccepted: false
 
     property ListModel modelBgr: ListModel {}
     property ListModel modelGem: ListModel {}
@@ -71,7 +74,7 @@ Item {
             }
 
             ScriptAction {
-                script: oneSecondTimer.start()
+                script: oneHalfSecondTimer.start()
             }
         }
     ]
@@ -79,7 +82,9 @@ Item {
     // ----- Signal handlers
     onScoreChanged: {
 
-    }
+    } // ----- Property Declarations
+    // Required properties should be at the top.
+    property point originPosition: mapToItem(parent, 0, 0)
     onLevelCapChanged: {
 
         ///TODO levelCap == 1.0 -> signal levelUp()!!!
@@ -88,8 +93,20 @@ Item {
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
+        root.level = 1
+        root.score = 0
 
+        //m_selectedGem = NULL
+        m_gemSelected = false
+        m_selGemRow = 0
+        m_selGemColumn = 0
+        m_gemMovedByUser = false
+        m_userInteractionAccepted = true
+        m_gameStarted = false
+        m_gameLost = false
+        // m_cellSize = SMALL_CELL_SIZE
     }
+
     Component.onDestruction: {
 
     }
@@ -97,25 +114,48 @@ Item {
     // ----- Visual children.
     Rectangle {
         id: bgrRect
+        objectName: "bgrRect"
         anchors.fill: parent
         radius: 4 * DevicePixelRatio
         color: "transparent"
         z: -1
         opacity: 0
-        visible: opacity > 0
+        visible: (opacity > 0) && (isDebugMode)
         border.color: Theme.accent
         border.width: 1 * DevicePixelRatio
-        Item {
-            anchors.fill: parent
-            Repeater {
 
-                id: bgrRepeater
-                model: modelBgr
-                BgrItem {
-                    x: model.x
-                    y: model.y
-                    height: model.m_size
-                    width: model.m_size
+        Repeater {
+
+            id: bgrRepeater
+            model: modelBgr
+            BgrItem {
+                readonly property int index: model.index
+                x: model.x
+                y: model.y
+                height: model.m_size
+                width: model.m_size
+            }
+        }
+        Repeater {
+            id: gemRepeater
+            model: 2 //modelGem
+
+            GemItem {
+                srcSize: 37 * DevicePixelRatio
+                type: Modifier.CellState.Normal
+
+                m_modifer: (model.index
+                            > 0) ? Modifier.CellState.HyperCube : Modifier.CellState.Normal
+                Component.onCompleted: {
+                    if (isDebugMode) {
+                        console.log("------------ GemItem ----------")
+                        console.log("model.index:" + model.index)
+                        console.log("parent:" + parent)
+
+                        //                        for (var prop in this) {
+                        //                            print(prop += " (" + typeof (this[prop]) + ") = " + this[prop])
+                        //                        }
+                    }
                 }
             }
         }
@@ -125,8 +165,8 @@ Item {
 
     // ----- Custom non-visual children
     Timer {
-        id: oneSecondTimer
-        interval: 1000
+        id: oneHalfSecondTimer
+        interval: 500
         repeat: true
         running: false
         onTriggered: root.score++
@@ -157,6 +197,8 @@ Item {
                            })
         }
     }
+
+    ///TODO Move to GameLogic.js
 
 
     /**
