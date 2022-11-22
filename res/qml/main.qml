@@ -360,9 +360,6 @@ QQC2.ApplicationWindow {
                 visible: screen.state == "stateGame"
                 modelBgr: bgrModel
                 modelGem: gemsModel
-                onHeightChanged: {
-                    console.log("gameBoard.onHeightChanged:" + gameBoard.height)
-                }
             }
             QQC2.Frame {
                 id: spacerFrame_3
@@ -548,6 +545,10 @@ QQC2.ApplicationWindow {
 
     GemItemsModel {
         id: gemsModel
+        Component.onCompleted: {
+            Utils.fillGemsModel(gemsModel, global.cellCount,
+                                global.smallCellSize, DevicePixelRatio,global.defaultColumnCount)
+        }
     }
 
     BackgroundItemModel {

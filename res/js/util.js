@@ -61,3 +61,18 @@ function moveBackgroundTile(m_model) {
         // console.log(`Idx ${index} y2:${m_model.get(index).y}`)
     }
 }
+function fillGemsModel(m_model, m_count, m_size, m_dp, m_columnCount) {
+    m_model.clear()
+
+    for (var index = 0; index < m_count; index++) {
+        var row = index / m_columnCount
+        var column = index % m_columnCount
+        var item = {
+            "x": 0,
+            "y": 0,
+            "t_row": row
+        }
+        console.log("item:" + item)
+        m_model.append(item)
+    }
+}
