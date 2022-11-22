@@ -36,20 +36,6 @@ function fillBgrModel(m_model, m_count, m_size, m_dp) {
     }
 }
 
-function createBackgroundTile(m_parent, m_item, m_model) {
-    var m_size = m_model.get(0).m_size
-    for (var index = 0; index < m_model.count; index++) {
-
-        var m_bgr = m_item.createObject(m_parent, {
-                                            "x": m_model.get(index).x,
-                                            "y": m_model.get(index).y,
-                                            "height": m_size,
-                                            "width": m_size,
-                                            "visible": true
-                                        })
-    }
-}
-
 function moveBackgroundTile(m_model) {
     // console.log("moveBackgroundTile() begin")
     for (var index = 0; index < m_model.count; index++) {
@@ -61,6 +47,57 @@ function moveBackgroundTile(m_model) {
         // console.log(`Idx ${index} y2:${m_model.get(index).y}`)
     }
 }
+
+function isOpacity(m_width, m_x, m_y) {
+    var halfWidth = m_width / 2
+    var eightWidth = m_width * 8
+
+    return ((m_x < -halfWidth) || (m_y < -halfWidth) || (m_x >= eightWidth)
+            || (m_y >= eightWidth)) ? 0 : 1
+}
+
+function getGemImageSource(m_isHyrpeCube, m_type) {
+    var sourceImage
+
+    if (m_isHyrpeCube) {
+        sourceImage = "qrc:/res/images/gems/hyperCube.svg"
+    } else {
+
+        switch (m_type) {
+        case 0:
+            sourceImage = "qrc:/res/images/gems/yellowGem.svg"
+            break
+        case 1:
+            sourceImage = "qrc:/res/images/gems/redGem.svg"
+            break
+        case 2:
+            sourceImage = "qrc:/res/images/gems/blueGem.svg"
+            break
+        case 3:
+            sourceImage = "qrc:/res/images/gems/greenGem.svg"
+            break
+        case 4:
+            sourceImage = "qrc:/res/images/gems/purpleGem.svg"
+            break
+        case 5:
+            sourceImage = "qrc:/res/images/gems/whiteGem.svg"
+            break
+        case 6:
+            sourceImage = "qrc:/res/images/gems/orangeGem.svg"
+            break
+        default:
+            break
+        }
+    }
+    console.log("sourceImage:" + sourceImage)
+    return sourceImage
+}
+
+function calcRandomDuration(m_behavior_pause) {
+    var rnd = 1 + Math.random() * 0.4 - 0.2
+    return Math.floor(m_behavior_pause * rnd)
+}
+
 function fillGemsModel(m_model, m_count, m_size, m_dp, m_columnCount) {
     m_model.clear()
 
@@ -74,5 +111,13 @@ function fillGemsModel(m_model, m_count, m_size, m_dp, m_columnCount) {
         }
         console.log("item:" + item)
         m_model.append(item)
+    }
+}
+
+function createBlock(m_row, m_col, m_startRow) {
+    var item = {
+        "x": 0,
+        "y": 0,
+        "t_row": row
     }
 }
