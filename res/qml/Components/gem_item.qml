@@ -9,7 +9,7 @@ import "qrc:/res/js/util.js" as Utils
 Item {
     id: root
 
-    property bool myBehaviorEnabled: false
+    property bool behaviorEnabled: false
     property bool timeToDie: false
     property bool shouldBeRemoved: false
     property bool explodedOnce: false
@@ -20,10 +20,11 @@ Item {
     property bool explodable: false
     property bool selected: false
 
-    property int myBehaviorPause: 0
+    property int behaviorPause: 0
     property int srcSize: 0
     property int type: 0
-    property int m_modifer: Modifier.CellState.Normal
+    property int gmodifier: 0
+
     property int currentParentIndex: -1
     property int animTime: 0
     property alias sourceImage: img.source
@@ -69,17 +70,17 @@ Item {
     }
 
     Behavior on x {
-        enabled: root.spawned && root.myBehaviorEnabled
+        enabled: root.spawned && root.behaviorEnabled
         PropertyAnimation {
             easing.type: Easing.OutBack
             duration: 400
         }
     }
     Behavior on y {
-        enabled: myBehaviorEnabled
+        enabled: root.behaviorEnabled
         SequentialAnimation {
             PauseAnimation {
-                duration: Utils.calcRandomDuration(root.myBehaviorPause)
+                duration: Utils.calcRandomDuration(root.behaviorPause)
             }
             PropertyAnimation {
                 duration: 400
@@ -87,7 +88,7 @@ Item {
             }
 
             ScriptAction {
-                script: root.myBehaviorPause = 0
+                script: root.behaviorPause = 0
             }
         }
     }
@@ -102,8 +103,6 @@ Item {
 
     // ----- JavaScript functions
     function isHyperCube() {
-        console.trace()
-        console.log("isHyperCube():" + root.m_modifer)
-        return (root.m_modifer === Modifier.CellState.HyperCube) ? 1 : 0
+        return (root.gmodifier === Utils.CellState.HyperCube) ? 1 : 0
     }
 }
