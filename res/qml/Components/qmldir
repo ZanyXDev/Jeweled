@@ -1,6 +1,5 @@
 module Components
 BaseButton 1.0 basebutton.qml
-Modifier 1.0 modifier.qml
 JProgressBar 1.0 jprogressbar.qml
 BgrItem 1.0 bgr_item.qml
 TestRect 1.0 test.qml

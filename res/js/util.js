@@ -1,5 +1,12 @@
 .pragma library
 
+const CellState = {
+    "Normal": 0,
+    "Explosive": 1,
+    "HyperCube": 2,
+    "RowColumnRemove": 3
+}
+
 function getXFromIndex(index, m_size, m_offset) {
     if (index < 0) {
         return -1
