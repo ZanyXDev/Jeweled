@@ -43,6 +43,24 @@ function fillBgrModel(m_model, m_count, m_size, m_dp) {
     }
 }
 
+function fillGemsModel(m_model, m_count, m_size) {
+    console.trace()
+    m_model.clear()
+    var gemItemData = {
+        "behaviorPause": 0,
+        "type": 0,
+        "x": 0,
+        "y": 0,
+        "srcSize": m_size,
+        "YPos": 0,
+        "spawned": true,
+        "gmodifier": CellState.Normal
+    }
+    for (var index = 0; index < m_count; index++) {
+        m_model.append(gemItemData)
+    }
+}
+
 function moveBackgroundTile(m_model) {
     // console.log("moveBackgroundTile() begin")
     for (var index = 0; index < m_model.count; index++) {
@@ -96,35 +114,11 @@ function getGemImageSource(m_isHyrpeCube, m_type) {
             break
         }
     }
-    console.log("sourceImage:" + sourceImage)
+    //console.log("sourceImage:" + sourceImage)
     return sourceImage
 }
 
 function calcRandomDuration(m_behavior_pause) {
     var rnd = 1 + Math.random() * 0.4 - 0.2
     return Math.floor(m_behavior_pause * rnd)
-}
-
-function fillGemsModel(m_model, m_count, m_size, m_dp, m_columnCount) {
-    m_model.clear()
-
-    for (var index = 0; index < m_count; index++) {
-        var row = index / m_columnCount
-        var column = index % m_columnCount
-        var item = {
-            "x": 0,
-            "y": 0,
-            "t_row": row
-        }
-        console.log("item:" + item)
-        m_model.append(item)
-    }
-}
-
-function createBlock(m_row, m_col, m_startRow) {
-    var item = {
-        "x": 0,
-        "y": 0,
-        "t_row": row
-    }
 }
