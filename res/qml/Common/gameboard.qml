@@ -31,8 +31,8 @@ Item {
     property bool m_gemMovedByUser: false
     property bool m_userInteractionAccepted: false
 
-    property ListModel modelBgr: ListModel {}
-    property ListModel modelGem: ListModel {}
+    //    property ListModel modelBgr: ListModel {}
+    //    property ListModel modelGem: ListModel {}
 
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
@@ -67,7 +67,7 @@ Item {
             to: "newGame"
 
             ScriptAction {
-                script: Utils.moveBackgroundTile(modelBgr)
+                script: Utils.moveBackgroundTile(bgrModel)
             }
             ScriptAction {
                 script: calcLevelCap()
@@ -127,7 +127,7 @@ Item {
         Repeater {
 
             id: bgrRepeater
-            model: modelBgr
+            model: bgrModel
             BgrItem {
                 readonly property int index: model.index
                 x: model.x
@@ -136,32 +136,40 @@ Item {
                 width: model.m_size
             }
         }
+
         Repeater {
             id: gemRepeater
-            model: 2 //modelGem
+            model: gemsModel
+            delegate: GemItem {
+                readonly property int index: model.index
+                id: index
+                type: model.type
+                spawned: model.spawned
+                gmodifier: model.gmodifier
+                srcSize: model.srcSize
+                behaviorPause:model.behaviorPause
 
-            GemItem {
-                srcSize: 37 * DevicePixelRatio
-                type: Modifier.CellState.Normal
-
-                m_modifer: (model.index
-                            > 0) ? Modifier.CellState.HyperCube : Modifier.CellState.Normal
-                Component.onCompleted: {
-                    if (isDebugMode) {
-                        console.log("------------ GemItem ----------")
-                        console.log("model.index:" + model.index)
-                        console.log("parent:" + parent)
-
-                        //                        for (var prop in this) {
-                        //                            print(prop += " (" + typeof (this[prop]) + ") = " + this[prop])
-                        //                        }
-                    }
-                }
             }
         }
     }
 
     // ----- Qt provided non-visual children
+    ListModel {
+        id: gemsModel
+
+        Component.onCompleted: {
+            Utils.fillGemsModel(gemsModel, global.cellCount,
+                                global.smallCellSize)
+        }
+    }
+
+    ListModel {
+        id: bgrModel
+        Component.onCompleted: {
+            Utils.fillBgrModel(bgrModel, global.cellCount,
+                               global.smallCellSize, DevicePixelRatio)
+        }
+    }
 
     // ----- Custom non-visual children
     Timer {
@@ -178,27 +186,6 @@ Item {
         state = "newGame"
         console.log("newGame()")
     }
-
-    function createEmptyGems(m_model) {
-        var cnt = (root.colums * root.rows)
-        for (var x = 0; x < cnt; x++) {
-            m_model.append({
-                               "type": generateCellType(),
-                               "width": root.cellSize,
-                               "height": root.cellSize,
-                               "x"// "startRow": startRow,
-                               // "behaviorPause": Math.abs(
-                               //                      startRow) * 50 + root.m_currentStepDelay,
-                               : -100,
-                               "y": -100,
-                               "spawned": true,
-                               "srcSize": root.cellSize,
-                               "modifier": Modifier.CellState.Normal
-                           })
-        }
-    }
-
-    ///TODO Move to GameLogic.js
 
 
     /**

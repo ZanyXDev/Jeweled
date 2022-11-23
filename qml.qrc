@@ -18,9 +18,6 @@
         <file>res/qml/Components/bgr_item.qml</file>
         <file>res/qml/Components/test.qml</file>
         <file>res/qml/Components/gem_item.qml</file>
-        <file>res/qml/DataModels/qmldir</file>
-        <file>res/qml/DataModels/g_model.qml</file>
-        <file>res/qml/DataModels/b_model.qml</file>
         <file>res/qml/AppEffects/qmldir</file>
         <file>res/qml/AppEffects/shine.qml</file>
     </qresource>

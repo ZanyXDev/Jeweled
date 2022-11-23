@@ -12,7 +12,6 @@ import Common 1.0
 import Theme 1.0
 import Dialogs 1.0
 import Components 1.0
-import DataModels 1.0
 import AppEffects 1.0
 
 import "qrc:/res/js/util.js" as Utils
@@ -358,8 +357,8 @@ QQC2.ApplicationWindow {
                 Layout.preferredHeight: 320 * DevicePixelRatio
 
                 visible: screen.state == "stateGame"
-                modelBgr: bgrModel
-                modelGem: gemsModel
+                //modelBgr: bgrModel
+                //modelGem: gemsModel
             }
             QQC2.Frame {
                 id: spacerFrame_3
@@ -540,22 +539,6 @@ QQC2.ApplicationWindow {
             if (isDebugMode) {
                 console.log("I:" + tag + ":" + msg)
             }
-        }
-    }
-
-    GemItemsModel {
-        id: gemsModel
-        Component.onCompleted: {
-            Utils.fillGemsModel(gemsModel, global.cellCount,
-                                global.smallCellSize, DevicePixelRatio,global.defaultColumnCount)
-        }
-    }
-
-    BackgroundItemModel {
-        id: bgrModel
-        Component.onCompleted: {
-            Utils.fillBgrModel(bgrModel, global.cellCount,
-                               global.smallCellSize, DevicePixelRatio)
         }
     }
 
