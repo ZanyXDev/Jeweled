@@ -8,6 +8,7 @@
         <file>res/qml/Common/scorebox.qml</file>
         <file>res/qml/Common/gameboard.qml</file>
         <file>res/qml/Common/game_title.qml</file>
+        <file>res/qml/Common/txt_app_version.qml</file>
         <file>res/qml/Dialogs/qmldir</file>
         <file>res/qml/Dialogs/aboutdialog.qml</file>
         <file>res/qml/Theme/qmldir</file>
@@ -18,8 +19,8 @@
         <file>res/qml/Components/bgr_item.qml</file>
         <file>res/qml/Components/test.qml</file>
         <file>res/qml/Components/gem_item.qml</file>
+        <file>res/qml/Components/fps_item.qml</file>
         <file>res/qml/AppEffects/qmldir</file>
         <file>res/qml/AppEffects/shine.qml</file>
-        <file>res/qml/Components/fps_item.qml</file>
     </qresource>
 </RCC>

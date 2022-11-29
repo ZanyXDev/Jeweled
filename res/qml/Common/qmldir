@@ -4,3 +4,4 @@ Toast 1.0 toast.qml
 ScoreBox 1.0 scorebox.qml
 GameBoard 1.0 gameboard.qml
 GameTitle 1.0 game_title.qml
+AppVersionTxt 1.0 app_ver_txt.qml
