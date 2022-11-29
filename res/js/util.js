@@ -122,3 +122,25 @@ function calcRandomDuration(m_behavior_pause) {
     var rnd = 1 + Math.random() * 0.4 - 0.2
     return Math.floor(m_behavior_pause * rnd)
 }
+
+function getBackgroundSource(m_backgroundSource) {
+     var source
+    if (m_backgroundSource === undefined){
+        source =  "qrc:/res/images/backgrounds/bgr00.jpg"
+    }else {
+        source = generateBackgroundFileName()
+         while (source === m_backgroundSource) {
+             source = generateBackgroundFileName()
+         }
+    }
+    return source
+}
+
+function generateBackgroundFileName() {
+    var bgrStr = Math.floor(Math.random() * 20 + 1).toString()
+    if (bgrStr.length === 1) {
+        bgrStr = "0" + bgrStr
+    }
+    return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
+
+}

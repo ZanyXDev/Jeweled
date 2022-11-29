@@ -70,7 +70,8 @@ QQC2.ApplicationWindow {
     background: Image {
         id: background
         anchors.fill: parent
-        source: "qrc:/res/images/backgrounds/bgr00.jpg"
+        source: Utils.getBackgroundSource()
+
         fillMode: Image.PreserveAspectCrop
     }
 
@@ -555,11 +556,8 @@ QQC2.ApplicationWindow {
         id: optionsMenuAction
 
         onTriggered: {
-            //optionsMenu.open()
-            if (isDebugMode)
-                 AppSingleton.toLog("Jeweled","optionsMenuAction click")
 
-            Qt.quit()
+            //background.source = Utils.getBackgroundSource(background.source)
         }
     }
     QQC2.Action {
@@ -567,10 +565,9 @@ QQC2.ApplicationWindow {
 
         onTriggered: {
             Theme.toggleTheme()
-            AppSingleton.toLog("Jeweled","changeThemeMenuAction click")
+            AppSingleton.toLog("Jeweled", "changeThemeMenuAction click")
         }
     }
-
 
     // ----- Custom non-visual children
     Timer {
@@ -586,21 +583,4 @@ QQC2.ApplicationWindow {
 
     // ----- JavaScript functions
     /// TODO move to Utils.js
-    function setBackgroundSource() {
-        var source = generateBackgroundFileName()
-        while (source === background.source) {
-            source = generateBackgroundFileName()
-            if (isDebugMode)
-                AppSingleton.toLog("Jeweled",`setBackgroundSource() return:${source}`)
-        }
-        background.source = source
-    }
-
-    function generateBackgroundFileName() {
-        var bgrStr = Math.floor(Math.random() * 20 + 1).toString()
-        if (bgrStr.length === 1) {
-            bgrStr = "0" + bgrStr
-        }
-        return "qrc:/res/images/backgrounds/bgr" + bgrStr + ".jpg"
-    }
 }
