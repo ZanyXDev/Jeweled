@@ -23,6 +23,7 @@ QQC2.ApplicationWindow {
     // Required properties should be at the top.
     readonly property int screenOrientation: Screen.orientation
     readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
+    readonly property real winScale: Math.min(width / 1280.0, height / 720.0)
     property bool appInitialized: false
     // ----- Signal declarations
     signal screenOrientationUpdated(int screenOrientation)
@@ -556,7 +557,8 @@ QQC2.ApplicationWindow {
         onTriggered: {
             //optionsMenu.open()
             if (isDebugMode)
-                console.log("optionsMenuAction click")
+                 AppSingleton.toLog("Jeweled","optionsMenuAction click")
+
             Qt.quit()
         }
     }
@@ -565,71 +567,20 @@ QQC2.ApplicationWindow {
 
         onTriggered: {
             Theme.toggleTheme()
-            global.toLog("changeThemeMenuAction click")
+            AppSingleton.toLog("Jeweled","changeThemeMenuAction click")
         }
     }
-    FontLoader {
-        id: gameFont
-        source: "qrc:/res/fonts/mailrays.ttf"
-    }
-    FontLoader {
-        id: buttonFont
-        source: "qrc:/res/fonts/pirulen.ttf"
-    }
-    FontLoader {
-        id: aboutFont
-        source: "qrc:/res/fonts/forgotte.ttf"
-    }
+
 
     // ----- Custom non-visual children
     Timer {
         id: autoStartTimer
-        interval: global.enoughTimeToDie * 3
+        interval: AppSingleton.enoughTimeToDie * 3
         repeat: false
         running: gameTitle.opacity > 0
         onTriggered: {
             screen.state = "stateMainMenu"
             autoStartTimer.stop()
-        }
-    }
-
-    // a globally avalable utility object
-    QtObject {
-        id: global
-
-        readonly property real winScale: Math.min(width / 1280.0,
-                                                  height / 720.0)
-
-        readonly property int largeFontSize: 36
-        readonly property int middleFontSize: 24
-        readonly property int smallFontSize: 12
-        readonly property int tinyFontSize: 10
-
-        property QtObject fonts: QtObject {
-            readonly property string gamefont: gameFont.name
-            readonly property string buttonfont: buttonFont.name
-            readonly property string aboutfont: aboutFont.name
-        }
-        readonly property int smallCellSize: 37 * DevicePixelRatio
-        readonly property int bigSellSize: smallCellSize * 2
-        readonly property int defaultRowCount: 8
-        readonly property int defaultColumnCount: 8
-        readonly property int cellCount: defaultRowCount * defaultColumnCount
-
-        /* This is msecs. Half of second is enough for smooth animation. */
-        readonly property int timerInterval: 500
-        readonly property int enoughTimeToDie: 1000 // достаточноеВремяДляСмерти
-
-        readonly property int animationStopTreshhold: 3
-        readonly property int levelCapMultiplayer: 60
-
-        readonly property int huperCubeMultiplayer: 2
-        readonly property double difficultyMultiplayer: 1.07
-
-        function toLog(tag, msg) {
-            if (isDebugMode) {
-                console.log("I:" + tag + ":" + msg)
-            }
         }
     }
 
@@ -640,7 +591,7 @@ QQC2.ApplicationWindow {
         while (source === background.source) {
             source = generateBackgroundFileName()
             if (isDebugMode)
-                console.log("setBackgroundSource() return:" + source)
+                AppSingleton.toLog("Jeweled",`setBackgroundSource() return:${source}`)
         }
         background.source = source
     }

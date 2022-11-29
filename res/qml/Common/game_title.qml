@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import AppEffects 1.0
+import Common 1.0
 
 Item {
     id: root
@@ -33,7 +34,7 @@ Item {
 
         Behavior on opacity {
             NumberAnimation {
-                duration: global.timerIterval
+                duration: AppSingleton.timerIterval
             }
         }
     }

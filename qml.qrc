@@ -22,5 +22,6 @@
         <file>res/qml/Components/fps_item.qml</file>
         <file>res/qml/AppEffects/qmldir</file>
         <file>res/qml/AppEffects/shine.qml</file>
+        <file>res/qml/Common/app_singleton.qml</file>
     </qresource>
 </RCC>

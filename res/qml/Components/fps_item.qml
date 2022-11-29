@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import Common 1.0
 
 
 /**
@@ -23,7 +24,7 @@ Item {
 
     Behavior on opacity {
         NumberAnimation {
-            duration: global.timerIterval
+            duration: AppSingleton.timerInterval
             easing.type: Easing.InQuad
         }
     }
@@ -60,8 +61,8 @@ Item {
             horizontalAlignment: Text.AlignLeft
 
             font {
-                pointSize: global.tinyFontSize
-                family: global.fonts.buttonfont
+                pointSize: AppSingleton.tinyFontSize
+                family: AppSingleton.buttonFont.name
             }
             text: root.fpsAvg + " | " + root.fps + " fps"
         }

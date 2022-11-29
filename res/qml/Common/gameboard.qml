@@ -147,8 +147,7 @@ Item {
                 spawned: model.spawned
                 gmodifier: model.gmodifier
                 srcSize: model.srcSize
-                behaviorPause:model.behaviorPause
-
+                behaviorPause: model.behaviorPause
             }
         }
     }
@@ -158,16 +157,16 @@ Item {
         id: gemsModel
 
         Component.onCompleted: {
-            Utils.fillGemsModel(gemsModel, global.cellCount,
-                                global.smallCellSize)
+            Utils.fillGemsModel(gemsModel, AppSingleton.cellCount,
+                                AppSingleton.smallCellSize)
         }
     }
 
     ListModel {
         id: bgrModel
         Component.onCompleted: {
-            Utils.fillBgrModel(bgrModel, global.cellCount,
-                               global.smallCellSize, DevicePixelRatio)
+            Utils.fillBgrModel(bgrModel, AppSingleton.cellCount,
+                               AppSingleton.smallCellSize, DevicePixelRatio)
         }
     }
 
@@ -198,8 +197,8 @@ Item {
 
     // -------------------Utility function to use in different places. --------
     function calcLevelCap() {
-        var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
-                           global.difficultyMultiplayer, level - 1))
+        var max_cap = (5 * level * (level + 3) / 2 * AppSingleton.levelCapMultiplayer * Math.pow(
+                           AppSingleton.difficultyMultiplayer, level - 1))
         levelCap = score / max_cap
     }
 }

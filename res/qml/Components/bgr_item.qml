@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import Common 1.0
 
 Image {
     id: root
@@ -11,7 +12,7 @@ Image {
         enabled: true
         PropertyAnimation {
             easing.type: Easing.OutBack
-            duration: 1000
+            duration: AppSingleton.timerInterval * 2
         }
     }
 
@@ -19,7 +20,7 @@ Image {
         id: mA
         anchors.fill: parent
         onClicked: {
-            console.log("bgr_item onClicked" + root.x)
+            AppSingleton.toLog("Jeweled", `bgr_item onClicked:${root.x}`)
         }
     }
 }

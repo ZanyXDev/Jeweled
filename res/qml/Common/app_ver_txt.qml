@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import Common 1.0
 
 Text {
     id: root
@@ -7,13 +8,13 @@ Text {
     horizontalAlignment: Text.AlignRight
 
     font {
-        pointSize: global.smallFontSize
-        family: global.fonts.buttonfont
+        pointSize: AppSingleton.smallFontSize
+        family: AppSingleton.buttonFont.name
     }
 
     Behavior on opacity {
         NumberAnimation {
-            duration: global.timerInterval
+            duration: AppSingleton.timerInterval
             easing.type: Easing.InQuad
         }
     }

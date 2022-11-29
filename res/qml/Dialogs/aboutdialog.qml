@@ -2,9 +2,10 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 1.15
+import Common 1.0
 
 QQC2.Popup {
-    id: contol
+    id: root
 
     x: Math.round((parent.width - width) / 2)
     y: Math.round((parent.height - height) / 2)
@@ -22,8 +23,8 @@ QQC2.Popup {
             Layout.fillWidth: true
 
             font {
-                family: global.fonts.aboutfont
-                pointSize: global.largeFontSize
+                family: AppSingleton.aboutFont.name
+                pointSize: AppSingleton.largeFontSize
                 bold: true
             }
             verticalAlignment: Text.AlignVCenter
@@ -46,7 +47,7 @@ QQC2.Popup {
         InfoLablel {
             id: dlgBody
             Layout.preferredHeight: 120 * DevicePixelRatio
-            font.pointSize: global.smallFontSize
+            font.pointSize: AppSingleton.smallFontSize
             //TODO add android intents !!! url and email link
             text: qsTr(
                       "<p align=\"center\"><b>FreeJeweled</b> is a free Bejeweled2 inspired game</p>"
@@ -71,7 +72,7 @@ QQC2.Popup {
                 id: okBtn
                 text: qsTr("Close")
                 onClicked: {
-                    contol.close()
+                    root.close()
                 }
             }
             Item {
