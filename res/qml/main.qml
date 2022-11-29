@@ -120,32 +120,44 @@ QQC2.ApplicationWindow {
         }
     }
 
+    GameTitle {
+        id: gameTitle
+        width: parent.width * 0.9
+        height: 126. / 346. * width
+        anchors.topMargin: 30 * DevicePixelRatio
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        z: 1
+        MouseArea {
+            id: gameTitleMouseArea
+            anchors.fill: parent
+            onClicked: {
+                screen.state = "stateMainMenu"
+            }
+        }
+        Component.onCompleted: {
+            autoStartTimer.start()
+        }
+    }
+
     Item {
-        visible: true
         id: screen
-        // ----- Property Declarations
-        // Required properties should be at the top.
-        // ----- Signal declarations
-        // ----- In this section, we group the size and position information together.
         anchors.fill: parent
-        // If a single assignment, dot notation can be used.
-        // ----- Then comes the other properties. There's no predefined order to these.
-        // ----- Then attached properties and attached signal handlers.
-        // ----- States and transitions.
+        anchors.margins: 2 * DevicePixelRatio
         states: [
             State {
-                name: "stateAppStarted"
-                PropertyChanges {
-                    target: txtAppVersion
-                    opacity: 1.0
-                }
+                name: "*"
                 PropertyChanges {
                     target: gameTitle
                     opacity: 1.0
                 }
                 PropertyChanges {
-                    target: scoreBox
-                    state: "stateShowAppTitle"
+                    target: appVerTxt
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: fpsItem
+                    opacity: 1.0
                 }
                 PropertyChanges {
                     target: btnRun
@@ -162,311 +174,378 @@ QQC2.ApplicationWindow {
             },
             State {
                 name: "stateMainMenu"
-                /* Main menu elements anchors */
-                PropertyChanges {
-                    target: txtAppVersion
-                    opacity: 0.0
-                }
                 PropertyChanges {
                     target: gameTitle
                     opacity: 0.0
                 }
                 PropertyChanges {
-                    target: scoreBox
-                    state: "stateShowLevel"
-                }
-                PropertyChanges {
-                    target: btnRun
-                    enabled: true
-                }
-                PropertyChanges {
-                    target: btnReset
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: btnShowHint
-                    enabled: false
-                }
-                /* Game elements anchors */
-            },
-            State {
-                name: "stateGame"
-                PropertyChanges {
-                    target: txtAppVersion
+                    target: appVerTxt
                     opacity: 0.0
                 }
                 PropertyChanges {
-                    target: gameTitle
+                    target: fpsItem
                     opacity: 0.0
                 }
-                PropertyChanges {
-                    target: scoreBox
-                    state: "stateShowScore"
-                }
-                PropertyChanges {
-                    target: btnRun
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: btnReset
-                    enabled: true
-                }
-                PropertyChanges {
-                    target: btnShowHint
-                    enabled: true
-                }
-                /* Game elements anchors */
-            },
-            State {
-                name: "stateSettings"
-                /* Main menu elements anchors */
-                /* Game elements anchors */
-                /* Showing Settings and hiding About dialog */
-            },
-            State {
-                name: "stateAbout"
-                /* Showing About and hiding Settings dialogs */
-                /* Showing info about app version */
-                /* Showing info about app version */
-                PropertyChanges {
-                    target: txtAppVersion
-                    opacity: 1.0
-                }
-                /* Game elements anchors */
             }
         ]
         transitions: [
             Transition {
-                from: "stateMainMenu"
-                to: "stateGame"
-                ScriptAction {
-                    script: gameBoard.newGame()
-                }
-            },
-            Transition {
-                from: "stateMainMenu"
-                to: "stateSettings"
-                //                AnchorAnimation {
-                //                    duration: 500
-                //                    easing.type: Easing.InOutQuad
-                //                }
-                //                PropertyAction {
-                //                    target: scoreBox
-                //                    property: "state"
-                //                    value: "stateHidden"
-                //                }
-                //                ScriptAction {
-                //                    script: txtAppVersion.opacity = 0.0
-                //                }
-            },
-            Transition {
-                from: "stateSettings"
+                from: "*"
                 to: "stateMainMenu"
-                //                SequentialAnimation {
-                //                    ScriptAction {
-                //                        script: dlgSettings.opacity = 0.0
-                //                    }
-                //                    ScriptAction {
-                //                        script: txtAppVersion.opacity = 1.0
-                //                    }
-                //                    AnchorAnimation {
-                //                        duration: 500
-                //                        easing.type: Easing.InOutQuad
-                //                    }
-                //                }
-            },
-            Transition {
-                from: "stateGame"
-                to: "stateMainMenu"
-                //                SequentialAnimation {
-
-                //                    ScriptAction {
-                //                        script: txtAppVersion.opacity = 1.0
-                //                    }
-                //                    PropertyAction {
-                //                        target: gameBoard
-                //                        property: "opacity"
-                //                        value: 0.0
-                //                    }
-                //                    PropertyAction {
-                //                        target: scoreBox
-                //                        property: "state"
-                //                        value: "stateHidden"
-                //                    }
-                //                    AnchorAnimation {
-                //                        targets: toolBar
-                //                        duration: 400
-                //                    }
-                //                    //                    PropertyAction {
-                //                    //                        target: bgrMainMenu
-                //                    //                        property: "visible"
-                //                    //                        value: true
-                //                    //                    }
-                //                    //                    AnchorAnimation {
-                //                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
-                //                    //                        duration: 500
-                //                    //                        easing.type: Easing.InOutQuad
-                //                    //                    }
-                //                }
             }
         ]
-
-        // ----- Signal handlers
-        // ----- Visual children.
-        state: "stateAppStarted"
-        GameTitle {
-            id: gameTitle
-            width: parent.width * 0.9
-            height: 126. / 346. * width
-            anchors.topMargin: 30 * DevicePixelRatio
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            MouseArea {
-                id: gameTitleMouseArea
-                anchors.fill: parent
-                onClicked: {
-                    screen.state = "stateMainMenu"
-                }
-            }
-            Component.onCompleted: {
-                autoStartTimer.start()
-            }
-        }
-
+        ///TODO move Behavior animation from item to transitions:
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
-            anchors.leftMargin: 2 * DevicePixelRatio
-            anchors.rightMargin: 2 * DevicePixelRatio
-
             spacing: 2 * DevicePixelRatio
-
-            JProgressBar {
-                id: pbLevelProgress
+            FpsItem {
+                id: fpsItem
                 Layout.fillWidth: true
                 Layout.preferredHeight: 25 * DevicePixelRatio
-                visible: screen.state === "stateGame"
-                value: gameBoard.levelCap
-                color: "white"
-                secondColor: "green"
-            }
 
-            GameBoard {
-                id: gameBoard
+                rowSpacing: 2 * DevicePixelRatio
+                textColor: Theme.accent
+
+                visible: opacity > 0
+            }
+            Item {
+                id: test
                 Layout.fillWidth: true
-                Layout.preferredHeight: 320 * DevicePixelRatio
+                Layout.fillHeight: true
 
-                visible: screen.state == "stateGame"
-                //modelBgr: bgrModel
-                //modelGem: gemsModel
+                Component.onCompleted: {
+                    if (isDebugMode)
+                        console.log("test.size:[" + test.width / 1.5 + ","
+                                    + test.height / 1.5 + "]")
+                }
             }
-            QQC2.Frame {
-                id: spacerFrame_3
-                visible: screen.state == "stateGame"
+            AppVersionTxt {
+                id: appVerTxt
                 Layout.fillWidth: true
-                Layout.preferredHeight: 2 * DevicePixelRatio
-            }
-            RowLayout {
-                id: toolBarLayout
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: 20 * DevicePixelRatio
-                Layout.alignment: Qt.AlignBottom
-                Layout.bottomMargin: 15 * DevicePixelRatio
-
-                spacing: 10 * DevicePixelRatio
-                Item {
-                    Layout.fillWidth: true
-                }
-                BaseButton {
-                    id: btnRun
-                    text: qsTr("Run")
-                    font {
-                        family: global.fonts.buttonfont
-                        pointSize: global.smallFontSize
-                    }
-                    onClicked: {
-                        screen.state = "stateGame"
-                    }
-                }
-                BaseButton {
-                    id: btnReset
-
-                    text: qsTr("Reset")
-                    font {
-                        family: global.fonts.buttonfont
-                        pointSize: global.smallFontSize
-                    }
-                    onClicked: {
-                        gameBoard.resetBoard()
-                    }
-                }
-                BaseButton {
-                    id: btnShowHint
-                    text: qsTr("Hint")
-                    font {
-                        family: global.fonts.buttonfont
-                        pointSize: global.smallFontSize
-                    }
-                    onClicked: {
-
-                        // gameBoard.showHint()
-                    }
-                }
-                Item {
-                    Layout.fillWidth: true
-                }
-            }
-
-            Component.onCompleted: {
-                if (isDebugMode)
-                    console.log("mainLayout.size:[" + mainLayout.width / 1.5
-                                + "," + mainLayout.height / 1.5 + "]")
+                Layout.preferredHeight: 25 * DevicePixelRatio
+                color: Theme.accent
+                visible: opacity > 0
+                text: g_appVersion
             }
         }
-        ///TODO Move separate file
-        Text {
-            id: txtAppVersion
-            width: parent.width * 0.9
-
-            anchors {
-                bottom: screen.bottom
-                right: screen.right
-                margins: 3 * DevicePixelRatio
-            }
-            color: Theme.accent
-            visible: opacity > 0
-            text: g_appVersion
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignRight
-            font {
-                pointSize: global.smallFontSize
-                family: global.fonts.buttonfont
-            }
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: global.timerInterval
-                    easing.type: Easing.InQuad
-                }
-            }
-        }
-
-        // ----- Qt provided non-visual children
-        Timer {
-            id: autoStartTimer
-            interval: global.enoughTimeToDie * 3
-            repeat: false
-            running: gameTitle.opacity > 0
-            onTriggered: {
-                console.log("autoStartTimer,  gameTitle.visible:" + gameTitle.opacity)
-                screen.state = "stateMainMenu"
-                autoStartTimer.stop()
-            }
-        }
-        // ----- Custom non-visual children
-        // ----- JavaScript functions
     }
 
+    //    Item {
+    //        visible: true
+    //        id: screen
+    //        // ----- Property Declarations
+    //        // Required properties should be at the top.
+    //        // ----- Signal declarations
+    //        // ----- In this section, we group the size and position information together.
+    //        anchors.fill: parent
+    //        // If a single assignment, dot notation can be used.
+    //        // ----- Then comes the other properties. There's no predefined order to these.
+    //        // ----- Then attached properties and attached signal handlers.
+    //        // ----- States and transitions.
+    //        states: [
+    //            State {
+    //                name: "stateAppStarted"
+    //                PropertyChanges {
+    //                    target: txtAppVersion
+    //                    opacity: 1.0
+    //                }
+    //                PropertyChanges {
+    //                    target: gameTitle
+    //                    opacity: 1.0
+    //                }
+    //                PropertyChanges {
+    //                    target: scoreBox
+    //                    state: "stateShowAppTitle"
+    //                }
+    //                PropertyChanges {
+    //                    target: btnRun
+    //                    enabled: false
+    //                }
+    //                PropertyChanges {
+    //                    target: btnReset
+    //                    enabled: false
+    //                }
+    //                PropertyChanges {
+    //                    target: btnShowHint
+    //                    enabled: false
+    //                }
+    //            },
+    //            State {
+    //                name: "stateMainMenu"
+    //                /* Main menu elements anchors */
+    //                PropertyChanges {
+    //                    target: txtAppVersion
+    //                    opacity: 0.0
+    //                }
+    //                PropertyChanges {
+    //                    target: gameTitle
+    //                    opacity: 0.0
+    //                }
+    //                PropertyChanges {
+    //                    target: scoreBox
+    //                    state: "stateShowLevel"
+    //                }
+    //                PropertyChanges {
+    //                    target: btnRun
+    //                    enabled: true
+    //                }
+    //                PropertyChanges {
+    //                    target: btnReset
+    //                    enabled: false
+    //                }
+    //                PropertyChanges {
+    //                    target: btnShowHint
+    //                    enabled: false
+    //                }
+    //                /* Game elements anchors */
+    //            },
+    //            State {
+    //                name: "stateGame"
+    //                PropertyChanges {
+    //                    target: txtAppVersion
+    //                    opacity: 0.0
+    //                }
+    //                PropertyChanges {
+    //                    target: gameTitle
+    //                    opacity: 0.0
+    //                }
+    //                PropertyChanges {
+    //                    target: scoreBox
+    //                    state: "stateShowScore"
+    //                }
+    //                PropertyChanges {
+    //                    target: btnRun
+    //                    enabled: false
+    //                }
+    //                PropertyChanges {
+    //                    target: btnReset
+    //                    enabled: true
+    //                }
+    //                PropertyChanges {
+    //                    target: btnShowHint
+    //                    enabled: true
+    //                }
+    //                /* Game elements anchors */
+    //            },
+    //            State {
+    //                name: "stateSettings"
+    //                /* Main menu elements anchors */
+    //                /* Game elements anchors */
+    //                /* Showing Settings and hiding About dialog */
+    //            },
+    //            State {
+    //                name: "stateAbout"
+    //                /* Showing About and hiding Settings dialogs */
+    //                /* Showing info about app version */
+    //                /* Showing info about app version */
+    //                PropertyChanges {
+    //                    target: txtAppVersion
+    //                    opacity: 1.0
+    //                }
+    //                /* Game elements anchors */
+    //            }
+    //        ]
+    //        transitions: [
+    //            Transition {
+    //                from: "stateMainMenu"
+    //                to: "stateGame"
+    //                ScriptAction {
+    //                    script: gameBoard.newGame()
+    //                }
+    //            },
+    //            Transition {
+    //                from: "stateMainMenu"
+    //                to: "stateSettings"
+    //                //                AnchorAnimation {
+    //                //                    duration: 500
+    //                //                    easing.type: Easing.InOutQuad
+    //                //                }
+    //                //                PropertyAction {
+    //                //                    target: scoreBox
+    //                //                    property: "state"
+    //                //                    value: "stateHidden"
+    //                //                }
+    //                //                ScriptAction {
+    //                //                    script: txtAppVersion.opacity = 0.0
+    //                //                }
+    //            },
+    //            Transition {
+    //                from: "stateSettings"
+    //                to: "stateMainMenu"
+    //                //                SequentialAnimation {
+    //                //                    ScriptAction {
+    //                //                        script: dlgSettings.opacity = 0.0
+    //                //                    }
+    //                //                    ScriptAction {
+    //                //                        script: txtAppVersion.opacity = 1.0
+    //                //                    }
+    //                //                    AnchorAnimation {
+    //                //                        duration: 500
+    //                //                        easing.type: Easing.InOutQuad
+    //                //                    }
+    //                //                }
+    //            },
+    //            Transition {
+    //                from: "stateGame"
+    //                to: "stateMainMenu"
+    //                //                SequentialAnimation {
+
+    //                //                    ScriptAction {
+    //                //                        script: txtAppVersion.opacity = 1.0
+    //                //                    }
+    //                //                    PropertyAction {
+    //                //                        target: gameBoard
+    //                //                        property: "opacity"
+    //                //                        value: 0.0
+    //                //                    }
+    //                //                    PropertyAction {
+    //                //                        target: scoreBox
+    //                //                        property: "state"
+    //                //                        value: "stateHidden"
+    //                //                    }
+    //                //                    AnchorAnimation {
+    //                //                        targets: toolBar
+    //                //                        duration: 400
+    //                //                    }
+    //                //                    //                    PropertyAction {
+    //                //                    //                        target: bgrMainMenu
+    //                //                    //                        property: "visible"
+    //                //                    //                        value: true
+    //                //                    //                    }
+    //                //                    //                    AnchorAnimation {
+    //                //                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
+    //                //                    //                        duration: 500
+    //                //                    //                        easing.type: Easing.InOutQuad
+    //                //                    //                    }
+    //                //                }
+    //            }
+    //        ]
+
+    //        // ----- Signal handlers
+    //        // ----- Visual children.
+    //        state: "stateAppStarted"
+    //        GameTitle {
+    //            id: gameTitle
+    //            width: parent.width * 0.9
+    //            height: 126. / 346. * width
+    //            anchors.topMargin: 30 * DevicePixelRatio
+    //            anchors.horizontalCenter: parent.horizontalCenter
+    //            anchors.verticalCenter: parent.verticalCenter
+    //            MouseArea {
+    //                id: gameTitleMouseArea
+    //                anchors.fill: parent
+    //                onClicked: {
+    //                    screen.state = "stateMainMenu"
+    //                }
+    //            }
+    //            Component.onCompleted: {
+    //                autoStartTimer.start()
+    //            }
+    //        }
+
+    //        ColumnLayout {
+    //            id: mainScreenLayout
+    //            anchors.fill: parent
+    //            anchors.leftMargin: 2 * DevicePixelRatio
+    //            anchors.rightMargin: 2 * DevicePixelRatio
+
+    //            spacing: 2 * DevicePixelRatio
+
+    //            JProgressBar {
+    //                id: pbLevelProgress
+    //                Layout.fillWidth: true
+    //                Layout.preferredHeight: 25 * DevicePixelRatio
+    //                visible: screen.state === "stateGame"
+    //                value: gameBoard.levelCap
+    //                color: "white"
+    //                secondColor: "green"
+    //            }
+
+    //            GameBoard {
+    //                id: gameBoard
+    //                Layout.fillWidth: true
+    //                Layout.preferredHeight: 320 * DevicePixelRatio
+
+    //                visible: screen.state == "stateGame"
+    //                //modelBgr: bgrModel
+    //                //modelGem: gemsModel
+    //            }
+    //            QQC2.Frame {
+    //                id: spacerFrame_3
+    //                visible: screen.state == "stateGame"
+    //                Layout.fillWidth: true
+    //                Layout.preferredHeight: 2 * DevicePixelRatio
+    //            }
+    //            RowLayout {
+    //                id: toolBarLayout
+
+    //                Layout.fillWidth: true
+    //                Layout.preferredHeight: 20 * DevicePixelRatio
+    //                Layout.alignment: Qt.AlignBottom
+    //                Layout.bottomMargin: 15 * DevicePixelRatio
+
+    //                spacing: 10 * DevicePixelRatio
+    //                Item {
+    //                    Layout.fillWidth: true
+    //                }
+    //                BaseButton {
+    //                    id: btnRun
+    //                    text: qsTr("Run")
+    //                    font {
+    //                        family: global.fonts.buttonfont
+    //                        pointSize: global.smallFontSize
+    //                    }
+    //                    onClicked: {
+    //                        screen.state = "stateGame"
+    //                    }
+    //                }
+    //                BaseButton {
+    //                    id: btnReset
+
+    //                    text: qsTr("Reset")
+    //                    font {
+    //                        family: global.fonts.buttonfont
+    //                        pointSize: global.smallFontSize
+    //                    }
+    //                    onClicked: {
+    //                        gameBoard.resetBoard()
+    //                    }
+    //                }
+    //                BaseButton {
+    //                    id: btnShowHint
+    //                    text: qsTr("Hint")
+    //                    font {
+    //                        family: global.fonts.buttonfont
+    //                        pointSize: global.smallFontSize
+    //                    }
+    //                    onClicked: {
+
+    //                        // gameBoard.showHint()
+    //                    }
+    //                }
+    //                Item {
+    //                    Layout.fillWidth: true
+    //                }
+    //            }
+    //        }
+    //        ///TODO Move separate file
+
+    //        // ----- Qt provided non-visual children
+    //        Timer {
+    //            id: autoStartTimer
+    //            interval: global.enoughTimeToDie * 3
+    //            repeat: false
+    //            running: gameTitle.opacity > 0
+    //            onTriggered: {
+    //                console.log("autoStartTimer,  gameTitle.visible:" + gameTitle.opacity)
+    //                screen.state = "stateMainMenu"
+    //                autoStartTimer.stop()
+    //            }
+    //        }
+    //        // ----- Custom non-visual children
+    //        // ----- JavaScript functions
+    //    }
     AboutDialog {
         id: dlgAbout
     }
@@ -501,7 +580,18 @@ QQC2.ApplicationWindow {
         id: aboutFont
         source: "qrc:/res/fonts/forgotte.ttf"
     }
+
     // ----- Custom non-visual children
+    Timer {
+        id: autoStartTimer
+        interval: global.enoughTimeToDie * 3
+        repeat: false
+        running: gameTitle.opacity > 0
+        onTriggered: {
+            screen.state = "stateMainMenu"
+            autoStartTimer.stop()
+        }
+    }
 
     // a globally avalable utility object
     QtObject {
@@ -513,6 +603,7 @@ QQC2.ApplicationWindow {
         readonly property int largeFontSize: 36
         readonly property int middleFontSize: 24
         readonly property int smallFontSize: 12
+        readonly property int tinyFontSize: 10
 
         property QtObject fonts: QtObject {
             readonly property string gamefont: gameFont.name
