@@ -41,6 +41,6 @@ QtObject {
 
     function toLog(tag, msg) {
         console.trace()
-        console.log(`TAG:${tag}:${msg}`)
+        console.log(`TAG [${tag}] ${msg}`)
     }
 }
