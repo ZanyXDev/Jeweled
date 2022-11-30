@@ -190,13 +190,7 @@ QQC2.ApplicationWindow {
                 }
             }
         ]
-        transitions: [
-            Transition {
-                from: "*"
-                to: "stateMainMenu"
-            }
-        ]
-        ///TODO move Behavior animation from item to transitions:
+
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -216,7 +210,7 @@ QQC2.ApplicationWindow {
                 id: pbLevelProgress
                 Layout.fillWidth: true
                 Layout.preferredHeight: 25 * DevicePixelRatio
-                visible: true //screen.state === "stateGame"
+                visible: screen.state === "stateGame"
                 value: gameBoard.levelCap
                 color: "white"
                 secondColor: "green"
@@ -233,6 +227,51 @@ QQC2.ApplicationWindow {
                                     + test.height / 1.5 + "]")
                 }
             }
+            RowLayout {
+                id: toolBarLayout
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: 20 * DevicePixelRatio
+                Layout.alignment: Qt.AlignBottom
+                Layout.bottomMargin: 15 * DevicePixelRatio
+
+                spacing: 10 * DevicePixelRatio
+                visible: screen.state === "stateMainMenu"
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                BaseButton {
+                    id: btnRun
+                    text: qsTr("Run")
+                    enabled: screen.state === "stateMainMenu"
+                    onClicked: {
+                        screen.state = "stateGame"
+                    }
+                }
+                BaseButton {
+                    id: btnReset
+                    enabled: !btnRun.enabled
+                    text: qsTr("Reset")
+                    onClicked: {
+
+                        //  gameBoard.resetBoard()
+                    }
+                }
+                BaseButton {
+                    id: btnShowHint
+                    enabled: !btnRun.enabled
+                    text: qsTr("Hint")
+                    onClicked: {
+
+                        // gameBoard.showHint()
+                    }
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
             AppVersionTxt {
                 id: appVerTxt
                 Layout.fillWidth: true
@@ -480,56 +519,7 @@ QQC2.ApplicationWindow {
     //                Layout.fillWidth: true
     //                Layout.preferredHeight: 2 * DevicePixelRatio
     //            }
-    //            RowLayout {
-    //                id: toolBarLayout
 
-    //                Layout.fillWidth: true
-    //                Layout.preferredHeight: 20 * DevicePixelRatio
-    //                Layout.alignment: Qt.AlignBottom
-    //                Layout.bottomMargin: 15 * DevicePixelRatio
-
-    //                spacing: 10 * DevicePixelRatio
-    //                Item {
-    //                    Layout.fillWidth: true
-    //                }
-    //                BaseButton {
-    //                    id: btnRun
-    //                    text: qsTr("Run")
-    //                    font {
-    //                        family: global.fonts.buttonfont
-    //                        pointSize: global.smallFontSize
-    //                    }
-    //                    onClicked: {
-    //                        screen.state = "stateGame"
-    //                    }
-    //                }
-    //                BaseButton {
-    //                    id: btnReset
-
-    //                    text: qsTr("Reset")
-    //                    font {
-    //                        family: global.fonts.buttonfont
-    //                        pointSize: global.smallFontSize
-    //                    }
-    //                    onClicked: {
-    //                        gameBoard.resetBoard()
-    //                    }
-    //                }
-    //                BaseButton {
-    //                    id: btnShowHint
-    //                    text: qsTr("Hint")
-    //                    font {
-    //                        family: global.fonts.buttonfont
-    //                        pointSize: global.smallFontSize
-    //                    }
-    //                    onClicked: {
-
-    //                        // gameBoard.showHint()
-    //                    }
-    //                }
-    //                Item {
-    //                    Layout.fillWidth: true
-    //                }
     //            }
     //        }
     //        ///TODO Move separate file
