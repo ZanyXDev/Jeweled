@@ -211,6 +211,17 @@ QQC2.ApplicationWindow {
 
                 visible: opacity > 0
             }
+
+            JProgressBar {
+                id: pbLevelProgress
+                Layout.fillWidth: true
+                Layout.preferredHeight: 25 * DevicePixelRatio
+                visible: true //screen.state === "stateGame"
+                value: gameBoard.levelCap
+                color: "white"
+                secondColor: "green"
+            }
+
             Item {
                 id: test
                 Layout.fillWidth: true
@@ -453,16 +464,6 @@ QQC2.ApplicationWindow {
     //            anchors.rightMargin: 2 * DevicePixelRatio
 
     //            spacing: 2 * DevicePixelRatio
-
-    //            JProgressBar {
-    //                id: pbLevelProgress
-    //                Layout.fillWidth: true
-    //                Layout.preferredHeight: 25 * DevicePixelRatio
-    //                visible: screen.state === "stateGame"
-    //                value: gameBoard.levelCap
-    //                color: "white"
-    //                secondColor: "green"
-    //            }
 
     //            GameBoard {
     //                id: gameBoard
