@@ -30,6 +30,10 @@ QtObject {
     readonly property int cellCount: defaultRowCount * defaultColumnCount
 
     /* This is msecs. Half of second is enough for smooth animation. */
+    readonly property int timer200: 200
+    readonly property int timer500: 500
+    readonly property int timer800: 800
+    readonly property int timer1000: 1000
     readonly property int timerInterval: 500
     readonly property int enoughTimeToDie: 1000 // достаточноеВремяДляСмерти
 
