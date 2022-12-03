@@ -5,4 +5,4 @@ BgrItem 1.0 bgr_item.qml
 TestRect 1.0 test.qml
 GemItem 1.0 gem_item.qml
 FpsItem 1.0 fps_item.qml
-
+FadeItem 1.0 fade_item.qml

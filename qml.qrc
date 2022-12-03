@@ -2,6 +2,12 @@
     <qresource prefix="/">
         <file alias="qtquickcontrols2.conf">res/qml/qtquickcontrols2.conf</file>
         <file>res/qml/main.qml</file>
+        <file>res/qml/AppEffects/qmldir</file>
+        <file>res/qml/AppEffects/shine.qml</file>
+        <file>res/qml/Theme/qmldir</file>
+        <file>res/qml/Theme/theme.qml</file>
+        <file>res/qml/Dialogs/qmldir</file>
+        <file>res/qml/Dialogs/aboutdialog.qml</file>
         <file>res/qml/Common/qmldir</file>
         <file>res/qml/Common/mydebugrect.qml</file>
         <file>res/qml/Common/toast.qml</file>
@@ -9,10 +15,7 @@
         <file>res/qml/Common/gameboard.qml</file>
         <file>res/qml/Common/game_title.qml</file>
         <file>res/qml/Common/app_ver_txt.qml</file>
-        <file>res/qml/Dialogs/qmldir</file>
-        <file>res/qml/Dialogs/aboutdialog.qml</file>
-        <file>res/qml/Theme/qmldir</file>
-        <file>res/qml/Theme/theme.qml</file>
+        <file>res/qml/Common/app_singleton.qml</file>
         <file>res/qml/Components/qmldir</file>
         <file>res/qml/Components/basebutton.qml</file>
         <file>res/qml/Components/jprogressbar.qml</file>
@@ -20,8 +23,6 @@
         <file>res/qml/Components/test.qml</file>
         <file>res/qml/Components/gem_item.qml</file>
         <file>res/qml/Components/fps_item.qml</file>
-        <file>res/qml/AppEffects/qmldir</file>
-        <file>res/qml/AppEffects/shine.qml</file>
-        <file>res/qml/Common/app_singleton.qml</file>
+        <file>res/qml/Components/fade_item.qml</file>
     </qresource>
 </RCC>
