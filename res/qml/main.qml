@@ -125,6 +125,7 @@ QQC2.ApplicationWindow {
     Item {
         id: screen
         property bool itemFolded: false
+        property int testCounter: 0
         anchors.fill: parent
         anchors.margins: 2 * DevicePixelRatio
 
@@ -196,89 +197,108 @@ QQC2.ApplicationWindow {
                     textColor: Theme.accent
                 }
             }
+            FadeItem {
+                id: progressBarFadeItem
+                Layout.fillWidth: true
+                Layout.preferredHeight: 25 * DevicePixelRatio
+                folded: screen.itemFolded
+                inlineContent: JProgressBar {
+                    id: pbItem
+                    anchors.fill: parent
+                    progress: screen.testCounter //gameBoard.levelCap
+                    visible: true
+                    /// TODO extract color to AppSingleton
+                    color: "white"
+                    secondColor: "green"
+                }
+            }
 
-            //            JProgressBar {
-            //                id: pbLevelProgress
-            //                Layout.fillWidth: true
-            //                Layout.preferredHeight: 25 * DevicePixelRatio
-            //                visible: screen.state === "stateGame"
-            //                value: gameBoard.levelCap
-            //                color: "white"
-            //                secondColor: "green"
-            //            }
-            //            GameBoard {
-            //                id: gameBoard
-            //                Layout.fillWidth: true
-            //                Layout.preferredHeight: 320 * DevicePixelRatio
-            //                visible: screen.state == "stateGame"
-            //            }
-            //            QQC2.Frame {
-            //                id: spacerFrame_3
-            //                visible: screen.state == "stateGame"
-            //                Layout.fillWidth: true
-            //                Layout.preferredHeight: 2 * DevicePixelRatio
-            //            }
+            FadeItem {
+                id: gameBoardFadeItem
+                Layout.fillWidth: true
+                Layout.preferredHeight: 320 * DevicePixelRatio
+                folded: screen.itemFolded
+                inlineContent: GameBoard {
+                    id: gameBoard
+                    anchors.fill: parent
+                }
+            }
 
-            //            RowLayout {
-            //                id: toolBarLayout
+            QQC2.Frame {
+                id: spacerFrame_3
+                //  visible: !screen.itemFolded //screen.state == "stateGame"
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2 * DevicePixelRatio
+            }
 
-            //                Layout.fillWidth: true
-            //                Layout.preferredHeight: 20 * DevicePixelRatio
-            //                Layout.alignment: Qt.AlignBottom
-            //                Layout.bottomMargin: 15 * DevicePixelRatio
+            FadeItem {
+                id: gameButtonFadeItem
+                Layout.fillWidth: true
+                Layout.preferredHeight: 20 * DevicePixelRatio
 
-            //                spacing: 10 * DevicePixelRatio
-            //                visible: screen.state === "stateMainMenu"
-            //                Item {
-            //                    Layout.fillWidth: true
-            //                }
+                folded: screen.itemFolded
+                inlineContent: RowLayout {
+                    id: toolBarLayout
+                    anchors.fill: parent
 
-            //                BaseButton {
-            //                    id: btnRun
-            //                    text: qsTr("Run")
-            //                    enabled: screen.state === "stateMainMenu"
-            //                    onClicked: {
-            //                        screen.state = "stateGame"
-            //                    }
-            //                }
-            //                BaseButton {
-            //                    id: btnReset
-            //                    enabled: !btnRun.enabled
-            //                    text: qsTr("Reset")
-            //                    onClicked: {
+                    spacing: 10 * DevicePixelRatio
+                    //visible: screen.state === "stateMainMenu"
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    BaseButton {
+                        id: btnRun
+                        text: qsTr("Run")
+                        enabled: screen.state === "stateMainMenu"
+                        onClicked: {
+                            screen.state = "stateGame"
+                        }
+                    }
+                    BaseButton {
+                        id: btnReset
+                        enabled: !btnRun.enabled
+                        text: qsTr("Reset")
+                        onClicked: {
 
-            //                        //  gameBoard.resetBoard()
-            //                    }
-            //                }
-            //                BaseButton {
-            //                    id: btnShowHint
-            //                    enabled: !btnRun.enabled
-            //                    text: qsTr("Hint")
-            //                    onClicked: {
+                            //  gameBoard.resetBoard()
+                        }
+                    }
+                    BaseButton {
+                        id: btnShowHint
+                        enabled: !btnRun.enabled
+                        text: qsTr("Hint")
+                        onClicked: {
 
-            //                        // gameBoard.showHint()
-            //                    }
-            //                }
-            //                Item {
-            //                    Layout.fillWidth: true
-            //                }
-            //            }
-            //            AppVersionTxt {
-            //                id: appVerTxt
-            //                Layout.fillWidth: true
-            //                Layout.preferredHeight: 25 * DevicePixelRatio
-            //                color: Theme.accent
-            //                visible: opacity > 0
-            //                text: g_appVersion
-            //            }
+                            // gameBoard.showHint()
+                        }
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+            }
+            FadeItem {
+                id: appVersionFadeItem
+                Layout.fillWidth: true
+                Layout.preferredHeight: 24 * DevicePixelRatio
+                Layout.alignment: Qt.AlignBottom
+                Layout.topMargin: 5 * DevicePixelRatio
+                folded: screen.itemFolded
+                inlineContent: AppVersionTxt {
+                    id: appVerTxt
+                    color: Theme.accent
+                    text: g_appVersion
+                }
+            }
         }
         Timer {
             id: testTimer
-            interval: AppSingleton.timer800
+            interval: AppSingleton.timer1000
             repeat: true
-            running: true
+            running: false
             onTriggered: {
                 screen.itemFolded = !screen.itemFolded
+                screen.testCounter++
             }
         }
     }
