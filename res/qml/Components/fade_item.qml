@@ -18,11 +18,15 @@ Item {
 
     Rectangle {
         id: background
+        property bool folded: true
+
         color: "transparent"
         anchors.fill: parent
-        property bool folded: true
-        border.color: "grey"
-        border.width: 3
+        border {
+            color: (isDebugMode) ? "red" : "transparent"
+            width: 2
+        }
+
         state: !folded ? "Visible" : "Invisible"
         states: [
             State {
@@ -87,6 +91,7 @@ Item {
         ]
         Loader {
             id: loader
+            anchors.fill: parent
             sourceComponent: inlineContent
         }
     }
