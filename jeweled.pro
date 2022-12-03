@@ -14,7 +14,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 LANGUAGE  = C++
 
-CONFIG += c++17 resources_big qml_debug
+CONFIG += c++17 resources_big
+CONFIG(release,debug|release):CONFIG += qtquickcompiler # Qt Quick compiler
+CONFIG(release,debug|release):CONFIG += add_source_task # Add source.zip to target
+CONFIG(debug,debug|release):CONFIG += qml_debug  # Add qml_debug
 
 include(gitversion.pri)
 
@@ -31,6 +34,7 @@ SOURCES += \
     src/main.cpp
 
 #HEADERS += \
+#    src/appcore.h
 
 RESOURCES += \
      qml.qrc \
@@ -38,6 +42,13 @@ RESOURCES += \
      backgrounds.qrc \
      images.qrc \
      js.qrc
+
+add_source_task{
+#https://raymii.org/s/blog/Existing_GPL_software_for_sale.html
+    message("add source.zip")
+    system(cd $$PWD; rm source.zip; zip -r source.zip src res  *.md *.qrc *.pro *.pri LICENSE)
+    RESOURCES += source.qrc
+}
 
 #TRANSLATIONS += \
 #    G2_ru_RU.ts
@@ -58,5 +69,3 @@ QML_DESIGNER_IMPORT_PATH =
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH = $$PWD/res/qml
 
-#HEADERS += \
-#    src/appcore.h
