@@ -16,21 +16,11 @@ Item {
     property int fps: 0
     property int fpsAvg: 0
 
-    property int animTime: 800
-    property int timerInterval: 2000
     property alias rowSpacing: mainLayout.spacing
-
-    visible: opacity > 0
-
-    Behavior on opacity {
-        NumberAnimation {
-            duration: AppSingleton.timerInterval
-            easing.type: Easing.InQuad
-        }
-    }
 
     RowLayout {
         id: mainLayout
+        anchors.fill: parent
         spacing: rowSpacing
         Image {
             id: spinnerImage
@@ -46,7 +36,7 @@ Item {
             NumberAnimation on rotation {
                 from: 0
                 to: 360
-                duration: root.animTime
+                duration: AppSingleton.timer800
                 loops: Animation.Infinite
             }
             onRotationChanged: frameCounter++
@@ -69,7 +59,7 @@ Item {
     }
 
     Timer {
-        interval: root.timerInterval
+        interval: AppSingleton.timer2000
         repeat: true
         running: true
         onTriggered: {
