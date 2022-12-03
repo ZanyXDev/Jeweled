@@ -16,6 +16,53 @@ import AppEffects 1.0
 
 import "qrc:/res/js/util.js" as Utils
 
+Window {
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Fade in / Fade out demo by raymii.org")
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 20 * DevicePixelRatio
+        spacing: 20 * DevicePixelRatio
+
+        QQC2.Button {
+            text: fadeItem.folded ? "Fade in" : "Fade out"
+            onClicked: {
+
+                fadeItem.folded = !fadeItem.folded
+                fadeItem2.folded = !fadeItem2.folded
+            }
+        }
+
+        FadeItem {
+            id: fadeItem
+            Layout.fillWidth: true
+            Layout.preferredHeight: 80 * DevicePixelRatio
+            bgrColor: "#efefef"
+            inlineContent: QQC2.Label {
+                text: "World"
+                background: Rectangle {
+                    color: "#30dd0000"
+                }
+            }
+        }
+        FadeItem {
+            id: fadeItem2
+            Layout.fillWidth: true
+            Layout.preferredHeight: 80 * DevicePixelRatio
+            bgrColor: "green"
+        }
+        Rectangle {
+            color: "red"
+            Layout.fillWidth: true
+            Layout.preferredHeight: 80 * DevicePixelRatio
+        }
+    }
+}
+
+/**
 QQC2.ApplicationWindow {
     id: appWnd
     // ----- Property Declarations
@@ -122,26 +169,6 @@ QQC2.ApplicationWindow {
         }
     }
 
-    GameTitle {
-        id: gameTitle
-        width: parent.width * 0.9
-        height: 126. / 346. * width
-        anchors.topMargin: 30 * DevicePixelRatio
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        z: 1
-        MouseArea {
-            id: gameTitleMouseArea
-            anchors.fill: parent
-            onClicked: {
-                screen.state = "stateMainMenu"
-            }
-        }
-        Component.onCompleted: {
-            autoStartTimer.start()
-        }
-    }
-
     Item {
         id: screen
         anchors.fill: parent
@@ -188,6 +215,13 @@ QQC2.ApplicationWindow {
                     target: fpsItem
                     opacity: 0.0
                 }
+            },
+            State {
+                name: "stateGame"
+                PropertyChanges {
+                    target: scoreBox
+                    state: "stateShowScore"
+                }
             }
         ]
 
@@ -195,6 +229,7 @@ QQC2.ApplicationWindow {
             id: mainLayout
             anchors.fill: parent
             spacing: 2 * DevicePixelRatio
+
             FpsItem {
                 id: fpsItem
                 Layout.fillWidth: true
@@ -205,7 +240,6 @@ QQC2.ApplicationWindow {
 
                 visible: opacity > 0
             }
-
             JProgressBar {
                 id: pbLevelProgress
                 Layout.fillWidth: true
@@ -215,18 +249,19 @@ QQC2.ApplicationWindow {
                 color: "white"
                 secondColor: "green"
             }
-
-            Item {
-                id: test
+            GameBoard {
+                id: gameBoard
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                Component.onCompleted: {
-                    if (isDebugMode)
-                        console.log("test.size:[" + test.width / 1.5 + ","
-                                    + test.height / 1.5 + "]")
-                }
+                Layout.preferredHeight: 320 * DevicePixelRatio
+                visible: screen.state == "stateGame"
             }
+            QQC2.Frame {
+                id: spacerFrame_3
+                visible: screen.state == "stateGame"
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2 * DevicePixelRatio
+            }
+
             RowLayout {
                 id: toolBarLayout
 
@@ -271,7 +306,6 @@ QQC2.ApplicationWindow {
                     Layout.fillWidth: true
                 }
             }
-
             AppVersionTxt {
                 id: appVerTxt
                 Layout.fillWidth: true
@@ -283,262 +317,27 @@ QQC2.ApplicationWindow {
         }
     }
 
-    //    Item {
-    //        visible: true
-    //        id: screen
-    //        // ----- Property Declarations
-    //        // Required properties should be at the top.
-    //        // ----- Signal declarations
-    //        // ----- In this section, we group the size and position information together.
-    //        anchors.fill: parent
-    //        // If a single assignment, dot notation can be used.
-    //        // ----- Then comes the other properties. There's no predefined order to these.
-    //        // ----- Then attached properties and attached signal handlers.
-    //        // ----- States and transitions.
-    //        states: [
-    //            State {
-    //                name: "stateAppStarted"
-    //                PropertyChanges {
-    //                    target: txtAppVersion
-    //                    opacity: 1.0
-    //                }
-    //                PropertyChanges {
-    //                    target: gameTitle
-    //                    opacity: 1.0
-    //                }
-    //                PropertyChanges {
-    //                    target: scoreBox
-    //                    state: "stateShowAppTitle"
-    //                }
-    //                PropertyChanges {
-    //                    target: btnRun
-    //                    enabled: false
-    //                }
-    //                PropertyChanges {
-    //                    target: btnReset
-    //                    enabled: false
-    //                }
-    //                PropertyChanges {
-    //                    target: btnShowHint
-    //                    enabled: false
-    //                }
-    //            },
-    //            State {
-    //                name: "stateMainMenu"
-    //                /* Main menu elements anchors */
-    //                PropertyChanges {
-    //                    target: txtAppVersion
-    //                    opacity: 0.0
-    //                }
-    //                PropertyChanges {
-    //                    target: gameTitle
-    //                    opacity: 0.0
-    //                }
-    //                PropertyChanges {
-    //                    target: scoreBox
-    //                    state: "stateShowLevel"
-    //                }
-    //                PropertyChanges {
-    //                    target: btnRun
-    //                    enabled: true
-    //                }
-    //                PropertyChanges {
-    //                    target: btnReset
-    //                    enabled: false
-    //                }
-    //                PropertyChanges {
-    //                    target: btnShowHint
-    //                    enabled: false
-    //                }
-    //                /* Game elements anchors */
-    //            },
-    //            State {
-    //                name: "stateGame"
-    //                PropertyChanges {
-    //                    target: txtAppVersion
-    //                    opacity: 0.0
-    //                }
-    //                PropertyChanges {
-    //                    target: gameTitle
-    //                    opacity: 0.0
-    //                }
-    //                PropertyChanges {
-    //                    target: scoreBox
-    //                    state: "stateShowScore"
-    //                }
-    //                PropertyChanges {
-    //                    target: btnRun
-    //                    enabled: false
-    //                }
-    //                PropertyChanges {
-    //                    target: btnReset
-    //                    enabled: true
-    //                }
-    //                PropertyChanges {
-    //                    target: btnShowHint
-    //                    enabled: true
-    //                }
-    //                /* Game elements anchors */
-    //            },
-    //            State {
-    //                name: "stateSettings"
-    //                /* Main menu elements anchors */
-    //                /* Game elements anchors */
-    //                /* Showing Settings and hiding About dialog */
-    //            },
-    //            State {
-    //                name: "stateAbout"
-    //                /* Showing About and hiding Settings dialogs */
-    //                /* Showing info about app version */
-    //                /* Showing info about app version */
-    //                PropertyChanges {
-    //                    target: txtAppVersion
-    //                    opacity: 1.0
-    //                }
-    //                /* Game elements anchors */
-    //            }
-    //        ]
-    //        transitions: [
-    //            Transition {
-    //                from: "stateMainMenu"
-    //                to: "stateGame"
-    //                ScriptAction {
-    //                    script: gameBoard.newGame()
-    //                }
-    //            },
-    //            Transition {
-    //                from: "stateMainMenu"
-    //                to: "stateSettings"
-    //                //                AnchorAnimation {
-    //                //                    duration: 500
-    //                //                    easing.type: Easing.InOutQuad
-    //                //                }
-    //                //                PropertyAction {
-    //                //                    target: scoreBox
-    //                //                    property: "state"
-    //                //                    value: "stateHidden"
-    //                //                }
-    //                //                ScriptAction {
-    //                //                    script: txtAppVersion.opacity = 0.0
-    //                //                }
-    //            },
-    //            Transition {
-    //                from: "stateSettings"
-    //                to: "stateMainMenu"
-    //                //                SequentialAnimation {
-    //                //                    ScriptAction {
-    //                //                        script: dlgSettings.opacity = 0.0
-    //                //                    }
-    //                //                    ScriptAction {
-    //                //                        script: txtAppVersion.opacity = 1.0
-    //                //                    }
-    //                //                    AnchorAnimation {
-    //                //                        duration: 500
-    //                //                        easing.type: Easing.InOutQuad
-    //                //                    }
-    //                //                }
-    //            },
-    //            Transition {
-    //                from: "stateGame"
-    //                to: "stateMainMenu"
-    //                //                SequentialAnimation {
-
-    //                //                    ScriptAction {
-    //                //                        script: txtAppVersion.opacity = 1.0
-    //                //                    }
-    //                //                    PropertyAction {
-    //                //                        target: gameBoard
-    //                //                        property: "opacity"
-    //                //                        value: 0.0
-    //                //                    }
-    //                //                    PropertyAction {
-    //                //                        target: scoreBox
-    //                //                        property: "state"
-    //                //                        value: "stateHidden"
-    //                //                    }
-    //                //                    AnchorAnimation {
-    //                //                        targets: toolBar
-    //                //                        duration: 400
-    //                //                    }
-    //                //                    //                    PropertyAction {
-    //                //                    //                        target: bgrMainMenu
-    //                //                    //                        property: "visible"
-    //                //                    //                        value: true
-    //                //                    //                    }
-    //                //                    //                    AnchorAnimation {
-    //                //                    //                        targets: [gameTitle, btnClassic, btnEndless, btnAction, btnAbout]
-    //                //                    //                        duration: 500
-    //                //                    //                        easing.type: Easing.InOutQuad
-    //                //                    //                    }
-    //                //                }
-    //            }
-    //        ]
-
-    //        // ----- Signal handlers
-    //        // ----- Visual children.
-    //        state: "stateAppStarted"
-    //        GameTitle {
-    //            id: gameTitle
-    //            width: parent.width * 0.9
-    //            height: 126. / 346. * width
-    //            anchors.topMargin: 30 * DevicePixelRatio
-    //            anchors.horizontalCenter: parent.horizontalCenter
-    //            anchors.verticalCenter: parent.verticalCenter
-    //            MouseArea {
-    //                id: gameTitleMouseArea
-    //                anchors.fill: parent
-    //                onClicked: {
-    //                    screen.state = "stateMainMenu"
-    //                }
-    //            }
-    //            Component.onCompleted: {
-    //                autoStartTimer.start()
-    //            }
-    //        }
-
-    //        ColumnLayout {
-    //            id: mainScreenLayout
-    //            anchors.fill: parent
-    //            anchors.leftMargin: 2 * DevicePixelRatio
-    //            anchors.rightMargin: 2 * DevicePixelRatio
-
-    //            spacing: 2 * DevicePixelRatio
-
-    //            GameBoard {
-    //                id: gameBoard
-    //                Layout.fillWidth: true
-    //                Layout.preferredHeight: 320 * DevicePixelRatio
-
-    //                visible: screen.state == "stateGame"
-    //                //modelBgr: bgrModel
-    //                //modelGem: gemsModel
-    //            }
-    //            QQC2.Frame {
-    //                id: spacerFrame_3
-    //                visible: screen.state == "stateGame"
-    //                Layout.fillWidth: true
-    //                Layout.preferredHeight: 2 * DevicePixelRatio
-    //            }
-
-    //            }
-    //        }
-    //        ///TODO Move separate file
-
-    //        // ----- Qt provided non-visual children
-    //        Timer {
-    //            id: autoStartTimer
-    //            interval: global.enoughTimeToDie * 3
-    //            repeat: false
-    //            running: gameTitle.opacity > 0
-    //            onTriggered: {
-    //                console.log("autoStartTimer,  gameTitle.visible:" + gameTitle.opacity)
-    //                screen.state = "stateMainMenu"
-    //                autoStartTimer.stop()
-    //            }
-    //        }
+    GameTitle {
+        id: gameTitle
+        width: parent.width * 0.9
+        height: 126. / 346. * width
+        anchors.topMargin: 30 * DevicePixelRatio
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        z: 1
+        MouseArea {
+            id: gameTitleMouseArea
+            anchors.fill: parent
+            onClicked: {
+                screen.state = "stateMainMenu"
+            }
+        }
+        Component.onCompleted: {
+            autoStartTimer.start()
+        }
+    }
     //        // ----- Custom non-visual children
     //        // ----- JavaScript functions
-    //    }
     AboutDialog {
         id: dlgAbout
     }
@@ -575,3 +374,6 @@ QQC2.ApplicationWindow {
     // ----- JavaScript functions
     /// TODO move to Utils.js
 }
+
+*/
+
