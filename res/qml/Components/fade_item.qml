@@ -8,17 +8,17 @@ import Common 1.0
 Item {
     id: root
 
-    property alias bgrColor: background.color
     property alias folded: background.folded
-
     property Component inlineContent: ContentItem {}
 
     component ContentItem: Text {
         text: qsTr("Not defined inline content Item")
         color: "red"
     }
+
     Rectangle {
         id: background
+        color: "transparent"
         anchors.fill: parent
         property bool folded: true
         border.color: "grey"
