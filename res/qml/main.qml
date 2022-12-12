@@ -99,8 +99,6 @@ QQC2.ApplicationWindow {
                 id: scoreBox
                 Layout.fillWidth: true
                 appTitle: qsTr("FreeJeweled")
-                gameBoardScore: gameBoard.score
-                gameBoardLevel: gameBoard.level
                 state: "stateShowAppTitle"
             }
 
@@ -117,6 +115,7 @@ QQC2.ApplicationWindow {
         }
         Component.onCompleted: {
             if (isDebugMode)
+
                 console.log("pageHeader.size:[" + pageHeader.width / 1.5 + ","
                             + pageHeader.height / 1.5 + "]")
         }
@@ -209,6 +208,22 @@ QQC2.ApplicationWindow {
                 inlineContent: GameBoard {
                     id: gameBoard
                     anchors.fill: parent
+                    Binding {
+                        target: scoreBox
+                        property: "gameBoardScore"
+                        value: gameBoard.score
+                    }
+                    Binding {
+                        target: scoreBox
+                        property: "gameBoardLevel"
+                        value: gameBoard.level
+                    }
+                    Component.onCompleted: {
+
+                        if (isDebugMode) {
+                            gameBoard.score = 777
+                        }
+                    }
                 }
             }
 
