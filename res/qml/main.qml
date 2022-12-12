@@ -186,18 +186,6 @@ QQC2.ApplicationWindow {
             spacing: 2 * DevicePixelRatio
 
             FadeItem {
-                id: fpsFadeItem
-                Layout.fillWidth: true
-                Layout.preferredHeight: 32 * DevicePixelRatio
-                folded: screen.itemFolded
-                inlineContent: FpsItem {
-                    id: fpsItem
-                    anchors.fill: parent
-                    rowSpacing: 2 * DevicePixelRatio
-                    textColor: Theme.accent
-                }
-            }
-            FadeItem {
                 id: progressBarFadeItem
                 Layout.fillWidth: true
                 Layout.preferredHeight: 25 * DevicePixelRatio
@@ -234,7 +222,7 @@ QQC2.ApplicationWindow {
             FadeItem {
                 id: gameButtonFadeItem
                 Layout.fillWidth: true
-                Layout.preferredHeight: 20 * DevicePixelRatio
+                Layout.preferredHeight: 32 * DevicePixelRatio
 
                 folded: screen.itemFolded
                 inlineContent: RowLayout {
@@ -277,17 +265,43 @@ QQC2.ApplicationWindow {
                     }
                 }
             }
-            FadeItem {
-                id: appVersionFadeItem
+
+            RowLayout {
+                id: infoRowLayout
+                spacing: 2 * DevicePixelRatio
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24 * DevicePixelRatio
                 Layout.alignment: Qt.AlignBottom
                 Layout.topMargin: 5 * DevicePixelRatio
-                folded: screen.itemFolded
-                inlineContent: AppVersionTxt {
-                    id: appVerTxt
-                    color: Theme.accent
-                    text: g_appVersion
+
+                FadeItem {
+                    id: fpsFadeItem
+                    Layout.alignment: Qt.AlignLeft
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 140 * DevicePixelRatio
+                    folded: screen.itemFolded
+                    inlineContent: FpsItem {
+                        id: fpsItem
+                        anchors.fill: parent
+                        rowSpacing: 2 * DevicePixelRatio
+                        textColor: Theme.accent
+                    }
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                FadeItem {
+                    id: appVersionFadeItem
+                    Layout.alignment: Qt.AlignRight
+                    Layout.preferredWidth: 140 * DevicePixelRatio
+                    Layout.fillHeight: true
+                    folded: screen.itemFolded
+                    inlineContent: AppVersionTxt {
+                        id: appVerTxt
+                        color: Theme.accent
+                        text: g_appVersion
+                    }
                 }
             }
         }
