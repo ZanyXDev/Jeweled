@@ -3,20 +3,26 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
+import Common 1.0
 
 QQC2.Button {
-    id: control
+    id: root
 
     property color shadowColor: "black"
 
+    font {
+        family: AppSingleton.buttonFont.name
+        pointSize: AppSingleton.smallFontSize
+    }
+
     layer.enabled: true
     layer.effect: DropShadow {
-        // anchors.fill: control
+
         horizontalOffset: 3
         verticalOffset: 4
         radius: 5
         samples: 11
-        color: control.shadowColor
+        color: root.shadowColor
         opacity: 0.75
     }
 
@@ -26,14 +32,14 @@ QQC2.Button {
         State {
             name: "buttonDown"
             PropertyChanges {
-                target: control
+                target: root
                 scale: 0.7
             }
         },
         State {
             name: "buttonUp"
             PropertyChanges {
-                target: control
+                target: root
                 scale: 1.0
             }
         }
@@ -43,7 +49,7 @@ QQC2.Button {
         NumberAnimation {
             properties: scale
             easing.type: Easing.InOutQuad
-            duration: 200
+            duration: AppSingleton.timer200
         }
     }
 }

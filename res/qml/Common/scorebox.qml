@@ -2,9 +2,10 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 1.15
+import Common 1.0
 
 Item {
-    id: control
+    id: root
 
     property string appTitle: ""
     property int gameBoardLevel: 1
@@ -14,8 +15,8 @@ Item {
         anchors.fill: parent
 
         font {
-            family: global.fonts.gamefont
-            pointSize: global.middleFontSize
+            family: AppSingleton.gameFont.name
+            pointSize: AppSingleton.middleFontSize
             bold: true
         }
 
@@ -27,7 +28,7 @@ Item {
         Behavior on scale {
             NumberAnimation {
                 easing.type: Easing.InQuad
-                duration: 300
+                duration: AppSingleton.timerInterval
             }
         }
     }
@@ -53,7 +54,7 @@ Item {
         State {
             name: ""
             PropertyChanges {
-                target: control
+                target: root
                 visible: true
                 opacity: 1
             }

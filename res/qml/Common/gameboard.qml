@@ -7,9 +7,11 @@ import QtQml.Models 2.15
 import Components 1.0
 import Common 1.0
 import Theme 1.0
+import "qrc:/res/js/util.js" as Utils
+import "qrc:/res/js/game_logic.js" as Logic
 
 Item {
-    id: control
+    id: root
 
     // ----- Property Declarations
 
@@ -18,17 +20,20 @@ Item {
     property int hintY: 0
     property int level: 0
     property int score: 0
-    property int selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
-    property int selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
+    property int m_selGemRow: 0 //READ selGemRow WRITE setSelGemRow NOTIFY selGemRowChanged)
+    property int m_selGemColumn: 0 //READ selGemColumn WRITE setSelGemColumn NOTIFY selGemColumnChanged)
     property int m_currentStepDelay: 0
     property real levelCap: 0.0
     property bool hintVisible: false
-    property bool gemSelected: false
-    property bool gameLost: false
-    property bool gameStarted: false
+    property bool m_gemSelected: false
+    property bool m_gameLost: false
+    property bool m_gameStarted: false
+    property bool m_gemMovedByUser: false
+    property bool m_userInteractionAccepted: false
 
-    property ListModel modelBgr: ListModel {}
-    property ListModel modelGem: ListModel {}
+    //    property ListModel modelBgr: ListModel {}
+    //    property ListModel modelGem: ListModel {}
+
     // ----- Signal declarations
     // ----- In this section, we group the size and position information together.
     // If the item is an image, sourceSize is also set here.
@@ -42,11 +47,11 @@ Item {
         State {
             name: "newGame"
             PropertyChanges {
-                target: control
+                target: root
                 score: 0
             }
             PropertyChanges {
-                target: control
+                target: root
                 level: 1
             }
             PropertyChanges {
@@ -60,15 +65,16 @@ Item {
         Transition {
             from: "*"
             to: "newGame"
+
             ScriptAction {
-                script: doFillBgrCells()
+                script: Utils.moveBackgroundTile(bgrModel)
             }
             ScriptAction {
                 script: calcLevelCap()
             }
 
             ScriptAction {
-                script: oneSecondTimer.start()
+                script: oneHalfSecondTimer.start()
             }
         }
     ]
@@ -76,7 +82,9 @@ Item {
     // ----- Signal handlers
     onScoreChanged: {
 
-    }
+    } // ----- Property Declarations
+    // Required properties should be at the top.
+    property point originPosition: mapToItem(parent, 0, 0)
     onLevelCapChanged: {
 
         ///TODO levelCap == 1.0 -> signal levelUp()!!!
@@ -85,100 +93,97 @@ Item {
     // onCompleted and onDestruction signal handlers are always the last in
     // the order.
     Component.onCompleted: {
+        root.level = 1
+        root.score = 0
 
+        //m_selectedGem = NULL
+        m_gemSelected = false
+        m_selGemRow = 0
+        m_selGemColumn = 0
+        m_gemMovedByUser = false
+        m_userInteractionAccepted = true
+        m_gameStarted = false
+        m_gameLost = false
+        // m_cellSize = SMALL_CELL_SIZE
     }
+
     Component.onDestruction: {
 
     }
+
     // ----- Visual children.
     Rectangle {
         id: bgrRect
+        objectName: "bgrRect"
         anchors.fill: parent
         radius: 4 * DevicePixelRatio
         color: "transparent"
         z: -1
         opacity: 0
-        visible: opacity > 0
+        visible: (opacity > 0) && (isDebugMode)
         border.color: Theme.accent
         border.width: 1 * DevicePixelRatio
 
         Repeater {
-            id: repeaterItem
-            model: modelBgr
+
+            id: bgrRepeater
+            model: bgrModel
             BgrItem {
-                readonly property int idx: model.index
+                readonly property int index: model.index
                 x: model.x
                 y: model.y
-                visible: model.visible
-                width: global.smallCellSize
-                height: global.smallCellSize
-                animationTime: global.timerInterval
+                height: model.m_size
+                width: model.m_size
             }
         }
-        Behavior on opacity {
-            NumberAnimation {
-                duration: global.timerInterval
-                easing.type: Easing.InQuad
+
+        Repeater {
+            id: gemRepeater
+            model: gemsModel
+            delegate: GemItem {
+                readonly property int index: model.index
+                id: index
+                type: model.type
+                spawned: model.spawned
+                gmodifier: model.gmodifier
+                srcSize: model.srcSize
+                behaviorPause: model.behaviorPause
             }
         }
     }
 
     // ----- Qt provided non-visual children
+    ListModel {
+        id: gemsModel
+
+        Component.onCompleted: {
+            Utils.fillGemsModel(gemsModel, AppSingleton.cellCount,
+                                AppSingleton.smallCellSize)
+        }
+    }
+
+    ListModel {
+        id: bgrModel
+        Component.onCompleted: {
+            Utils.fillBgrModel(bgrModel, AppSingleton.cellCount,
+                               AppSingleton.smallCellSize, DevicePixelRatio)
+        }
+    }
 
     // ----- Custom non-visual children
     Timer {
-        id: oneSecondTimer
-        interval: 1000
+        id: oneHalfSecondTimer
+        interval: 500
         repeat: true
         running: false
-        onTriggered: control.score++
-        //control.score = Qt.binding(function () {  return 77     })
+        onTriggered: root.score++
+        //root.score = Qt.binding(function () {  return 77     })
     }
 
     // ----- JavaScript functions
     function newGame() {
         state = "newGame"
-    }
-
-    function fillBackgroundModel(m_model) {
-        // All item placed left corner
-        var cnt = (control.colums * control.rows)
-        for (var x = 0; x < cnt; x++) {
-            m_model.append({
-                               "x": -100,
-                               "y": -100,
-                               "visible": false
-                           })
-        }
-    }
-
-    function doFillBgrCells() {
-        console.log("doFillBgrCells()")
-        var cnt = (control.colums * control.rows)
-        for (var index = 0; index < cnt; index++) {
-            bgrItemsModel.setProperty(index, "x", getXFromIndex(index))
-            bgrItemsModel.setProperty(index, "y", getYFromIndex(index))
-            bgrItemsModel.setProperty(index, "visible", true)
-        }
-    }
-
-    function createEmptyGems(m_model) {
-        var cnt = (control.colums * control.rows)
-        for (var x = 0; x < cnt; x++) {
-            m_model.append({
-                               "type": generateCellType(),
-                               "width": control.cellSize,
-                               "height": control.cellSize,
-                               "x"// "startRow": startRow,
-                               // "behaviorPause": Math.abs(
-                               //                      startRow) * 50 + control.m_currentStepDelay,
-                               : -100,
-                               "y": -100,
-                               "spawned": true,
-                               "srcSize": control.cellSize,
-                               "modifier": Modifier.CellState.Normal
-                           })
-        }
+        console.log("newGame()")
     }
 
 
@@ -189,38 +194,11 @@ Item {
       * gem types so there are no combos
       */
     function resetBoard() {}
+
     // -------------------Utility function to use in different places. --------
-
-    // Generate random cell type.
-    function generateCellType() {
-        return Math.floor(Math.random() * 7.0)
-    }
-
-    function getXFromIndex(index) {
-        if (index < 0) {
-            return -1
-        }
-        var m_col = index % 8
-        var x = m_col * (control.cellSize + 3 * DevicePixelRatio)
-        x += 2 * DevicePixelRatio
-        return x
-    }
-
-    function getYFromIndex(index) {
-        if (index < 0) {
-            return -1
-        }
-        var m_col = index % 8
-        var m_row = (index > 7) ? ((index - m_col) / 8) : 0
-        var y = m_row * (control.cellSize + 3 * DevicePixelRatio)
-
-        y += 2 * DevicePixelRatio
-        return y
-    }
-
     function calcLevelCap() {
-        var max_cap = (5 * level * (level + 3) / 2 * global.levelCapMultiplayer * Math.pow(
-                           global.difficultyMultiplayer, level - 1))
+        var max_cap = (5 * level * (level + 3) / 2 * AppSingleton.levelCapMultiplayer * Math.pow(
+                           AppSingleton.difficultyMultiplayer, level - 1))
         levelCap = score / max_cap
     }
 }

@@ -54,3 +54,7 @@ compile_commands.json
 #Doxygen Doc
 *doc
 #test
+/trunk
+
+source.zip
+
