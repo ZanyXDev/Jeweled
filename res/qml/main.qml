@@ -123,62 +123,26 @@ QQC2.ApplicationWindow {
 
     Item {
         id: screen
-        property bool itemFolded: false
+        property bool itemFolded: true
         property int testCounter: 0
+
         anchors.fill: parent
         anchors.margins: 2 * DevicePixelRatio
 
-        //        states: [
-        //            State {
-        //                name: "*"
-        //                PropertyChanges {
-        //                    target: gameTitle
-        //                    opacity: 1.0
-        //                }
-        //                PropertyChanges {
-        //                    target: appVerTxt
-        //                    opacity: 1.0
-        //                }
-        //                PropertyChanges {
-        //                    target: fpsItem
-        //                    opacity: 1.0
-        //                }
-        //                PropertyChanges {
-        //                    target: btnRun
-        //                    enabled: false
-        //                }
-        //                PropertyChanges {
-        //                    target: btnReset
-        //                    enabled: false
-        //                }
-        //                PropertyChanges {
-        //                    target: btnShowHint
-        //                    enabled: false
-        //                }
-        //            },
-        //            State {
-        //                name: "stateMainMenu"
-        //                PropertyChanges {
-        //                    target: gameTitle
-        //                    opacity: 0.0
-        //                }
-        //                PropertyChanges {
-        //                    target: appVerTxt
-        //                    opacity: 0.0
-        //                }
-        //                PropertyChanges {
-        //                    target: fpsItem
-        //                    opacity: 0.0
-        //                }
-        //            },
-        //            State {
-        //                name: "stateGame"
-        //                PropertyChanges {
-        //                    target: scoreBox
-        //                    state: "stateShowScore"
-        //                }
-        //            }
-        //        ]
+        states: [
+            State {
+                name: "stateMainMenu"
+                PropertyChanges {
+                    target: screen
+                    itemFolded: false
+                }
+                PropertyChanges {
+                    target: gameTitle
+                    opacity: 0
+                }
+            }
+        ]
+
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -229,7 +193,7 @@ QQC2.ApplicationWindow {
 
             QQC2.Frame {
                 id: spacerFrame_3
-                //  visible: !screen.itemFolded //screen.state == "stateGame"
+                visible: !screen.itemFolded
                 Layout.fillWidth: true
                 Layout.preferredHeight: 2 * DevicePixelRatio
             }
@@ -245,7 +209,7 @@ QQC2.ApplicationWindow {
                     anchors.fill: parent
 
                     spacing: 10 * DevicePixelRatio
-                    //visible: screen.state === "stateMainMenu"
+
                     Item {
                         Layout.fillWidth: true
                     }
@@ -294,7 +258,7 @@ QQC2.ApplicationWindow {
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillHeight: true
                     Layout.preferredWidth: 140 * DevicePixelRatio
-                    folded: screen.itemFolded
+                    folded: !screen.itemFolded
                     inlineContent: FpsItem {
                         id: fpsItem
                         anchors.fill: parent
@@ -311,7 +275,7 @@ QQC2.ApplicationWindow {
                     Layout.alignment: Qt.AlignRight
                     Layout.preferredWidth: 140 * DevicePixelRatio
                     Layout.fillHeight: true
-                    folded: screen.itemFolded
+                    folded: !screen.itemFolded
                     inlineContent: AppVersionTxt {
                         id: appVerTxt
                         color: Theme.accent
@@ -320,37 +284,27 @@ QQC2.ApplicationWindow {
                 }
             }
         }
-        Timer {
-            id: testTimer
-            interval: AppSingleton.timer1000
-            repeat: true
-            running: false
-            onTriggered: {
-                screen.itemFolded = !screen.itemFolded
-                screen.testCounter++
-            }
-        }
     }
 
-    //    GameTitle {
-    //        id: gameTitle
-    //        width: parent.width * 0.9
-    //        height: 126. / 346. * width
-    //        anchors.topMargin: 30 * DevicePixelRatio
-    //        anchors.horizontalCenter: parent.horizontalCenter
-    //        anchors.verticalCenter: parent.verticalCenter
-    //        z: 1
-    //        MouseArea {
-    //            id: gameTitleMouseArea
-    //            anchors.fill: parent
-    //            onClicked: {
-    //                screen.state = "stateMainMenu"
-    //            }
-    //        }
-    //        Component.onCompleted: {
-    //            autoStartTimer.start()
-    //        }
-    //    }
+    GameTitle {
+        id: gameTitle
+        width: parent.width * 0.9
+        height: 126. / 346. * width
+        anchors.topMargin: 30 * DevicePixelRatio
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        z: 1
+        MouseArea {
+            id: gameTitleMouseArea
+            anchors.fill: parent
+            onClicked: {
+                screen.state = "stateMainMenu"
+            }
+        }
+        Component.onCompleted: {
+            autoStartTimer.start()
+        }
+    }
     //        // ----- Custom non-visual children
     //        // ----- JavaScript functions
     AboutDialog {
