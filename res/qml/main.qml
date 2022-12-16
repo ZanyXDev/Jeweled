@@ -140,9 +140,18 @@ QQC2.ApplicationWindow {
                     target: gameTitle
                     opacity: 0
                 }
+            },
+            State {
+                name: "stateGame"
+                PropertyChanges {
+                    target: gameBoard
+                    state: "newGame"
+                }
             }
         ]
-
+        onStateChanged: {
+            AppSingleton.toLog("INFO", "Screen.state:" + screen.state)
+        }
         ColumnLayout {
             id: mainLayout
             anchors.fill: parent
@@ -301,6 +310,12 @@ QQC2.ApplicationWindow {
                 screen.state = "stateMainMenu"
             }
         }
+        onOpacityChanged: {
+            if (isDebugMode) {
+                AppSingleton.toLog("INFO", "gameTitle opacity changed")
+            }
+        }
+
         Component.onCompleted: {
             autoStartTimer.start()
         }
